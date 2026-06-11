@@ -21,6 +21,16 @@
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ─── Dark mode ─────────────────────────── */
+body.dark-mode {
+  --black:      #f0f0f0;
+  --white:      #0a0a0a;
+  --gray-light: #2a2a2a;
+}
+body.dark-mode .site-logo img { filter: invert(1); }
+body.dark-mode #btn-monogram img { filter: invert(1); }
+body.dark-mode #splash-bg { background: #0a0a0a; }
+
 /* ─── Reset ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -44,6 +54,7 @@ body {
   font-size: 14px;
   line-height: 1.5;
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -680,6 +691,7 @@ ul { list-style: none; }
   }
 
   #splash-bg { background: #000; }
+  #btn-theme { display: none; }
 
   /* Logo centrato in alto — mix-blend-mode inverte rispetto allo sfondo */
   .site-logo,

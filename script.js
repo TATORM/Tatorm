@@ -689,3 +689,26 @@ document.addEventListener('dragstart', e => {
 // Mostra home al caricamento (già .active nel HTML)
 // Il pannello look parte nascosto (aggiunto da showSection)
 fixedLookInfo.classList.remove('panel-visible');
+
+/* ═══════════════════════════════════════════
+   DARK / LIGHT MODE TOGGLE
+   ═══════════════════════════════════════════ */
+const btnTheme  = document.getElementById('btn-theme');
+const iconMoon  = document.getElementById('icon-moon');
+const iconSun   = document.getElementById('icon-sun');
+
+function applyTheme(dark) {
+  document.body.classList.toggle('dark-mode', dark);
+  iconMoon.style.display = dark ? 'none'  : '';
+  iconSun.style.display  = dark ? ''      : 'none';
+}
+
+// Ripristina preferenza salvata
+const savedDark = localStorage.getItem('tato-dark') === 'true';
+applyTheme(savedDark);
+
+btnTheme.addEventListener('click', () => {
+  const isDark = !document.body.classList.contains('dark-mode');
+  applyTheme(isDark);
+  localStorage.setItem('tato-dark', isDark);
+});
