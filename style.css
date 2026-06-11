@@ -709,12 +709,16 @@ ul { list-style: none; }
   .about-wrap { padding: 0 28px; }
   #collection { padding-left: 0; padding-top: 0; }
 
-  /* Home: ogni foto occupa schermo intero e si blocca */
+  /* Home: ogni foto in formato 9:16 (1080x1920) */
   .home-image-block {
-    height: 100vh;
     width: 100vw;
+    height: 100svh;
+    aspect-ratio: 9 / 16;
     overflow: hidden;
     scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .home-image-block img {
     width: 100%;
@@ -734,7 +738,8 @@ ul { list-style: none; }
     left: auto !important;
     transform: none !important;
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100svh !important;
+    aspect-ratio: 9 / 16;
     scroll-snap-align: start;
   }
   .carousel-track {
