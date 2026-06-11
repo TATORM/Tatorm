@@ -1,0 +1,818 @@
+/* ═══════════════════════════════════════════
+   TATO — style.css
+   ═══════════════════════════════════════════ */
+
+:root {
+  --black:      #0a0a0a;
+  --gray:       #888888;
+  --gray-light: #d8d8d8;
+  --white:      #ffffff;
+
+  --font: "Neue Haas Grotesk Display", "Neue Haas Grotesk Text",
+          "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Larghezza immagine unificata — home, look, about */
+  --image-width: clamp(560px, 36vw, 700px);
+
+  /* Dimensioni logo durante animazione */
+  --logo-w-splash: 130px;
+  --logo-w-final:  130px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ─── Protezione immagini ────────────────── */
+img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  draggable: false;
+}
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; width: 100%; height: auto; }
+button {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font); font-weight: 500;
+  color: inherit; padding: 0;
+}
+ul { list-style: none; }
+.hidden { display: none !important; }
+
+
+/* ═══════════════════════════════════════════
+   SPLASH BACKGROUND
+   z 55 — sopra al contenuto, sotto al logo (z 60)
+   ═══════════════════════════════════════════ */
+#splash-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: var(--white);
+  pointer-events: none;
+  transition: opacity 0.55s ease;
+}
+#splash-bg.fade-out { opacity: 0; }
+
+
+/* ═══════════════════════════════════════════
+   LOGO — unico elemento, animazione FLIP
+   ─────────────────────────────────────────
+   transform: translateY(-50%) rimane IDENTICO
+   nei due stati — non cambia.
+   Cambia solo `left` e `width`.
+   Zero salti visivi, zero duplicazioni.
+
+   Splash: left = 50% - metà logo → centrato
+   Finale: left 3vw → vicino al bordo sinistro
+
+   Posizione finale specchiata con .fixed-look-info:
+   logo:  left 3vw, top 50%
+   testo: right 3vw, top 50%
+   ═══════════════════════════════════════════ */
+.site-logo {
+  position: fixed;
+  top: 50%;
+  z-index: 60;
+
+  /* Stato iniziale (splash): logo centrato orizzontalmente
+     left = 50% - metà larghezza logo
+     transform: translateY(-50%) centra verticalmente */
+  left: calc(50% - var(--logo-w-splash) / 2);
+  transform: translateY(-50%);
+  width: var(--logo-w-splash);
+
+  /* Anima left e width — transform rimane invariato */
+  transition: left 0.8s var(--ease), width 0.8s var(--ease);
+}
+
+.site-logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Stato finale: vicino al bordo sinistro, centrato verticalmente */
+.site-logo.logo--left {
+  left: 3vw;
+  width: var(--logo-w-final);
+  /* transform: translateY(-50%) — non cambia */
+}
+
+.site-logo.logo--left:hover { opacity: 0.5; transition: opacity 0.2s ease; }
+
+
+/* ═══════════════════════════════════════════
+   UI FISSA — icone e nav
+   z 50 — sotto splash-bg (55) durante la splash
+   ═══════════════════════════════════════════ */
+.top-icons {
+  position: fixed;
+  top: 26px;
+  right: 26px;
+  z-index: 50;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.icon-btn {
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.8; transition: opacity 0.2s ease;
+}
+.icon-btn:hover { opacity: 0.3; }
+.icon-btn img, .icon-btn svg { width: 100%; height: 100%; object-fit: contain; }
+
+.site-nav {
+  position: fixed;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  text-align: right;
+}
+.nav-toggle {
+  font-size: 0.6rem; letter-spacing: 0.2em;
+  transition: opacity 0.2s ease;
+}
+.nav-toggle:hover { opacity: 0.4; }
+
+.nav-links {
+  margin-top: 20px;
+  display: flex; flex-direction: column; gap: 1px;
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+.nav-links.open { max-height: 200px; opacity: 1; }
+.nav-links a {
+  font-size: 0.58rem; letter-spacing: 0.1em;
+  line-height: 1;
+  color: var(--gray); transition: color 0.2s ease;
+}
+.nav-links a:hover { color: var(--black); }
+
+
+/* ═══════════════════════════════════════════
+   PAGINE
+   ═══════════════════════════════════════════ */
+.page { display: none; opacity: 0; transition: opacity 0.4s ease; }
+.page.active { display: block; opacity: 1; }
+
+
+/* ═══════════════════════════════════════════
+   HOME — scroll editoriale
+   ─────────────────────────────────────────
+   Le foto usano --image-width.
+   Colonna centrale inizia dopo il logo (margin-left).
+   ═══════════════════════════════════════════ */
+#home {
+  padding: 0;
+}
+#home .home-feed {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.home-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Prima foto: hero fullscreen */
+.home-hero {
+  width: var(--image-width);
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  position: relative;
+}
+.home-hero img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Foto successive */
+.home-image-block {
+  width: var(--image-width);
+  margin: 0;
+}
+.home-image-block img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* ═══════════════════════════════════════════
+   COLLECTION
+   ─────────────────────────────────────────
+   .visual-column → solo immagini, in colonna.
+   Il testo look è nel pannello fisso aside.
+   ═══════════════════════════════════════════ */
+#collection {
+  padding-left: 0;
+  padding-top: 0;
+}
+
+/* Colonna centrale centrata */
+.visual-column {
+  width: 100%;
+  position: relative;
+}
+
+/* ─── Carosello look ──────────────────────── */
+.look-carousel {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--image-width);
+}
+
+.carousel-track {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-slides {
+  position: relative;
+  height: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Counter fuori dalla foto, a destra, 1/3 dal basso */
+.look-carousel .image-counter {
+  position: absolute;
+  left: calc(100% + 24px);
+  top: auto;
+  bottom: 12%;
+  transform: none;
+  writing-mode: horizontal-tb;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--black);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Nessuno spazio tra i due caroselli */
+.look-carousel + .look-carousel {
+  margin-top: 0;
+  border-top: none;
+}
+
+
+/* ═══════════════════════════════════════════
+   PANNELLO LOOK FISSO — aside.fixed-look-info
+   ─────────────────────────────────────────
+   Unico elemento. Esiste una volta sola.
+   Specchiato rispetto al logo:
+     logo:  left 3vw,  top 50%, transform translateY(-50%)
+     testo: right 3vw, top 50%, transform translateY(-50%)
+
+   Non scrolla. Non si muove.
+   JS aggiorna solo l'innerHTML.
+   ═══════════════════════════════════════════ */
+.fixed-look-info {
+  position: fixed;
+  right: 3vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  text-align: right;
+  z-index: 40;
+
+  /* Nascosto di default; visibile solo su collection */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.fixed-look-info.panel-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Micro-fade durante cambio contenuto */
+.fixed-look-info.panel-updating {
+  opacity: 0;
+}
+
+/* Stili interni del pannello (generati da JS) */
+.panel-look-number {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  margin-bottom: 24px;
+}
+
+.panel-look-items {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.panel-item { }
+
+.panel-item-name {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.panel-item-info {
+  font-size: 0.64rem;
+  color: var(--gray);
+  line-height: 1.7;
+}
+
+.panel-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 20px;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.panel-footer--hidden {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.panel-footer--open {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 20px;
+}
+
+.panel-footer-line {
+  font-size: 0.66rem;
+  color: var(--gray);
+  line-height: 1.7;
+}
+
+.panel-footer-line a {
+  color: var(--gray);
+  transition: color 0.2s;
+}
+.panel-footer-line a:hover { color: var(--black); }
+
+.panel-details-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 2px;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.panel-details-link:hover {
+  color: var(--black);
+  border-color: var(--black);
+}
+
+
+/* ═══════════════════════════════════════════
+   ABOUT
+   ═══════════════════════════════════════════ */
+#about.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.about-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  padding: 80px 40px;
+}
+
+.about-label {
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gray);
+  margin-bottom: 48px;
+}
+
+.about-body {
+  font-size: 0.78rem;
+  line-height: 2;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--black);
+}
+
+.about-contact {
+  margin-top: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.about-contact-title {
+  font-size: 0.5rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 6px;
+}
+
+.about-contact-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.about-contact-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.about-contact a {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--black);
+  transition: color 0.2s;
+}
+.about-contact a:hover { color: var(--gray); }
+
+
+/* ═══════════════════════════════════════════
+   BREADCRUMB COLLECTION
+   ═══════════════════════════════════════════ */
+.collection-breadcrumb {
+  position: fixed;
+  right: 3vw;
+  width: 200px;
+  bottom: 26px;
+  z-index: 50;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-align: right;
+  color: var(--black);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.collection-breadcrumb.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.collection-breadcrumb a {
+  color: var(--black);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.collection-breadcrumb a:hover { opacity: 0.4; }
+
+
+/* ═══════════════════════════════════════════
+   SHOP POPUP
+   ═══════════════════════════════════════════ */
+.shop-overlay { position: fixed; inset: 0; z-index: 75; }
+.shop-popup {
+  position: fixed;
+  top: 64px; right: 26px;
+  z-index: 80;
+  background: rgba(215,215,215,0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 4px;
+  padding: 14px 24px;
+  font-size: 0.66rem; letter-spacing: 0.05em;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  animation: popup-in 0.2s ease forwards;
+}
+@keyframes popup-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════
+   NEWSLETTER POPUP
+   ═══════════════════════════════════════════ */
+.drop-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .28s ease, visibility .28s ease;
+  font-family: var(--font);
+}
+.drop-popup.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.drop-popup__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.14);
+}
+.drop-popup__panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: min(390px, 30vw);
+  min-width: 340px;
+  height: 100vh;
+  background: #f3f3ef;
+  color: #111;
+  box-sizing: border-box;
+  transform: translateX(100%);
+  transition: transform .34s cubic-bezier(.22,1,.36,1);
+  overflow-y: auto;
+  border-left: 1px solid rgba(17,17,17,0.12);
+}
+.drop-popup.is-open .drop-popup__panel { transform: translateX(0); }
+.drop-popup__close {
+  position: absolute;
+  top: 18px; right: 18px;
+  width: 18px; height: 18px;
+  background: transparent; border: 0; padding: 0; margin: 0; cursor: pointer;
+}
+.drop-popup__close::before,
+.drop-popup__close::after {
+  content: ""; position: absolute;
+  top: 8px; left: 0;
+  width: 18px; height: 1px; background: #111;
+}
+.drop-popup__close::before { transform: rotate(45deg); }
+.drop-popup__close::after  { transform: rotate(-45deg); }
+.drop-popup__inner { padding: 72px 18px 20px; }
+.drop-popup__title {
+  margin: 0 0 10px;
+  font-weight: 500; font-size: 20px; line-height: 1;
+  letter-spacing: -0.02em; color: #111;
+}
+.drop-popup__copy {
+  margin: 0 0 22px;
+  font-size: 12px; line-height: 1.5; color: rgba(17,17,17,0.82);
+}
+.mailchimp-custom-form  { display: block; margin: 0; }
+.mailchimp-custom-field { width: 100%; margin: 0 0 14px; }
+.mailchimp-custom-label {
+  display: block; margin: 0 0 8px;
+  font-size: 10px; line-height: 1; letter-spacing: 0.04em;
+  text-transform: uppercase; color: rgba(17,17,17,0.82); cursor: text;
+}
+.mailchimp-custom-linewrap { position: relative; width: 100%; height: 24px; }
+.mailchimp-custom-input {
+  position: absolute; inset: 0;
+  width: 100%; height: 22px;
+  border: 0; background: transparent; color: #111;
+  font-size: 13px; outline: none; padding: 0; margin: 0;
+  font-family: inherit; box-sizing: border-box;
+  border-radius: 0; -webkit-appearance: none; appearance: none;
+}
+.mailchimp-custom-input::placeholder { color: rgba(17,17,17,0.5); }
+.mailchimp-custom-line {
+  position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 1px; background: rgba(17,17,17,0.9);
+}
+.mailchimp-custom-button {
+  width: 100%; height: 32px; border: 0;
+  background: #111; color: #f3f3ef;
+  font-family: inherit; font-weight: 500; font-size: 10px;
+  line-height: 1; letter-spacing: 0.04em; text-transform: uppercase;
+  cursor: pointer; border-radius: 0; -webkit-appearance: none; appearance: none;
+  margin-top: 4px;
+}
+.mailchimp-status {
+  display: none; margin-top: 12px;
+  font-size: 11px; line-height: 1.4; color: rgba(17,17,17,0.8);
+}
+.mailchimp-status.is-visible { display: block; }
+.mailchimp-error {
+  display: none; margin-top: 8px;
+  font-size: 11px; line-height: 1.35; color: rgba(17,17,17,0.78);
+}
+.mailchimp-error.is-visible { display: block; }
+@media (max-width: 900px) {
+  .drop-popup__panel { width: 100vw; min-width: 0; }
+  .drop-popup__title { font-size: 18px; }
+  .drop-popup__copy  { font-size: 11px; }
+  .mailchimp-custom-input { font-size: 12px; }
+}
+
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — Mobile ≤ 768px
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  :root { --image-width: 100vw; }
+
+  /* Tutto in negativo su mobile */
+  body {
+    background: #000;
+    color: #fff;
+  }
+
+  #splash-bg { background: #000; }
+
+  /* Logo centrato in alto — mix-blend-mode inverte rispetto allo sfondo */
+  .site-logo,
+  .site-logo.logo--left {
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%);
+    width: 58px;
+    transition: none;
+    mix-blend-mode: difference;
+    filter: invert(1);
+  }
+
+  /* Nav — mix-blend-mode */
+  .top-icons { display: none; }
+  .site-nav { top: 18px; right: 16px; transform: none; mix-blend-mode: difference; }
+  .nav-toggle { color: #fff; }
+  .nav-links a { color: #fff; }
+  .nav-links a:hover { color: #fff; }
+
+  /* Snap scrolling a blocchi */
+  html { scroll-snap-type: y mandatory; scroll-behavior: auto; }
+
+  /* Home: parte dall'alto senza padding */
+  #home { padding: 0; }
+  #about { padding: 0; height: 100vh; }
+  .about-wrap { padding: 0 28px; }
+  #collection { padding-left: 0; padding-top: 0; }
+
+  /* Home: ogni foto occupa schermo intero e si blocca */
+  .home-image-block {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+  .home-image-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  /* Collection: override layout assoluto — carousels in flow normale */
+  .visual-column {
+    position: static !important;
+    height: auto !important;
+  }
+  .look-carousel {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    scroll-snap-align: start;
+  }
+  .carousel-track {
+    height: 100vh !important;
+  }
+
+  /* About in negativo */
+  .about-wrap { padding: 80px 28px; max-width: 100%; }
+  .about-label { color: rgba(255,255,255,0.5); }
+  .about-body { color: #fff; }
+  .about-contact-title { color: rgba(255,255,255,0.5); }
+  .about-contact-label { color: rgba(255,255,255,0.5); }
+  .about-contact a { color: #fff; }
+
+  /* Breadcrumb in basso a sinistra — mix-blend-mode */
+  .collection-breadcrumb {
+    left: 16px;
+    right: auto;
+    bottom: 20px;
+    text-align: left;
+    color: #fff;
+    width: auto;
+    mix-blend-mode: difference;
+  }
+  .collection-breadcrumb a { color: #fff; }
+  .collection-breadcrumb a:hover { opacity: 0.5; }
+
+  /* Gradiente sul fondo di ogni carousel */
+  .look-carousel::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 240px;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.6));
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Counter in basso a destra — mix-blend-mode */
+  .look-carousel .image-counter {
+    position: absolute;
+    left: auto;
+    right: 16px;
+    bottom: 20px;
+    top: auto;
+    transform: none;
+    font-size: 11px;
+    color: #fff;
+    z-index: 2;
+    mix-blend-mode: difference;
+  }
+
+  /* Pannello look: fisso in basso a sinistra, testo bianco */
+  /* Pannello look — mix-blend-mode */
+  .fixed-look-info {
+    position: fixed !important;
+    bottom: 56px !important;
+    left: 16px !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 62vw !important;
+    text-align: left !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    z-index: 10;
+    transition: opacity 0.3s ease !important;
+    mix-blend-mode: difference;
+  }
+
+  .fixed-look-info .panel-look-number,
+  .fixed-look-info .panel-item-name,
+  .fixed-look-info .panel-item-info,
+  .fixed-look-info .panel-footer-line,
+  .fixed-look-info .panel-details-link { color: #fff; }
+
+  .fixed-look-info .panel-details-link { border-bottom-color: #fff; }
+
+  .shop-popup { top: auto; bottom: 20px; right: 16px; left: 16px; text-align: center; }
+}

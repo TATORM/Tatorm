@@ -1,0 +1,10 @@
+# File di test/bozze
+POST  PROVA.jpg
+POST  PROVA_Tavola disegno 1 copia 34.jpg
+
+# Cartella placeholder non usata nel sito finale
+FOTO SITO PLACEHOLDER/
+
+# macOS
+.DS_Store
+**/.DS_Store

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO base -->
+  <title>TATO — Independent Fashion. Designed in Rome, Made in Italy.</title>
+  <meta name="description" content="TATO è un progetto di moda indipendente fondato su semplicità, qualità e ricerca materica. Collezioni prodotte in piccole quantità. Designed in Rome, Made in Italy." />
+  <meta name="keywords" content="TATO, moda indipendente, fashion Rome, Made in Italy, collezione, abbigliamento, Roma" />
+  <meta name="author" content="TATO" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.tatorm.com/" />
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.tatorm.com/" />
+  <meta property="og:title" content="TATO — Independent Fashion. Designed in Rome, Made in Italy." />
+  <meta property="og:description" content="TATO è un progetto di moda indipendente fondato su semplicità, qualità e ricerca materica. Collezioni prodotte in piccole quantità." />
+  <meta property="og:image" content="https://www.tatorm.com/EXTRA%20HOME%20PAGE/QS4A0029.jpg" />
+  <meta property="og:locale" content="it_IT" />
+  <meta property="og:site_name" content="TATO" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TATO — Independent Fashion. Designed in Rome, Made in Italy." />
+  <meta name="twitter:description" content="TATO è un progetto di moda indipendente fondato su semplicità, qualità e ricerca materica." />
+  <meta name="twitter:image" content="https://www.tatorm.com/EXTRA%20HOME%20PAGE/QS4A0029.jpg" />
+
+  <!-- Structured data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    "name": "TATO",
+    "url": "https://www.tatorm.com",
+    "description": "TATO è un progetto di moda indipendente fondato su semplicità, qualità e ricerca materica. Designed in Rome, Made in Italy.",
+    "email": "info@tatorm.com",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Rome, Italy"
+    }
+  }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png" />
+
+  <link rel="stylesheet" href="style.css?v=1781208000" />
+</head>
+<body>
+
+  <!--
+    LOGICA SPLASH + LOGO
+    ────────────────────────────────────────────
+    #splash-bg  → overlay bianco, sparisce con fade
+    #logo       → unico elemento PNG, si muove
+                  da centro schermo → left: 3vw, top: 50%
+                  Non sparisce mai. Non viene duplicato.
+  -->
+  <div id="splash-bg"></div>
+
+  <a href="#" id="logo" class="site-logo" aria-label="TATO — home">
+    <img src="LOGHI TATO/LOGOTYPO.png" alt="TATO" />
+  </a>
+
+  <!-- Icone top-right -->
+  <div class="top-icons">
+    <button class="icon-btn" id="btn-monogram" aria-label="Monogramma">
+      <img src="LOGHI TATO/PITTOGRAMMA.png" alt="" />
+    </button>
+    <button class="icon-btn" id="btn-shop" aria-label="Shop">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor"
+           stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigazione -->
+  <nav class="site-nav">
+    <button class="nav-toggle" id="nav-toggle">MENU</button>
+    <ul class="nav-links" id="nav-links"></ul>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       SEZIONI
+  ══════════════════════════════════════════ -->
+  <div id="site">
+
+    <!-- HOME
+         Le foto usano .home-image-block → width: var(--image-width)
+         Stessa larghezza dei look. -->
+    <section id="home" class="page active">
+      <div class="home-feed" id="home-feed">
+        <!-- popolato da script.js -->
+      </div>
+    </section>
+
+    <!-- COLLECTION -->
+    <section id="collection" class="page">
+      <div class="visual-column">
+
+        <!-- LOOK 1 -->
+        <div class="look-carousel" data-look="1">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%201/LOOK%201_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%201/LOOK%201_PHOTO2.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-1">img. [01]</p>
+        </div>
+
+        <!-- LOOK 2 -->
+        <div class="look-carousel" data-look="2">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%202/LOOK%202_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%202/LOOK%202_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%202/LOOK%202_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%202/LOOK%202_PHOTO4.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%202/LOOK%202_PHOTO5.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-2">img. [01]</p>
+        </div>
+
+        <!-- LOOK 3 -->
+        <div class="look-carousel" data-look="3">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%203/LOOK%203_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%203/LOOK%203_PHOTO2.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-3">img. [01]</p>
+        </div>
+
+        <!-- LOOK 4 -->
+        <div class="look-carousel" data-look="4">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%204/LOOK%204_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%204/LOOK%204_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%204/LOOK%204_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%204/CROP%20STORIA%20INSTAGRAM-29.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-4">img. [01]</p>
+        </div>
+
+        <!-- LOOK 5 -->
+        <div class="look-carousel" data-look="5">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%205/LOOK%205_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%205/LOOK%205_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%205/LOOK%205_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-5">img. [01]</p>
+        </div>
+
+        <!-- LOOK 6 -->
+        <div class="look-carousel" data-look="6">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%206/LOOK%206_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%206/LOOK%206_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%206/LOOK%206_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%206/LOOK%206_PHOTO4.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-6">img. [01]</p>
+        </div>
+
+        <!-- LOOK 7 -->
+        <div class="look-carousel" data-look="7">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%207/LOOK%207_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%207/LOOK%207_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%207/LOOK%207_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-7">img. [01]</p>
+        </div>
+
+        <!-- LOOK 8 -->
+        <div class="look-carousel" data-look="8">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%208/LOOK%208_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%208/LOOK%208_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%208/LOOK%208_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%208/LOOK%208_PHOTO4.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%208/LOOK%208_PHOTO5.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-8">img. [01]</p>
+        </div>
+
+        <!-- LOOK 9 -->
+        <div class="look-carousel" data-look="9">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%209/LOOK%209_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%209/LOOK%209_PHOTO2.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-9">img. [01]</p>
+        </div>
+
+        <!-- LOOK 10 -->
+        <div class="look-carousel" data-look="10">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2010/LOOK%2010_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2010/LOOK%2010_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2010/LOOK%2010_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-10">img. [01]</p>
+        </div>
+
+        <!-- LOOK 11 -->
+        <div class="look-carousel" data-look="11">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO4.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO5.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO6.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO7.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2011/LOOK%2011_PHOTO8.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-11">img. [01]</p>
+        </div>
+
+        <!-- LOOK 12 -->
+        <div class="look-carousel" data-look="12">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2012/LOOK%2012_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2012/LOOK%2012_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2012/LOOK%2012_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-12">img. [01]</p>
+        </div>
+
+        <!-- LOOK 13 -->
+        <div class="look-carousel" data-look="13">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2013/LOOK%2013_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2013/LOOK%2013_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2013/LOOK%2013_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-13">img. [01]</p>
+        </div>
+
+        <!-- LOOK 14 -->
+        <div class="look-carousel" data-look="14">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2014/LOOK%2014_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2014/LOOK%2014_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2014/LOOK%2014_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-14">img. [01]</p>
+        </div>
+
+        <!-- LOOK 15 -->
+        <div class="look-carousel" data-look="15">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2015/LOOK%2015_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2015/LOOK%2015_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2015/LOOK%2015_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-15">img. [01]</p>
+        </div>
+
+        <!-- LOOK 16 -->
+        <div class="look-carousel" data-look="16">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2016/LOOK%2016_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2016/LOOK%2016_PHOTO2.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-16">img. [01]</p>
+        </div>
+
+        <!-- LOOK 17 -->
+        <div class="look-carousel" data-look="17">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2017/LOOK%2017_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2017/LOOK%2017_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2017/LOOK%2017_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2017/LOOK%2017_PHOTO4.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2017/LOOK%2017_PHOTO5.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2017/CROP%20STORIA%20INSTAGRAM-62.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-17">img. [01]</p>
+        </div>
+
+        <!-- LOOK 18 -->
+        <div class="look-carousel" data-look="18">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2018/LOOK%2018_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2018/LOOK%2017_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2018/LOOK%2017_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2018/LOOK%2017_PHOTO4.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-18">img. [01]</p>
+        </div>
+
+        <!-- LOOK 19 -->
+        <div class="look-carousel" data-look="19">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2019/LOOK%2019_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2019/LOOK%2019_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2019/LOOK%2019_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-19">img. [01]</p>
+        </div>
+
+        <!-- LOOK 20 -->
+        <div class="look-carousel" data-look="20">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2020/LOOK%2020_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2020/LOOK%2020_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2020/LOOK%2020_PHOTO3.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2020/LOOK%2020_PHOTO4.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-20">img. [01]</p>
+        </div>
+
+        <!-- LOOK 21 -->
+        <div class="look-carousel" data-look="21">
+          <div class="carousel-track">
+            <div class="carousel-slides">
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2021/LOOK%2021_PHOTO1.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2021/LOOK%2021_PHOTO2.jpg" alt="" /></div>
+              <div class="carousel-slide"><img src="FOTO%20LOOK/LOOK%2021/LOOK%2021_PHOTO3.jpg" alt="" /></div>
+            </div>
+          </div>
+          <p class="image-counter" id="counter-look-21">img. [01]</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACTS -->
+    <section id="about" class="page">
+      <div class="about-wrap">
+        <div class="about-contact">
+          <p class="about-contact-title">Contacts</p>
+          <div class="about-contact-row">
+            <span class="about-contact-label">General</span>
+            <a href="mailto:info@tatorm.com">info@tatorm.com</a>
+          </div>
+          <div class="about-contact-row">
+            <span class="about-contact-label">Press</span>
+            <a href="mailto:press@tatorm.com">press@tatorm.com</a>
+          </div>
+          <div class="about-contact-row">
+            <span class="about-contact-label">Sales</span>
+            <a href="mailto:sales@tatorm.com">sales@tatorm.com</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /site -->
+
+  <!-- ══════════════════════════════════════════
+       PANNELLO LOOK FISSO
+       ────────────────────────────────────────
+       UN SOLO elemento. Fuori da #site.
+       Fuori da #collection. Fuori da .visual-column.
+       Fuori da ogni figure.
+       JS aggiorna solo l'innerHTML.
+       Il blocco non si muove mai.
+  ══════════════════════════════════════════ -->
+  <aside class="fixed-look-info" id="fixed-look-info">
+    <!-- Popolato da script.js tramite IntersectionObserver -->
+  </aside>
+
+  <!-- Breadcrumb globale -->
+  <nav class="collection-breadcrumb" id="site-breadcrumb">
+    <a href="#" data-section="home">HOME</a> /
+    <a href="#" data-section="collection">COLLECTION</a> /
+    <a href="#" data-section="about">CONTACTS</a>
+  </nav>
+
+  <!-- Newsletter popup -->
+  <div class="drop-popup" id="dropPopup" aria-hidden="true">
+    <div class="drop-popup__overlay" id="dropPopupOverlay"></div>
+    <div class="drop-popup__panel" role="dialog" aria-labelledby="dropPopupTitle">
+      <button class="drop-popup__close" id="closeDropPopup" type="button" aria-label="Close"></button>
+      <div class="drop-popup__inner">
+        <h2 class="drop-popup__title" id="dropPopupTitle">Join the newsletter</h2>
+        <p class="drop-popup__copy">Sign up for updates, releases and occasional news.</p>
+        <form
+          class="mailchimp-custom-form"
+          id="realMailchimpForm"
+          action="https://tatorm.us18.list-manage.com/subscribe/post?u=573643a50c63106afa383770e&amp;id=a57e40d1d5&amp;f_id=0052b3e6f0"
+          method="post"
+          target="hidden_mailchimp_iframe"
+          novalidate
+        >
+          <div class="mailchimp-custom-field">
+            <label class="mailchimp-custom-label" for="mce-EMAIL">Email</label>
+            <div class="mailchimp-custom-linewrap">
+              <input class="mailchimp-custom-input" id="mce-EMAIL" name="EMAIL" type="email" required autocomplete="email" inputmode="email" enterkeyhint="send">
+              <div class="mailchimp-custom-line"></div>
+            </div>
+            <div class="mailchimp-error" id="mailchimpError">Enter a valid email.</div>
+          </div>
+          <div aria-hidden="true" style="position:absolute;left:-5000px;">
+            <input type="text" name="b_573643a50c63106afa383770e_a57e40d1d5" tabindex="-1" value="">
+          </div>
+          <button class="mailchimp-custom-button" type="submit" name="subscribe">Notify me</button>
+        </form>
+        <div class="mailchimp-status" id="mailchimpStatus">You've been added to the newsletter.</div>
+      </div>
+    </div>
+  </div>
+  <iframe name="hidden_mailchimp_iframe" id="hidden_mailchimp_iframe" style="display:none;"></iframe>
+
+  <!-- Shop popup -->
+  <div id="shop-popup" class="shop-popup hidden"><p>Online shop coming soon!</p></div>
+  <div id="shop-overlay" class="shop-overlay hidden"></div>
+
+  <script src="script.js?v=1781208000"></script>
+</body>
+</html>
