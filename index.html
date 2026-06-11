@@ -51,7 +51,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png" />
   <link rel="shortcut icon" href="favicon-32.png" />
 
-  <link rel="stylesheet" href="style.css?v=1781210000" />
+  <link rel="stylesheet" href="style.css?v=1781211000" />
 </head>
 <body>
 
@@ -83,28 +83,13 @@
         <path d="M16 10a4 4 0 0 1-8 0"/>
       </svg>
     </button>
-    <button class="icon-btn" id="btn-theme" aria-label="Toggle dark mode">
-      <!-- Luna (light mode → click per dark) -->
-      <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="1.2"
-           stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-      <!-- Sole (dark mode → click per light) -->
-      <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="1.2"
-           stroke-linecap="round" stroke-linejoin="round" style="display:none">
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3"/>
-        <line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/>
-        <line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-      </svg>
-    </button>
+    <div class="theme-toggle" id="btn-theme" role="button" aria-label="Toggle dark mode">
+      <span class="toggle-label">LIGHT</span>
+      <div class="toggle-track">
+        <div class="toggle-thumb"></div>
+      </div>
+      <span class="toggle-label">DARK</span>
+    </div>
   </div>
 
   <!-- Navigazione -->
@@ -480,6 +465,6 @@
   <div id="shop-popup" class="shop-popup hidden"><p>Online shop coming soon!</p></div>
   <div id="shop-overlay" class="shop-overlay hidden"></div>
 
-  <script src="script.js?v=1781210000"></script>
+  <script src="script.js?v=1781211000"></script>
 </body>
 </html>

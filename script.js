@@ -693,19 +693,14 @@ fixedLookInfo.classList.remove('panel-visible');
 /* ═══════════════════════════════════════════
    DARK / LIGHT MODE TOGGLE
    ═══════════════════════════════════════════ */
-const btnTheme  = document.getElementById('btn-theme');
-const iconMoon  = document.getElementById('icon-moon');
-const iconSun   = document.getElementById('icon-sun');
+const btnTheme = document.getElementById('btn-theme');
 
 function applyTheme(dark) {
   document.body.classList.toggle('dark-mode', dark);
-  iconMoon.style.display = dark ? 'none'  : '';
-  iconSun.style.display  = dark ? ''      : 'none';
 }
 
 // Ripristina preferenza salvata
-const savedDark = localStorage.getItem('tato-dark') === 'true';
-applyTheme(savedDark);
+applyTheme(localStorage.getItem('tato-dark') === 'true');
 
 btnTheme.addEventListener('click', () => {
   const isDark = !document.body.classList.contains('dark-mode');
