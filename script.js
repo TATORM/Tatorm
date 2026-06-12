@@ -576,15 +576,14 @@ lookCarousels.forEach(carousel => {
   const lookKey  = carousel.dataset.look;
   const total    = slideEls.length;
   let current    = 0;
-  function pad(n) { return String(n).padStart(2, '0'); }
-
   slideEls[0].classList.add('active');
+  if (counter) counter.textContent = `1 / ${total}`;
 
   function goTo(index) {
     slideEls[current].classList.remove('active');
     current = (index + total) % total;
     slideEls[current].classList.add('active');
-    if (counter) counter.textContent = `img. [${pad(current + 1)}]`;
+    if (counter) counter.textContent = `${current + 1} / ${total}`;
   }
 
   carousel.addEventListener('click', e => {
