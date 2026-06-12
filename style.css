@@ -33,10 +33,6 @@ body.dark-mode #splash-bg { background: #0a0a0a; }
 
 /* ─── Toggle switch dark/light ───────────── */
 .theme-toggle {
-  position: fixed;
-  top: 26px;
-  left: 26px;
-  z-index: 50;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -746,12 +742,27 @@ ul { list-style: none; }
     filter: invert(1);
   }
 
-  /* Nav — mix-blend-mode */
-  .top-icons { display: none; }
-  .site-nav { top: 18px; right: 16px; transform: none; mix-blend-mode: difference; }
+  /* Nav mobile: MENU a sinistra */
+  .site-nav {
+    top: 18px; left: 16px; right: auto;
+    transform: none; text-align: left;
+    mix-blend-mode: difference;
+  }
   .nav-toggle { color: #fff; }
+  .nav-links { text-align: left; }
   .nav-links a { color: #fff; }
   .nav-links a:hover { color: #fff; }
+
+  /* Icone mobile: visibili in alto a destra, nascondi solo toggle B/W */
+  .top-icons {
+    display: flex;
+    top: 14px; right: 16px;
+    gap: 14px;
+    mix-blend-mode: difference;
+  }
+  #btn-theme { display: none; }
+  .icon-btn { color: #fff; }
+  #btn-monogram img { filter: invert(1); }
 
   /* Snap scrolling a blocchi — su iOS funziona meglio con overflow scroll su body */
   html, body { height: 100dvh; overflow: hidden; }
