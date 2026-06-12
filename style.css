@@ -33,6 +33,10 @@ body.dark-mode #splash-bg { background: #0a0a0a; }
 
 /* ─── Toggle switch dark/light ───────────── */
 .theme-toggle {
+  position: fixed;
+  top: 26px;
+  left: 26px;
+  z-index: 50;
   display: flex;
   align-items: center;
   cursor: pointer;
