@@ -863,6 +863,11 @@ ul { list-style: none; }
     z-index: 10;
     transition: opacity 0.3s ease !important;
     mix-blend-mode: difference;
+    pointer-events: none;
+  }
+
+  .fixed-look-info .panel-details-link {
+    pointer-events: auto;
   }
 
   .fixed-look-info .panel-look-number,

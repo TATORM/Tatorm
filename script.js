@@ -595,16 +595,27 @@ lookCarousels.forEach(carousel => {
 
   let touchStartX = 0;
   let touchStartY = 0;
+  let swipeDir = null;
+
   carousel.addEventListener('touchstart', e => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
+    swipeDir = null;
   }, { passive: true });
-  carousel.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20) {
-      goTo(dx < 0 ? current + 1 : current - 1);
+
+  carousel.addEventListener('touchmove', e => {
+    if (swipeDir === null) {
+      const dx = Math.abs(e.touches[0].clientX - touchStartX);
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (dx > 8 || dy > 8) swipeDir = dx > dy ? 'h' : 'v';
     }
+    if (swipeDir === 'h') e.preventDefault();
+  }, { passive: false });
+
+  carousel.addEventListener('touchend', e => {
+    if (swipeDir !== 'h') return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 30) goTo(dx < 0 ? current + 1 : current - 1);
   });
 });
 
