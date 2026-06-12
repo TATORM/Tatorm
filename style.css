@@ -792,16 +792,14 @@ ul { list-style: none; }
     transform: none !important;
     width: 100vw !important;
     height: 100svh !important;
-    aspect-ratio: 9 / 16;
     scroll-snap-align: start;
   }
   .carousel-track {
     height: 100svh !important;
   }
   .carousel-slide img {
-    object-fit: contain;
+    object-fit: cover;
     object-position: center center;
-    background: #000;
   }
 
   /* About in negativo */
