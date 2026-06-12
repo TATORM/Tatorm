@@ -332,6 +332,7 @@ const lookData = {
    Usa window.innerHeight in px, zero catene CSS
    ═══════════════════════════════════════════ */
 function layoutCarousels() {
+  if (window.matchMedia('(max-width: 768px)').matches) return;
   const vh = window.innerHeight;
   const vc = document.querySelector('.visual-column');
   const carousels = document.querySelectorAll('.look-carousel');
@@ -431,6 +432,15 @@ function updateNavLinks(currentId) {
 }
 
 function showSection(id) {
+  // Mobile: scroll to section, never hide them
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    const target = document.getElementById(id);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+    updateNavLinks(id);
+    navLinks.classList.remove('open');
+    return;
+  }
+
   // Nascondi tutte le sezioni
   document.querySelectorAll('.page').forEach(p => {
     p.style.display = 'none';
@@ -683,6 +693,17 @@ const observer = new IntersectionObserver(
 );
 
 lookCarousels.forEach(c => observer.observe(c));
+
+// Mobile: mostra/nascondi pannello e breadcrumb in base alla visibilità di #collection
+if (window.matchMedia('(max-width: 768px)').matches) {
+  const collectionEl = document.getElementById('collection');
+  if (collectionEl) {
+    new IntersectionObserver(([entry]) => {
+      fixedLookInfo.classList.toggle('panel-visible', entry.isIntersecting);
+      siteBreadcrumb.classList.toggle('visible', entry.isIntersecting);
+    }, { threshold: 0 }).observe(collectionEl);
+  }
+}
 
 /* ═══════════════════════════════════════════
    PROTEZIONE IMMAGINI

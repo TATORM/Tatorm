@@ -753,6 +753,10 @@ ul { list-style: none; }
   .nav-links a { color: #fff; }
   .nav-links a:hover { color: #fff; }
 
+  /* Su mobile tutte le sezioni sono sempre visibili e impilate (scroll snap) */
+  .page, .page.active { display: block !important; opacity: 1 !important; }
+  #about, #about.active { display: flex !important; }
+
   /* Snap scrolling a blocchi — su iOS funziona meglio con overflow scroll su body */
   html, body { height: 100dvh; overflow: hidden; }
   body { overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: auto; }
