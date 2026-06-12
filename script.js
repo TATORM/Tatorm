@@ -315,7 +315,8 @@ const lookData = {
     items: [
       { name: 'TRIPLE BREASTED BOMBER', info: ['100% Wool',   'Color: Dark Blue'] },
       { name: 'SMOCK LONGSLEEVE',       info: ['100% Cotton', 'Color: Navy / Bordeaux'] },
-      { name: 'TOBI PANTS',             info: ['100% Cotton', 'Color: Navy'] }
+      { name: 'TOBI PANTS',             info: ['100% Cotton', 'Color: Navy'] },
+      { name: 'TATO TAILORING CAP',     info: ['100% Cotton', 'Color: Washed Black'] }
     ]
   },
   '21': {
