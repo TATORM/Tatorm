@@ -436,6 +436,15 @@ function showSection(id) {
   if (window.matchMedia('(max-width: 768px)').matches) {
     const target = document.getElementById(id);
     if (target) target.scrollIntoView({ behavior: 'smooth' });
+    if (id === 'collection') {
+      fixedLookInfo.classList.add('panel-visible');
+      siteBreadcrumb.classList.add('visible');
+      activeLook = null;
+      renderLookPanel('1');
+    } else {
+      fixedLookInfo.classList.remove('panel-visible');
+      siteBreadcrumb.classList.remove('visible');
+    }
     updateNavLinks(id);
     navLinks.classList.remove('open');
     return;
@@ -680,8 +689,12 @@ const observer = new IntersectionObserver(
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const lookKey = entry.target.dataset.look;
-        activeLook = null; // forza aggiornamento
+        activeLook = null;
         renderLookPanel(lookKey);
+        if (window.matchMedia('(max-width: 768px)').matches) {
+          fixedLookInfo.classList.add('panel-visible');
+          siteBreadcrumb.classList.add('visible');
+        }
       }
     });
   },
