@@ -856,7 +856,7 @@ ul { list-style: none; }
     right: auto !important;
     top: auto !important;
     transform: none !important;
-    width: 62vw !important;
+    width: 48vw !important;
     text-align: left !important;
     padding: 0 !important;
     border: none !important;
@@ -871,13 +871,32 @@ ul { list-style: none; }
     pointer-events: auto;
   }
 
-  .fixed-look-info .panel-look-number,
-  .fixed-look-info .panel-item-name,
-  .fixed-look-info .panel-item-info,
-  .fixed-look-info .panel-footer-line,
-  .fixed-look-info .panel-details-link { color: #fff; }
-
-  .fixed-look-info .panel-details-link { border-bottom-color: #fff; }
+  .fixed-look-info .panel-look-number {
+    font-size: 0.55rem;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .fixed-look-info .panel-look-items { gap: 8px; }
+  .fixed-look-info .panel-item-name {
+    font-size: 0.52rem;
+    margin-bottom: 1px;
+    color: #fff;
+  }
+  .fixed-look-info .panel-item-info {
+    font-size: 0.5rem;
+    line-height: 1.5;
+    color: #fff;
+  }
+  .fixed-look-info .panel-details-link {
+    font-size: 0.5rem;
+    margin-top: 10px;
+    color: #fff;
+    border-bottom-color: #fff;
+  }
+  .fixed-look-info .panel-footer-line {
+    font-size: 0.5rem;
+    color: #fff;
+  }
 
   .shop-popup { top: auto; bottom: 20px; right: 16px; left: 16px; text-align: center; }
 }
