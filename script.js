@@ -431,6 +431,12 @@ function updateNavLinks(currentId) {
 }
 
 function showSection(id) {
+  // Reset scroll prima di tutto per evitare che l'IntersectionObserver
+  // legga la posizione della home e mostri il look sbagliato su mobile
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+
   // Nascondi tutte le sezioni
   document.querySelectorAll('.page').forEach(p => {
     p.style.display = 'none';
@@ -469,7 +475,6 @@ function showSection(id) {
   }
 
   updateNavLinks(id);
-  window.scrollTo({ top: 0, behavior: 'instant' });
   navLinks.classList.remove('open');
 }
 
