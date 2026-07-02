@@ -610,62 +610,56 @@ ul { list-style: none; }
    ═══════════════════════════════════════════ */
 .drop-popup {
   position: fixed;
-  inset: 0;
+  bottom: 28px;
+  right: 28px;
   z-index: 10000;
+  width: 284px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity .28s ease, visibility .28s ease;
+  transform: translateY(10px);
+  transition: opacity .3s ease, visibility .3s ease, transform .34s cubic-bezier(.22,1,.36,1);
   font-family: var(--font);
 }
 .drop-popup.is-open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transform: translateY(0);
 }
-.drop-popup__overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.14);
-}
+.drop-popup__overlay { display: none; }
 .drop-popup__panel {
-  position: absolute;
-  top: 0; right: 0;
-  width: min(390px, 30vw);
-  min-width: 340px;
-  height: 100vh;
+  position: relative;
+  width: 100%;
   background: #f3f3ef;
   color: #111;
   box-sizing: border-box;
-  transform: translateX(100%);
-  transition: transform .34s cubic-bezier(.22,1,.36,1);
-  overflow-y: auto;
-  border-left: 1px solid rgba(17,17,17,0.12);
+  border: 1px solid rgba(17,17,17,0.13);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
 }
-.drop-popup.is-open .drop-popup__panel { transform: translateX(0); }
 .drop-popup__close {
   position: absolute;
-  top: 18px; right: 18px;
-  width: 18px; height: 18px;
+  top: 13px; right: 13px;
+  width: 16px; height: 16px;
   background: transparent; border: 0; padding: 0; margin: 0; cursor: pointer;
 }
 .drop-popup__close::before,
 .drop-popup__close::after {
   content: ""; position: absolute;
-  top: 8px; left: 0;
-  width: 18px; height: 1px; background: #111;
+  top: 7px; left: 0;
+  width: 16px; height: 1px; background: #111;
 }
 .drop-popup__close::before { transform: rotate(45deg); }
 .drop-popup__close::after  { transform: rotate(-45deg); }
-.drop-popup__inner { padding: 72px 18px 20px; }
+.drop-popup__inner { padding: 28px 18px 20px; }
 .drop-popup__title {
-  margin: 0 0 10px;
-  font-weight: 500; font-size: 20px; line-height: 1;
-  letter-spacing: -0.02em; color: #111;
+  margin: 0 0 6px;
+  font-weight: 500; font-size: 14px; line-height: 1;
+  letter-spacing: -0.01em; color: #111;
 }
 .drop-popup__copy {
-  margin: 0 0 22px;
-  font-size: 12px; line-height: 1.5; color: rgba(17,17,17,0.82);
+  margin: 0 0 18px;
+  font-size: 11px; line-height: 1.5; color: rgba(17,17,17,0.72);
 }
 .mailchimp-custom-form  { display: block; margin: 0; }
 .mailchimp-custom-field { width: 100%; margin: 0 0 14px; }
@@ -706,10 +700,8 @@ ul { list-style: none; }
   font-size: 11px; line-height: 1.35; color: rgba(17,17,17,0.78);
 }
 .mailchimp-error.is-visible { display: block; }
-@media (max-width: 900px) {
-  .drop-popup__panel { width: 100vw; min-width: 0; }
-  .drop-popup__title { font-size: 18px; }
-  .drop-popup__copy  { font-size: 11px; }
+@media (max-width: 600px) {
+  .drop-popup { bottom: 16px; right: 16px; left: 16px; width: auto; }
   .mailchimp-custom-input { font-size: 12px; }
 }
 

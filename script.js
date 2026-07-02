@@ -400,6 +400,7 @@ window.addEventListener('load', () => {
 
       setTimeout(() => {
         splashBg.style.display = 'none';
+        window.dispatchEvent(new Event('tato:intro-done'));
       }, 580);
 
     }, 350);
@@ -521,16 +522,12 @@ document.addEventListener('click', e => {
   let submitted    = false;
 
   function openPopup() {
+    if (localStorage.getItem('tato-nl-done')) return;
     popup.classList.add('is-open');
     popup.setAttribute('aria-hidden', 'false');
-    if (submitted) {
-      form.style.display = 'none';
-      status.classList.add('is-visible');
-    } else {
-      form.style.display = 'block';
-      status.classList.remove('is-visible');
-      errorText.classList.remove('is-visible');
-    }
+    form.style.display = 'block';
+    status.classList.remove('is-visible');
+    errorText.classList.remove('is-visible');
   }
 
   function closePopup() {
@@ -538,9 +535,14 @@ document.addEventListener('click', e => {
     popup.setAttribute('aria-hidden', 'true');
   }
 
-  btnMonogram?.addEventListener('click', openPopup);
+  // auto-apri dopo la fine dell'intro
+  window.addEventListener('tato:intro-done', openPopup, { once: true });
+
+  btnMonogram?.addEventListener('click', () => {
+    if (popup.classList.contains('is-open')) closePopup();
+    else openPopup();
+  });
   closeBtn.addEventListener('click', closePopup);
-  overlay.addEventListener('click', closePopup);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
 
   emailInput.addEventListener('input', () => {
@@ -555,8 +557,10 @@ document.addEventListener('click', e => {
     }
     errorText.classList.remove('is-visible');
     submitted = true;
+    localStorage.setItem('tato-nl-done', '1');
     form.style.display = 'none';
     status.classList.add('is-visible');
+    setTimeout(closePopup, 2500);
   });
 })();
 
