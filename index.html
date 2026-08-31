@@ -51,7 +51,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png" />
   <link rel="shortcut icon" href="favicon-32.png" />
 
-  <link rel="stylesheet" href="style.css?v=1782595313" />
+  <link rel="stylesheet" href="style.css?v=1788186280" />
 </head>
 <body>
 
@@ -79,7 +79,7 @@
     <button class="icon-btn" id="btn-monogram" aria-label="Monogramma">
       <img src="LOGHI TATO/PITTOGRAMMA.png" alt="" />
     </button>
-    <button class="icon-btn" id="btn-shop" aria-label="Shop">
+    <button class="icon-btn" id="btn-shop" aria-label="Shop" style="position:relative;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
            fill="none" stroke="currentColor"
            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
@@ -87,6 +87,7 @@
         <line x1="3" y1="6" x2="21" y2="6"/>
         <path d="M16 10a4 4 0 0 1-8 0"/>
       </svg>
+      <span class="cart-badge hidden" id="cart-badge">0</span>
     </button>
   </div>
 
@@ -380,6 +381,24 @@
       </div>
     </section>
 
+    <!-- ══════════════════════════════════════════
+         SHOP — griglia prodotti singoli
+    ══════════════════════════════════════════ -->
+    <section id="shop" class="page">
+      <div class="shop-head">
+        <p class="shop-title" id="shop-title">New Arrivals</p>
+        <nav class="shop-filters" id="shop-filters"><!-- popolato da script.js --></nav>
+      </div>
+      <div class="shop-grid" id="shop-grid"><!-- popolato da script.js --></div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         PRODUCT — scheda prodotto (PDP)
+    ══════════════════════════════════════════ -->
+    <section id="product" class="page">
+      <div class="pdp" id="pdp"><!-- popolato da script.js --></div>
+    </section>
+
     <!-- CONTACTS -->
     <section id="about" class="page">
       <div class="about-wrap">
@@ -419,6 +438,7 @@
   <!-- Breadcrumb globale -->
   <nav class="collection-breadcrumb" id="site-breadcrumb">
     <a href="#" data-section="home">HOME</a> /
+    <a href="#" data-section="shop">SHOP</a> /
     <a href="#" data-section="collection">COLLECTION</a> /
     <a href="#" data-section="about">CONTACTS</a>
   </nav>
@@ -458,10 +478,27 @@
   </div>
   <iframe name="hidden_mailchimp_iframe" id="hidden_mailchimp_iframe" style="display:none;"></iframe>
 
-  <!-- Shop popup -->
-  <div id="shop-popup" class="shop-popup hidden"><p>Online shop coming soon!</p></div>
-  <div id="shop-overlay" class="shop-overlay hidden"></div>
+  <!-- Cart Drawer -->
+  <div id="cart-drawer" class="cart-drawer" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <p class="cart-drawer-title">Cart</p>
+      <button class="cart-close" id="cart-close" aria-label="Close cart"></button>
+    </div>
+    <div class="cart-drawer-body" id="cart-body">
+      <p class="cart-empty">Your cart is empty.</p>
+    </div>
+    <div class="cart-drawer-footer hidden" id="cart-footer">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Total</span>
+        <span class="cart-total-value" id="cart-total">€0</span>
+      </div>
+      <button class="cart-checkout-btn">Checkout</button>
+      <p class="cart-note">Payment integration coming soon.</p>
+    </div>
+  </div>
+  <div id="cart-overlay" class="cart-overlay"></div>
 
-  <script src="script.js?v=1782595313"></script>
+  <script src="data/products.js?v=1788186280"></script>
+  <script src="script.js?v=1788186280"></script>
 </body>
 </html>

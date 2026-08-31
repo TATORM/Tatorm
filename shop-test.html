@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TATO — Shop UI Test</title>
+  <style>
+    /* ── Font + Reset ── */
+    :root {
+      --black:      #0a0a0a;
+      --gray:       #888888;
+      --gray-light: #d8d8d8;
+      --white:      #ffffff;
+      --font: "Neue Haas Grotesk Display", "Neue Haas Grotesk Text",
+              "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      font-weight: 500;
+      font-size: 14px;
+      background: #f5f5f3;
+      color: var(--black);
+      min-height: 100vh;
+    }
+    button {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); font-weight: 500;
+      color: inherit; padding: 0;
+    }
+    .hidden { display: none !important; }
+
+    /* ── Header barra di test ── */
+    .test-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: var(--black);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 200;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+    }
+    .test-bar-label { opacity: 0.5; }
+    .test-bag-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--white);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      position: relative;
+    }
+    .test-bag-btn svg { width: 18px; height: 18px; }
+    .cart-badge {
+      position: absolute;
+      top: -5px; right: -8px;
+      min-width: 14px; height: 14px;
+      border-radius: 7px;
+      background: var(--white);
+      color: var(--black);
+      font-size: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+      pointer-events: none;
+    }
+
+    /* ── Layout principale ── */
+    .main {
+      margin-top: 48px;
+      display: flex;
+      gap: 0;
+      min-height: calc(100vh - 48px);
+    }
+
+    /* ── Pannello collezione (sinistra) ── */
+    .collection-panel {
+      flex: 1;
+      padding: 40px 40px 40px 60px;
+      max-width: 640px;
+    }
+    .collection-title {
+      font-size: 0.55rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 48px;
+    }
+
+    .look-block {
+      margin-bottom: 60px;
+      padding-bottom: 60px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .look-block:last-child { border-bottom: none; }
+
+    .look-number {
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      margin-bottom: 24px;
+    }
+
+    .look-items { display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── Singolo item ── */
+    .item-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px 20px;
+      align-items: start;
+    }
+    .item-left { grid-column: 1; }
+    .item-right { grid-column: 2; text-align: right; }
+
+    .item-name {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .item-info {
+      font-size: 0.62rem;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+    .item-price {
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      color: var(--black);
+      white-space: nowrap;
+    }
+
+    /* Taglia + add: span tutta la larghezza */
+    .item-size-row {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .size-label {
+      font-size: 0.52rem;
+      letter-spacing: 0.14em;
+      color: var(--gray);
+    }
+    .size-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+    .size-btn {
+      font-size: 0.5rem;
+      letter-spacing: 0.1em;
+      border: 1px solid var(--gray-light);
+      background: none;
+      color: var(--black);
+      padding: 3px 7px;
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 500;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .size-btn:hover { border-color: var(--black); }
+    .size-btn.selected {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+    .add-btn {
+      margin-left: auto;
+      font-size: 0.52rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray);
+      border-bottom: 1px solid var(--gray-light);
+      padding-bottom: 2px;
+      background: none;
+      border-top: none; border-left: none; border-right: none;
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 500;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+    .add-btn:hover { color: var(--black); border-color: var(--black); }
+    .add-btn:disabled { color: var(--gray); cursor: default; opacity: 0.5; }
+    .add-btn.confirmed { color: var(--black); border-color: var(--black); }
+
+    @keyframes size-pulse {
+      0%, 100% { opacity: 1; }
+      40% { opacity: 0.2; }
+    }
+    .size-required { animation: size-pulse 0.55s ease; }
+
+    /* ── CART DRAWER ── */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(0,0,0,0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0; right: 0;
+      width: 340px;
+      height: 100dvh;
+      z-index: 160;
+      background: #f3f3ef;
+      border-left: 1px solid rgba(17,17,17,0.10);
+      box-shadow: -4px 0 32px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.36s cubic-bezier(0.22,1,0.36,1);
+      font-family: var(--font);
+    }
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px;
+      border-bottom: 1px solid rgba(17,17,17,0.10);
+      flex-shrink: 0;
+    }
+    .cart-drawer-title {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #111;
+      font-weight: 500;
+    }
+    .cart-close {
+      width: 18px; height: 18px;
+      background: transparent; border: 0;
+      cursor: pointer; position: relative;
+      opacity: 0.5; transition: opacity 0.2s;
+    }
+    .cart-close:hover { opacity: 1; }
+    .cart-close::before, .cart-close::after {
+      content: ""; position: absolute;
+      top: 8px; left: 0;
+      width: 18px; height: 1px; background: #111;
+    }
+    .cart-close::before { transform: rotate(45deg); }
+    .cart-close::after  { transform: rotate(-45deg); }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .cart-empty {
+      font-size: 0.64rem;
+      color: rgba(17,17,17,0.4);
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+
+    .cart-item-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(17,17,17,0.08);
+    }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 3px;
+    }
+    .cart-item-meta {
+      font-size: 0.56rem;
+      color: rgba(17,17,17,0.5);
+      line-height: 1.6;
+      margin-bottom: 2px;
+    }
+    .cart-item-look {
+      font-size: 0.52rem;
+      color: rgba(17,17,17,0.35);
+      letter-spacing: 0.06em;
+    }
+    .cart-item-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .cart-item-price {
+      font-size: 0.64rem;
+      color: #111;
+      letter-spacing: 0.04em;
+    }
+    .cart-remove-btn {
+      font-size: 16px;
+      color: rgba(17,17,17,0.35);
+      background: none; border: none;
+      cursor: pointer; padding: 0;
+      font-family: inherit; font-weight: 300;
+      line-height: 1; transition: color 0.2s;
+    }
+    .cart-remove-btn:hover { color: #111; }
+
+    .cart-footer {
+      padding: 20px;
+      border-top: 1px solid rgba(17,17,17,0.10);
+      flex-shrink: 0;
+    }
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 18px;
+    }
+    .cart-total-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #111;
+    }
+    .cart-total-value {
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      color: #111;
+    }
+    .cart-checkout-btn {
+      width: 100%;
+      height: 38px;
+      background: #111;
+      color: #f3f3ef;
+      border: none;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: opacity 0.2s;
+    }
+    .cart-checkout-btn:hover { opacity: 0.75; }
+    .cart-note {
+      font-size: 0.54rem;
+      color: rgba(17,17,17,0.35);
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 768px) {
+      .collection-panel { padding: 24px 20px; }
+      .cart-drawer { width: 100vw; border-left: none; }
+      .item-card { grid-template-columns: 1fr; }
+      .item-right { text-align: left; grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra test -->
+  <header class="test-bar">
+    <span class="test-bar-label">SHOP UI — TEST FILE</span>
+    <button class="test-bag-btn" id="btn-open-cart" aria-label="Apri carrello">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor"
+           stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="cart-badge hidden" id="cart-badge">0</span>
+    </button>
+  </header>
+
+  <!-- Contenuto principale -->
+  <div class="main">
+    <div class="collection-panel">
+      <p class="collection-title">Collection — Shop UI Test</p>
+      <div id="looks-container">
+        <!-- Popolato da JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div id="cart-drawer" class="cart-drawer" aria-hidden="true">
+    <div class="cart-drawer-header">
+      <p class="cart-drawer-title">Cart</p>
+      <button class="cart-close" id="cart-close" aria-label="Chiudi carrello"></button>
+    </div>
+    <div class="cart-body" id="cart-body">
+      <p class="cart-empty">Il carrello è vuoto.</p>
+    </div>
+    <div class="cart-footer hidden" id="cart-footer">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Totale</span>
+        <span class="cart-total-value" id="cart-total">€0</span>
+      </div>
+      <button class="cart-checkout-btn">Checkout</button>
+      <p class="cart-note">Integrazione pagamento in arrivo.</p>
+    </div>
+  </div>
+  <div id="cart-overlay" class="cart-overlay"></div>
+
+  <script>
+    /* ── Catalogo prezzi ── */
+    const itemPrices = {
+      '2 BUTTON WINDBREAKER':       280,
+      'BACK SHIRT':                 180,
+      'TOBI PANTS':                 220,
+      'CROPPED TAILORED JACKET':    390,
+      '2 BUTTON TAILORED PANTS':    280,
+      'CARDIGAN V NECK':            320,
+      '2 BUTTON SHIRT DRESS':       260,
+      'TAILORED PANTS':             280,
+      'TINY CREWNECK':              160,
+      '2 BUTTON SHIRT':             180,
+      'RIB BOMBER':                 360,
+      '2 BUTTON MIDI SKIRT':        240,
+      'TAILORED JACKET':            390,
+      'SIDE WAY VEST':              220,
+      'SIDE WAY ZIP-UP':            280,
+      'HOODIE':                     200,
+      '3/4 ZIP-UP':                 260,
+      'INSIDE OUT SELVEDGE DENIM':  320,
+      'TATO CAP':                    80,
+      'TATO TAILORING CAP':          90,
+      'SMOCK LONGSLEEVE':            180,
+      'TRIPLE BREASTED COAT':        520,
+      '2 BUTTON LONG SKIRT':         240,
+      'TRIPLE BREASTED BOMBER':      450,
+    };
+
+    /* ── Look data (stesso del sito) ── */
+    const lookData = [
+      { number: 'LOOK #1', items: [
+        { name: '2 BUTTON WINDBREAKER', info: ['100% Cotton', 'Color: White'] },
+        { name: 'BACK SHIRT',           info: ['100% Cotton', 'Color: White'] },
+        { name: 'TOBI PANTS',           info: ['100% Cotton', 'Color: White'] }
+      ]},
+      { number: 'LOOK #2', items: [
+        { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
+        { name: 'BACK SHIRT',              info: ['100% Cotton', 'Color: Black'] },
+        { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #3', items: [
+        { name: 'CARDIGAN V NECK',         info: ['100% Wool',   'Color: Chocolate'] },
+        { name: 'BACK SHIRT',              info: ['100% Cotton', 'Color: White'] },
+        { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #4', items: [
+        { name: '2 BUTTON SHIRT DRESS', info: ['100% Cotton', 'Color: Baby Blue'] },
+        { name: 'TAILORED PANTS',       info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #5', items: [
+        { name: 'CARDIGAN V NECK',  info: ['100% Wool',   'Color: Lilac'] },
+        { name: 'TINY CREWNECK',    info: ['100% Cotton', 'Color: Baby Blue'] },
+        { name: '2 BUTTON SHIRT',   info: ['100% Cotton', 'Color: White'] },
+        { name: 'TOBI PANTS',       info: ['100% Cotton', 'Color: Black'] }
+      ]},
+      { number: 'LOOK #6', items: [
+        { name: 'RIB BOMBER',          info: ['100% Nylon',  'Color: Green / Chocolate'] },
+        { name: 'CARDIGAN V NECK',     info: ['100% Wool',   'Color: Baby Green'] },
+        { name: '2 BUTTON SHIRT',      info: ['100% Cotton', 'Color: Baby Pink'] },
+        { name: '2 BUTTON MIDI SKIRT', info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #7', items: [
+        { name: 'TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
+        { name: 'BACK SHIRT',      info: ['100% Cotton', 'Color: White'] },
+        { name: 'TAILORED PANTS',  info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #8', items: [
+        { name: 'CARDIGAN V NECK',  info: ['100% Wool',   'Color: Cherry'] },
+        { name: 'SIDE WAY VEST',    info: ['100% Cotton', 'Color: Burgundy'] },
+        { name: '2 BUTTON SHIRT',   info: ['100% Cotton', 'Color: Baby Pink'] },
+        { name: 'TOBI PANTS',       info: ['100% Cotton', 'Color: Baby Pink'] }
+      ]},
+      { number: 'LOOK #9', items: [
+        { name: 'SIDE WAY ZIP-UP',           info: ['100% Cotton', 'Color: Dark Navy'] },
+        { name: 'HOODIE',                    info: ['100% Cotton', 'Color: Dark Navy'] },
+        { name: '3/4 ZIP-UP',               info: ['100% Cotton', 'Color: Dark Navy'] },
+        { name: 'INSIDE OUT SELVEDGE DENIM', info: ['100% Cotton', 'Color: Black Denim'] },
+        { name: 'TATO CAP',                  info: ['100% Cotton', 'Color: Green'] }
+      ]},
+      { number: 'LOOK #10', items: [
+        { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
+        { name: 'SMOCK LONGSLEEVE',        info: ['100% Cotton', 'Color: White'] },
+        { name: 'TOBI PANTS',              info: ['100% Cotton', 'Color: Black'] }
+      ]},
+      { number: 'LOOK #11', items: [
+        { name: 'TRIPLE BREASTED COAT',    info: ['100% Wool',   'Color: Dark Blue'] },
+        { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
+        { name: 'BACK SHIRT',              info: ['100% Cotton', 'Color: White'] },
+        { name: '2 BUTTON LONG SKIRT',     info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #12', items: [
+        { name: 'BACK SHIRT',          info: ['100% Cotton', 'Color: White'] },
+        { name: '2 BUTTON LONG SKIRT', info: ['100% Cotton', 'Color: Shiny White'] }
+      ]},
+      { number: 'LOOK #13', items: [
+        { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
+        { name: '2 BUTTON SHIRT',          info: ['100% Cotton', 'Color: White'] },
+        { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #14', items: [
+        { name: 'TRIPLE BREASTED COAT', info: ['100% Wool',   'Color: Dark Blue'] },
+        { name: 'BACK SHIRT',           info: ['100% Cotton', 'Color: White'] },
+        { name: 'TAILORED PANTS',       info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #15', items: [
+        { name: 'RIB BOMBER',              info: ['100% Nylon',  'Color: Green / Chocolate'] },
+        { name: '2 BUTTON WINDBREAKER',    info: ['100% Cotton', 'Color: Grey'] },
+        { name: '2 BUTTON SHIRT',          info: ['100% Cotton', 'Color: Baby Blue'] },
+        { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #16', items: [
+        { name: 'RIB BOMBER',           info: ['100% Nylon',  'Color: Dark Navy / Black'] },
+        { name: '2 BUTTON WINDBREAKER', info: ['100% Cotton', 'Color: White'] },
+        { name: 'TOBI PANTS',           info: ['100% Cotton', 'Color: White'] }
+      ]},
+      { number: 'LOOK #17', items: [
+        { name: 'TAILORED JACKET',     info: ['100% Wool',   'Color: Anthracite'] },
+        { name: 'SMOCK LONGSLEEVE',    info: ['100% Cotton', 'Color: Baby Pink'] },
+        { name: '2 BUTTON MIDI SKIRT', info: ['100% Wool',   'Color: Anthracite'] },
+        { name: '2 BUTTON LONG SKIRT', info: ['100% Wool',   'Color: Black'] }
+      ]},
+      { number: 'LOOK #18', items: [
+        { name: 'BACK SHIRT',          info: ['100% Cotton', 'Color: Black'] },
+        { name: '2 BUTTON LONG SKIRT', info: ['100% Cotton', 'Color: Black'] }
+      ]},
+      { number: 'LOOK #19', items: [
+        { name: 'CARDIGAN V NECK',      info: ['100% Wool',   'Color: Lilac'] },
+        { name: '2 BUTTON WINDBREAKER', info: ['100% Cotton', 'Color: Baby Blue / Oriental Blue'] },
+        { name: 'BACK SHIRT',           info: ['100% Cotton', 'Color: White'] },
+        { name: 'TAILORED PANTS',       info: ['100% Wool',   'Color: Anthracite'] }
+      ]},
+      { number: 'LOOK #20', items: [
+        { name: 'TRIPLE BREASTED BOMBER', info: ['100% Wool',   'Color: Dark Blue'] },
+        { name: 'SMOCK LONGSLEEVE',       info: ['100% Cotton', 'Color: Navy / Bordeaux'] },
+        { name: 'TOBI PANTS',             info: ['100% Cotton', 'Color: Navy'] },
+        { name: 'TATO TAILORING CAP',     info: ['100% Cotton', 'Color: Washed Black'] }
+      ]},
+      { number: 'LOOK #21', items: [
+        { name: '2 BUTTON SHIRT DRESS', info: ['100% Cotton', 'Color: White'] },
+        { name: '2 BUTTON LONG SKIRT',  info: ['100% Cotton', 'Color: Shiny White'] }
+      ]}
+    ];
+
+    /* ── Stato carrello ── */
+    let cart = [];
+    let cartNextId = 0;
+
+    /* ── Render lista look ── */
+    function buildLooks() {
+      const container = document.getElementById('looks-container');
+      lookData.forEach(look => {
+        const block = document.createElement('div');
+        block.className = 'look-block';
+        block.innerHTML = `
+          <p class="look-number">${look.number}</p>
+          <div class="look-items">
+            ${look.items.map((item, idx) => {
+              const price = itemPrices[item.name] || 0;
+              const color = item.info.find(i => i.startsWith('Color:')) || '';
+              return `
+                <div class="item-card" data-look="${look.number}" data-item-idx="${idx}" data-name="${item.name}" data-price="${price}" data-color="${color}">
+                  <div class="item-left">
+                    <p class="item-name">${item.name}</p>
+                    ${item.info.map(i => `<p class="item-info">${i}</p>`).join('')}
+                  </div>
+                  <div class="item-right">
+                    <p class="item-price">€${price}</p>
+                  </div>
+                  <div class="item-size-row">
+                    <span class="size-label">Size</span>
+                    <div class="size-btns">
+                      ${['XS','S','M','L','XL'].map(s => `<button class="size-btn" data-size="${s}">${s}</button>`).join('')}
+                    </div>
+                    <button class="add-btn">ADD TO CART</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        container.appendChild(block);
+      });
+
+      /* Wiring size buttons */
+      document.querySelectorAll('.item-card').forEach(card => {
+        card.querySelectorAll('.size-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            card.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+          });
+        });
+
+        card.querySelector('.add-btn').addEventListener('click', () => {
+          const selected = card.querySelector('.size-btn.selected');
+          const sizeRow = card.querySelector('.item-size-row');
+          if (!selected) {
+            sizeRow.classList.add('size-required');
+            setTimeout(() => sizeRow.classList.remove('size-required'), 600);
+            return;
+          }
+          addToCart({
+            name:  card.dataset.name,
+            price: parseInt(card.dataset.price),
+            look:  card.dataset.look,
+            color: card.dataset.color,
+            size:  selected.dataset.size,
+          });
+          const addBtn = card.querySelector('.add-btn');
+          addBtn.textContent = 'ADDED ✓';
+          addBtn.classList.add('confirmed');
+          addBtn.disabled = true;
+          setTimeout(() => {
+            addBtn.textContent = 'ADD TO CART';
+            addBtn.classList.remove('confirmed');
+            addBtn.disabled = false;
+          }, 1600);
+        });
+      });
+    }
+
+    /* ── Carrello ── */
+    function addToCart(item) {
+      cart.push({ id: cartNextId++, ...item });
+      updateBadge();
+      renderCart();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(item => item.id !== id);
+      updateBadge();
+      renderCart();
+    }
+
+    function updateBadge() {
+      const badge = document.getElementById('cart-badge');
+      badge.textContent = cart.length;
+      badge.classList.toggle('hidden', cart.length === 0);
+    }
+
+    function renderCart() {
+      const body   = document.getElementById('cart-body');
+      const footer = document.getElementById('cart-footer');
+
+      if (cart.length === 0) {
+        body.innerHTML = '<p class="cart-empty">Il carrello è vuoto.</p>';
+        footer.classList.add('hidden');
+        return;
+      }
+
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+      body.innerHTML = cart.map(item => `
+        <div class="cart-item-row">
+          <div class="cart-item-info">
+            <p class="cart-item-name">${item.name}</p>
+            <p class="cart-item-meta">${item.size}${item.color ? ' · ' + item.color : ''}</p>
+            <p class="cart-item-look">${item.look}</p>
+          </div>
+          <div class="cart-item-right">
+            <p class="cart-item-price">€${item.price}</p>
+            <button class="cart-remove-btn" data-id="${item.id}" aria-label="Rimuovi">×</button>
+          </div>
+        </div>
+      `).join('');
+
+      footer.classList.remove('hidden');
+      document.getElementById('cart-total').textContent = `€${total}`;
+
+      body.querySelectorAll('.cart-remove-btn').forEach(btn => {
+        btn.addEventListener('click', () => removeFromCart(parseInt(btn.dataset.id)));
+      });
+    }
+
+    function openCart() {
+      document.getElementById('cart-drawer').classList.add('open');
+      document.getElementById('cart-overlay').classList.add('open');
+      document.getElementById('cart-drawer').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeCart() {
+      document.getElementById('cart-drawer').classList.remove('open');
+      document.getElementById('cart-overlay').classList.remove('open');
+      document.getElementById('cart-drawer').setAttribute('aria-hidden', 'true');
+    }
+
+    /* ── Init ── */
+    buildLooks();
+
+    document.getElementById('btn-open-cart').addEventListener('click', openCart);
+    document.getElementById('cart-close').addEventListener('click', closeCart);
+    document.getElementById('cart-overlay').addEventListener('click', closeCart);
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
+  </script>
+</body>
+</html>

@@ -5,6 +5,34 @@
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
+/* ─── Catalogo prezzi ────────────────────── */
+const itemPrices = {
+  '2 BUTTON WINDBREAKER':       280,
+  'BACK SHIRT':                 180,
+  'TOBI PANTS':                 220,
+  'CROPPED TAILORED JACKET':    390,
+  '2 BUTTON TAILORED PANTS':    280,
+  'CARDIGAN V NECK':            320,
+  '2 BUTTON SHIRT DRESS':       260,
+  'TAILORED PANTS':             280,
+  'TINY CREWNECK':              160,
+  '2 BUTTON SHIRT':             180,
+  'RIB BOMBER':                 360,
+  '2 BUTTON MIDI SKIRT':        240,
+  'TAILORED JACKET':            390,
+  'SIDE WAY VEST':              220,
+  'SIDE WAY ZIP-UP':            280,
+  'HOODIE':                     200,
+  '3/4 ZIP-UP':                 260,
+  'INSIDE OUT SELVEDGE DENIM':  320,
+  'TATO CAP':                    80,
+  'TATO TAILORING CAP':          90,
+  'SMOCK LONGSLEEVE':            180,
+  'TRIPLE BREASTED COAT':        520,
+  '2 BUTTON LONG SKIRT':         240,
+  'TRIPLE BREASTED BOMBER':      450,
+};
+
 /* ─── Home feed — ordine casuale + scroll infinito ─ */
 const allHomePhotos = [
   'EXTRA%20HOME%20PAGE/CROP%20STORIA%20INSTAGRAM-73.jpg',
@@ -374,12 +402,86 @@ const navToggle         = document.getElementById('nav-toggle');
 const navLinks          = document.getElementById('nav-links');
 const btnMonogram       = document.getElementById('btn-monogram');
 const btnShop           = document.getElementById('btn-shop');
-const shopPopup         = document.getElementById('shop-popup');
-const shopOverlay       = document.getElementById('shop-overlay');
 const fixedLookInfo     = document.getElementById('fixed-look-info');
 const lookCarousels     = document.querySelectorAll('.look-carousel');
 const siteNav           = document.querySelector('.site-nav');
 const siteBreadcrumb    = document.getElementById('site-breadcrumb');
+
+/* ─── Carrello ──────────────────────────── */
+let cart = [];
+let cartNextId = 0;
+
+function addToCart(item) {
+  cart.push({ id: cartNextId++, ...item });
+  updateBadge();
+  renderCart();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateBadge();
+  renderCart();
+}
+
+function updateBadge() {
+  const badge = document.getElementById('cart-badge');
+  if (!badge) return;
+  badge.textContent = cart.length;
+  badge.classList.toggle('hidden', cart.length === 0);
+}
+
+function renderCart() {
+  const body   = document.getElementById('cart-body');
+  const footer = document.getElementById('cart-footer');
+  if (!body || !footer) return;
+
+  if (cart.length === 0) {
+    body.innerHTML = '<p class="cart-empty">Your cart is empty.</p>';
+    footer.classList.add('hidden');
+    return;
+  }
+
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+  body.innerHTML = cart.map(item => `
+    <div class="cart-item-row">
+      <div class="cart-item-info">
+        <p class="cart-item-name">${item.name}</p>
+        <p class="cart-item-meta">${item.size}${item.color ? ' · ' + item.color : ''}</p>
+        <p class="cart-item-look">${item.look}</p>
+      </div>
+      <div class="cart-item-right">
+        <p class="cart-item-price">€${item.price}</p>
+        <button class="cart-remove-btn" data-id="${item.id}" aria-label="Remove">×</button>
+      </div>
+    </div>
+  `).join('');
+
+  footer.classList.remove('hidden');
+  document.getElementById('cart-total').textContent = `€${total}`;
+
+  body.querySelectorAll('.cart-remove-btn').forEach(btn => {
+    btn.addEventListener('click', () => removeFromCart(parseInt(btn.dataset.id)));
+  });
+}
+
+function openCart() {
+  const drawer  = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-overlay');
+  if (!drawer || !overlay) return;
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  drawer.setAttribute('aria-hidden', 'false');
+}
+
+function closeCart() {
+  const drawer  = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-overlay');
+  if (!drawer || !overlay) return;
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  drawer.setAttribute('aria-hidden', 'true');
+}
 
 /* ═══════════════════════════════════════════
    SPLASH + ANIMAZIONE LOGO
@@ -412,23 +514,64 @@ window.addEventListener('load', () => {
 /* ═══════════════════════════════════════════
    NAVIGAZIONE SEZIONI
    ═══════════════════════════════════════════ */
-const NAV_PAGES = [
-  { section: 'home',       label: 'Home' },
-  { section: 'collection', label: 'Collection' },
-  { section: 'about',      label: 'Contacts' }
-];
+/* ─── Menu principale (home) ──────────────
+   New Arrivals · Women▸ · Men▸ · Accessories
+   · Collection · About
+   Women/Men aprono il sottomenu categorie.     */
+function navDeptSub(dept) {
+  const items = [`<li><a href="#" data-nav="shop/${dept}">View All</a></li>`].concat(
+    (window.TATO_CATEGORIES || []).map(c =>
+      `<li><a href="#" data-nav="shop/${dept}/${c.slug}">${c.label}</a></li>`)
+  );
+  return `<ul class="nav-sub">${items.join('')}</ul>`;
+}
 
-function updateNavLinks(currentId) {
-  navLinks.innerHTML = NAV_PAGES
-    .filter(p => p.section !== currentId)
-    .map(p => `<li><a href="#" data-section="${p.section}">${p.label}</a></li>`)
-    .join('');
-  navLinks.querySelectorAll('[data-section]').forEach(link => {
-    link.addEventListener('click', e => {
+function renderNavMenu() {
+  navLinks.innerHTML = `
+    <li><a href="#" data-nav="shop">New Arrivals</a></li>
+    <li class="nav-group">
+      <button type="button" class="nav-group-toggle" data-group="women">Women</button>
+      ${navDeptSub('women')}
+    </li>
+    <li class="nav-group">
+      <button type="button" class="nav-group-toggle" data-group="men">Men</button>
+      ${navDeptSub('men')}
+    </li>
+    <li><a href="#" data-nav="shop/accessories">Accessories</a></li>
+    <li class="nav-spacer" aria-hidden="true"></li>
+    <li><a href="#" data-section="collection">Collection</a></li>
+    <li><a href="#" data-section="about">About</a></li>
+  `;
+
+  navLinks.querySelectorAll('[data-nav]').forEach(a => {
+    a.addEventListener('click', e => {
       e.preventDefault();
-      showSection(link.dataset.section);
+      closeNav();
+      const target = '#' + a.dataset.nav;
+      if (location.hash === target) handleShopRoute();
+      else location.hash = target;
     });
   });
+  navLinks.querySelectorAll('[data-section]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      closeNav();
+      showSection(a.dataset.section);
+    });
+  });
+  navLinks.querySelectorAll('.nav-group-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const grp = btn.closest('.nav-group');
+      const wasOpen = grp.classList.contains('open');
+      navLinks.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+      if (!wasOpen) grp.classList.add('open');
+    });
+  });
+}
+
+function closeNav() {
+  navLinks.classList.remove('open');
+  navLinks.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
 }
 
 function showSection(id) {
@@ -468,6 +611,19 @@ function showSection(id) {
     siteBreadcrumb.classList.add('visible');
     siteNav.style.opacity       = '';
     siteNav.style.pointerEvents = '';
+  } else if (id === 'shop' || id === 'product') {
+    fixedLookInfo.classList.remove('panel-visible');
+    siteBreadcrumb.classList.add('visible');
+    siteNav.style.opacity       = '';
+    siteNav.style.pointerEvents = '';
+    if (id === 'shop') {
+      if (!location.hash.startsWith('#shop')) {
+        shopScope = 'new';
+        shopCategory = 'all';
+        history.replaceState(null, '', '#shop');
+      }
+      renderShop();
+    }
   } else {
     fixedLookInfo.classList.remove('panel-visible');
     siteBreadcrumb.classList.remove('visible');
@@ -475,8 +631,15 @@ function showSection(id) {
     siteNav.style.pointerEvents = '';
   }
 
-  updateNavLinks(id);
-  navLinks.classList.remove('open');
+  // Modalità header per shop / product
+  document.body.classList.toggle('shop-mode', id === 'shop' || id === 'product');
+
+  // Pulisci l'hash quando si torna a una sezione non-shop
+  if (id === 'home' || id === 'collection' || id === 'about') {
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  }
+
+  closeNav();
 }
 
 // Click su link breadcrumb (statici nell'HTML)
@@ -493,18 +656,17 @@ logo.addEventListener('click', e => {
   showSection('home');
 });
 
-// Stato iniziale nav: siamo su home
-updateNavLinks('home');
+// Stato iniziale nav
+renderNavMenu();
 
 /* ─── Toggle menu ────────────────────────── */
 navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
+  if (navLinks.classList.contains('open')) closeNav();
+  else navLinks.classList.add('open');
 });
 
 document.addEventListener('click', e => {
-  if (!e.target.closest('.site-nav')) {
-    navLinks.classList.remove('open');
-  }
+  if (!e.target.closest('.site-nav')) closeNav();
 });
 
 /* ═══════════════════════════════════════════
@@ -567,14 +729,9 @@ document.addEventListener('click', e => {
 /* ═══════════════════════════════════════════
    SHOP POPUP
    ═══════════════════════════════════════════ */
-btnShop?.addEventListener('click', () => {
-  shopPopup.classList.toggle('hidden');
-  shopOverlay.classList.toggle('hidden');
-});
-shopOverlay?.addEventListener('click', () => {
-  shopPopup.classList.add('hidden');
-  shopOverlay.classList.add('hidden');
-});
+btnShop?.addEventListener('click', openCart);
+document.getElementById('cart-close')?.addEventListener('click', closeCart);
+document.getElementById('cart-overlay')?.addEventListener('click', closeCart);
 
 /* ═══════════════════════════════════════════
    CAROSELLI LOOK — crossfade
@@ -644,31 +801,67 @@ function renderLookPanel(lookKey) {
   fixedLookInfo.classList.add('panel-updating');
 
   setTimeout(() => {
-    const itemsHTML = data.items.map(item => `
-      <div class="panel-item">
-        <p class="panel-item-name">${item.name}</p>
-        ${item.info.map(i => `<p class="panel-item-info">${i}</p>`).join('')}
-      </div>
-    `).join('');
+    const itemsHTML = data.items.map((item, idx) => {
+      const price     = itemPrices[item.name] || 0;
+      const colorInfo = item.info.find(i => i.startsWith('Color:')) || '';
+      return `
+        <div class="panel-item">
+          <p class="panel-item-name">${item.name}</p>
+          ${item.info.map(i => `<p class="panel-item-info">${i}</p>`).join('')}
+          <p class="panel-item-price">€${price}</p>
+          <div class="panel-size-row" data-item-idx="${idx}">
+            ${['XS','S','M','L','XL'].map(s => `<button class="size-btn" data-size="${s}">${s}</button>`).join('')}
+          </div>
+          <button class="panel-add-btn"
+            data-name="${item.name}"
+            data-price="${price}"
+            data-look="${data.number}"
+            data-color="${colorInfo}"
+            data-item-idx="${idx}">ADD TO CART</button>
+        </div>
+      `;
+    }).join('');
 
     fixedLookInfo.innerHTML = `
       <p class="panel-look-number">${data.number}</p>
       <div class="panel-look-items">${itemsHTML}</div>
-      <button class="panel-details-link" id="panel-details-btn">DETAILS</button>
-      <div class="panel-footer panel-footer--hidden" id="panel-footer">
-        <p class="panel-footer-line">Designed in Rome, Made in Italy</p>
-        <p class="panel-footer-line">For infos or inquiries contact us on <a href="mailto:info@tatorm.com">info@tatorm.com</a></p>
-      </div>
     `;
 
     fixedLookInfo.classList.remove('panel-updating');
 
-    document.getElementById('panel-details-btn').addEventListener('click', () => {
-      const footer = document.getElementById('panel-footer');
-      const btn    = document.getElementById('panel-details-btn');
-      const open   = footer.classList.toggle('panel-footer--open');
-      footer.classList.toggle('panel-footer--hidden', !open);
-      btn.textContent = open ? 'CLOSE' : 'DETAILS';
+    fixedLookInfo.querySelectorAll('.panel-size-row').forEach(row => {
+      row.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          row.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        });
+      });
+    });
+
+    fixedLookInfo.querySelectorAll('.panel-add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx      = btn.dataset.itemIdx;
+        const sizeRow  = fixedLookInfo.querySelector(`.panel-size-row[data-item-idx="${idx}"]`);
+        const selected = sizeRow?.querySelector('.size-btn.selected');
+        if (!selected) {
+          sizeRow?.classList.add('size-required');
+          setTimeout(() => sizeRow?.classList.remove('size-required'), 600);
+          return;
+        }
+        addToCart({
+          name:  btn.dataset.name,
+          price: parseInt(btn.dataset.price),
+          look:  btn.dataset.look,
+          color: btn.dataset.color,
+          size:  selected.dataset.size,
+        });
+        btn.textContent = 'ADDED';
+        btn.disabled = true;
+        setTimeout(() => {
+          btn.textContent = 'ADD TO CART';
+          btn.disabled = false;
+        }, 1600);
+      });
     });
   }, 180);
 }
@@ -691,6 +884,303 @@ const observer = new IntersectionObserver(
 );
 
 lookCarousels.forEach(c => observer.observe(c));
+
+/* ═══════════════════════════════════════════
+   SHOP + PDP — prodotti singoli
+   ─────────────────────────────────────────
+   Dati: window.TATO_PRODUCTS (data/products.js)
+   Route hash:
+     #shop                       → New Arrivals (tutto)
+     #shop/women · #shop/men     → reparto, tutte le categorie
+     #shop/women/<cat> · …/men/… → reparto + categoria
+     #shop/accessories           → accessori (no genere)
+     #shop/<cat>                  → New Arrivals filtrato per categoria
+     #product/<slug>             → scheda prodotto
+   Foto: se colore.images è vuoto → foto dei look (lookRefs)
+   ═══════════════════════════════════════════ */
+const PRODUCTS    = window.TATO_PRODUCTS    || [];
+const CATEGORIES  = window.TATO_CATEGORIES  || [];
+const shopGrid    = document.getElementById('shop-grid');
+const shopFilters = document.getElementById('shop-filters');
+const shopTitleEl = document.getElementById('shop-title');
+const pdpEl       = document.getElementById('pdp');
+
+let shopScope    = 'new';   // 'new' | 'women' | 'men' | 'accessories'
+let shopCategory = 'all';   // 'all' | slug categoria
+let pdpState     = { slug: null, colorIdx: 0, size: null };
+
+function money(price, currency) {
+  return (currency === 'EUR' ? '€' : '') + price;
+}
+
+/* ─── SHOP: titolo sezione ───────────────── */
+function renderShopHead() {
+  if (!shopTitleEl) return;
+  shopTitleEl.textContent =
+    shopScope === 'women'       ? 'Women'
+    : shopScope === 'men'       ? 'Men'
+    : shopScope === 'accessories' ? 'Accessories'
+    : 'New Arrivals';
+}
+
+/* ─── SHOP: filtri categoria (solo Women / Men) ─ */
+function renderShopFilters() {
+  if (!shopFilters) return;
+  if (shopScope !== 'women' && shopScope !== 'men') {
+    shopFilters.innerHTML = '';
+    return;
+  }
+  const base = '#shop/' + shopScope;
+  const cats = [{ slug: 'all', label: 'View All' }, ...CATEGORIES];
+  shopFilters.innerHTML = cats.map(c => {
+    const href = c.slug === 'all' ? base : base + '/' + c.slug;
+    return `<a class="shop-filter${c.slug === shopCategory ? ' active' : ''}" href="${href}">${c.label}</a>`;
+  }).join('');
+}
+
+function productThumb(p) {
+  const c = p.colors[0];
+  if (c && c.images && c.images.length) {
+    return `<img class="product-card-img" src="${c.images[0]}" alt="${p.name}" loading="lazy">`;
+  }
+  const look = window.TATO_lookImages
+    ? window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 1 })[0]
+    : null;
+  if (look) {
+    return `<img class="product-card-img" src="${look}" alt="${p.name}" loading="lazy">`;
+  }
+  return '<span class="ph-block"></span>';
+}
+
+/* ─── SHOP: griglia prodotti ─────────────── */
+function shopFilteredProducts() {
+  let list = PRODUCTS.slice();
+  if (shopScope === 'accessories') {
+    return list.filter(p => p.category === 'accessories');
+  }
+  list = list.filter(p => p.category !== 'accessories');
+  if (shopScope === 'women' || shopScope === 'men') {
+    list = list.filter(p => (p.genders || ['women', 'men']).includes(shopScope));
+  }
+  if (shopCategory !== 'all') {
+    list = list.filter(p => p.category === shopCategory);
+  }
+  return list;
+}
+
+function renderShopGrid() {
+  if (!shopGrid) return;
+  const list = shopFilteredProducts();
+
+  if (!list.length) {
+    shopGrid.innerHTML = '<p class="shop-empty">Coming soon.</p>';
+    return;
+  }
+
+  shopGrid.innerHTML = list.map(p => {
+    const sold = p.status === 'sold-out';
+    const meta = p.colors.length > 1
+      ? `${p.colors.length} colours`
+      : (p.colors[0] ? p.colors[0].name : '');
+    return `
+      <article class="product-card${sold ? ' is-soldout' : ''}" data-slug="${p.slug}">
+        ${productThumb(p)}
+        <div class="product-card-body">
+          <p class="product-card-name">${p.name}</p>
+          <p class="product-card-meta">${meta}</p>
+          <p class="product-card-price">${sold ? 'Sold out' : money(p.price, p.currency)}</p>
+        </div>
+      </article>`;
+  }).join('');
+
+  shopGrid.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', () => {
+      location.hash = '#product/' + card.dataset.slug;
+    });
+  });
+}
+
+function renderShop() {
+  renderShopHead();
+  renderShopFilters();
+  renderShopGrid();
+}
+
+/* ─── PDP: scheda prodotto ───────────────── */
+function renderPDP(slug) {
+  const p = window.TATO_getProduct(slug);
+  if (!p || !pdpEl) return false;
+
+  if (pdpState.slug !== slug) pdpState = { slug, colorIdx: 0, size: null };
+  const color = p.colors[pdpState.colorIdx] || p.colors[0];
+
+  let galleryImgs = (color.images && color.images.length) ? color.images.slice() : [];
+  if (!galleryImgs.length && window.TATO_lookImages) {
+    galleryImgs = window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 8 });
+  }
+  const gallery = galleryImgs.length
+    ? galleryImgs.map(src => `<img class="pdp-gallery-img" src="${src}" alt="${p.name}">`).join('')
+    : Array.from({ length: 3 }, () => '<span class="ph-block"></span>').join('');
+
+  const swatches = p.colors.map((c, i) =>
+    `<button class="pdp-color${i === pdpState.colorIdx ? ' selected' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${c.name}"></button>`
+  ).join('');
+
+  const sizes = color.sizes.map(s =>
+    `<button class="pdp-size${s.label === pdpState.size ? ' selected' : ''}" data-size="${s.label}"${s.available ? '' : ' disabled'}>${s.label}</button>`
+  ).join('');
+
+  const lookLinks = (p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ');
+
+  pdpEl.innerHTML = `
+    <div class="pdp-gallery">${gallery}</div>
+    <div class="pdp-info">
+      <button class="pdp-back" id="pdp-back">← Shop</button>
+      <h1 class="pdp-name">${p.name}</h1>
+      <p class="pdp-price">${money(p.price, p.currency)}</p>
+
+      <p class="pdp-row-label">Colour</p>
+      <div class="pdp-colors">${swatches}</div>
+      <p class="pdp-color-name">${color.name}</p>
+
+      <p class="pdp-row-label">Size</p>
+      <div class="pdp-sizes">${sizes}</div>
+      <p class="pdp-size-hint" id="pdp-size-hint"></p>
+
+      <button class="pdp-add-btn" id="pdp-add">Add to bag</button>
+
+      <div class="pdp-accordion">
+        <div class="pdp-acc-item open">
+          <button class="pdp-acc-head">Description <span class="pdp-acc-sign">–</span></button>
+          <div class="pdp-acc-body">${p.description}</div>
+        </div>
+        <div class="pdp-acc-item">
+          <button class="pdp-acc-head">Composition &amp; Care <span class="pdp-acc-sign">+</span></button>
+          <div class="pdp-acc-body">${p.composition}<br>${p.care}</div>
+        </div>
+        <div class="pdp-acc-item">
+          <button class="pdp-acc-head">Shipping &amp; Returns <span class="pdp-acc-sign">+</span></button>
+          <div class="pdp-acc-body">Free shipping within the EU. Returns accepted within 14 days of delivery.</div>
+        </div>
+        ${lookLinks ? `<div class="pdp-acc-item open">
+          <button class="pdp-acc-head">Seen in <span class="pdp-acc-sign">–</span></button>
+          <div class="pdp-acc-body pdp-lookrefs">${lookLinks}</div>
+        </div>` : ''}
+      </div>
+    </div>
+  `;
+
+  pdpEl.querySelectorAll('.pdp-color').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pdpState.colorIdx = parseInt(btn.dataset.idx);
+      pdpState.size = null;
+      renderPDP(slug);
+    });
+  });
+
+  pdpEl.querySelectorAll('.pdp-size').forEach(btn => {
+    if (btn.disabled) return;
+    btn.addEventListener('click', () => {
+      pdpEl.querySelectorAll('.pdp-size').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      pdpState.size = btn.dataset.size;
+      const hint = document.getElementById('pdp-size-hint');
+      if (hint) { hint.textContent = ''; hint.classList.remove('error'); }
+    });
+  });
+
+  pdpEl.querySelectorAll('.pdp-acc-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const item = head.closest('.pdp-acc-item');
+      item.classList.toggle('open');
+      const sign = head.querySelector('.pdp-acc-sign');
+      if (sign) sign.textContent = item.classList.contains('open') ? '–' : '+';
+    });
+  });
+
+  document.getElementById('pdp-back')?.addEventListener('click', () => { location.hash = '#shop'; });
+
+  pdpEl.querySelectorAll('[data-look-ref]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const n = parseInt(a.dataset.lookRef);
+      showSection('collection');
+      const target = document.querySelector(`.look-carousel[data-look="${n}"]`);
+      if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 80);
+    });
+  });
+
+  document.getElementById('pdp-add')?.addEventListener('click', () => {
+    if (!pdpState.size) {
+      const hint = document.getElementById('pdp-size-hint');
+      if (hint) { hint.textContent = 'Select a size'; hint.classList.add('error'); }
+      return;
+    }
+    addToCart({
+      name:  p.name,
+      price: p.price,
+      look:  window.TATO_getCategoryLabel(p.category),
+      color: color.name,
+      size:  pdpState.size,
+    });
+    const btn = document.getElementById('pdp-add');
+    btn.textContent = 'Added';
+    btn.disabled = true;
+    openCart();
+    setTimeout(() => { btn.textContent = 'Add to bag'; btn.disabled = false; }, 1600);
+  });
+
+  return true;
+}
+
+/* ─── Routing hash ───────────────────────── */
+function handleShopRoute() {
+  const hash = location.hash.replace(/^#/, '');
+  if (!hash) return;
+  const parts = hash.split('/');
+  const route = parts[0];
+  const a = parts[1] || '';
+  const b = parts[2] || '';
+
+  if (route === 'product' && a) {
+    if (renderPDP(a)) {
+      showSection('product');
+      document.getElementById('product')?.classList.add('active');
+    }
+    return;
+  }
+
+  if (route === 'shop') {
+    const isCat = slug => CATEGORIES.some(c => c.slug === slug);
+    if (a === 'women' || a === 'men') {
+      shopScope    = a;
+      shopCategory = isCat(b) ? b : 'all';
+    } else if (a === 'accessories') {
+      shopScope    = 'accessories';
+      shopCategory = 'all';
+    } else if (isCat(a)) {
+      shopScope    = 'new';
+      shopCategory = a;
+    } else {
+      shopScope    = 'new';
+      shopCategory = 'all';
+    }
+    renderShop();
+    showSection('shop');
+    document.getElementById('shop')?.classList.add('active');
+  }
+}
+
+window.addEventListener('hashchange', handleShopRoute);
+
+/* Deep-link all'apertura: #shop o #product/<slug> */
+(function initShopRoute() {
+  renderShop();
+  const h = location.hash.replace(/^#/, '');
+  if (h === 'shop' || h.startsWith('shop/') || h.startsWith('product/')) {
+    window.addEventListener('load', handleShopRoute, { once: true });
+  }
+})();
 
 /* ═══════════════════════════════════════════
    PROTEZIONE IMMAGINI
