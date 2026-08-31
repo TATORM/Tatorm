@@ -18,7 +18,7 @@
 
 window.TATO_SHOPIFY = {
   domain: 'pshgtp-ak.myshopify.com',
-  storefrontToken: '',            // <-- INCOLLA QUI IL TOKEN
+  storefrontToken: '387e563b969e48b03ea0be98c1851e2f',
 };
 
 window.TATO_shopify = {
@@ -84,15 +84,39 @@ window.TATO_shopify = {
     return hit ? hit.available : false;
   },
 
-  /* Crea un checkout Shopify con le righe passate e restituisce l'URL.
-     lineItems: [{ variantId, quantity }] */
+  /* Crea un carrello Shopify (Cart API) con le righe passate
+     e restituisce l'URL di checkout.
+     lineItems: [{ variantId, quantity }]                      */
   async createCheckoutUrl(lineItems) {
-    if (!this.ready || !lineItems.length) return null;
-    const checkout = await this.client.checkout.create();
-    const filled   = await this.client.checkout.addLineItems(
-      checkout.id,
-      lineItems.map(li => ({ variantId: li.variantId, quantity: li.quantity || 1 }))
-    );
-    return filled.webUrl;
+    if (!lineItems.length) return null;
+    const cfg = window.TATO_SHOPIFY;
+    const query = `mutation($lines:[CartLineInput!]!){
+      cartCreate(input:{lines:$lines}){
+        cart{ checkoutUrl }
+        userErrors{ field message }
+      }
+    }`;
+    const res = await fetch('https://' + cfg.domain + '/api/2024-10/graphql.json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': cfg.storefrontToken,
+      },
+      body: JSON.stringify({
+        query,
+        variables: {
+          lines: lineItems.map(li => ({
+            merchandiseId: li.variantId,
+            quantity: li.quantity || 1,
+          })),
+        },
+      }),
+    });
+    const json = await res.json();
+    const errs = json.errors || (json.data && json.data.cartCreate && json.data.cartCreate.userErrors);
+    if (errs && errs.length) throw new Error(JSON.stringify(errs));
+    return json.data && json.data.cartCreate && json.data.cartCreate.cart
+      ? json.data.cartCreate.cart.checkoutUrl
+      : null;
   },
 };
