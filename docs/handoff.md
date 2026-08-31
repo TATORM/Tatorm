@@ -9,12 +9,13 @@
 ## Stato attuale
 
 Il sito ha:
-1. Un **cart drawer** funzionante (dalla sessione di agosto) — non collegato a pagamento.
-2. Un **e-commerce a prodotti singoli** (nuovo, questa sessione) — sezione **Shop** con griglia
-   prodotti + scheda prodotto (PDP), collegati allo stesso carrello. Foto prodotto = blocchi
-   grigi placeholder. Checkout ancora placeholder.
+1. Un **cart drawer** funzionante — non collegato a pagamento.
+2. Un **e-commerce a prodotti singoli** — sezione **Shop** con griglia + PDP, reparti
+   Women/Men, menu home espandibile. Foto prodotto = foto dei look (fallback). Checkout placeholder.
+3. **Struttura file riorganizzata** (`assets/`, `media/`, `docs/`, `archive/`) — vedi `README.md`.
 
-**Niente è committato né pushato.** Il sito live su `main` è invariato.
+**Tutto committato sul branch `ecommerce-dev`** (commit `bdd54f9` shop, `14968b0` reorg).
+NON pushato, NON mergiato su `main`. Il sito live è invariato.
 
 ---
 
@@ -27,11 +28,13 @@ cd "/Users/samuelemurru/Desktop/LAVORO/IN CONTINUAZIONE/TATO/SITO"
 python3 -m http.server 8777
 ```
 
-Poi apri `http://localhost:8777/index.html`.
-Rotte shop: `#shop` · `#shop/knitwear` · `#product/cardigan-v-neck`
+Poi apri `http://localhost:8777/index.html?x` (la query-string evita che il browser
+serva `index.html` dalla cache).
+Rotte: `#shop` · `#shop/women` · `#shop/women/knit` · `#shop/men/tailoring`
+· `#shop/accessories` · `#product/cardigan-v-neck`
 
-**Cache:** ad ogni modifica di `style.css` / `script.js` bumpare il parametro `?v=...`
-nei tag `<link>` e `<script>` di `index.html`, altrimenti il browser serve la versione vecchia.
+**Cache:** ad ogni modifica di `assets/css/style.css` / `assets/js/*.js` bumpare il
+parametro `?v=...` nei tag `<link>` e `<script>` di `index.html`.
 
 ---
 
