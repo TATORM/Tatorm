@@ -51,7 +51,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/favicon-192.png" />
   <link rel="shortcut icon" href="assets/icons/favicon-32.png" />
 
-  <link rel="stylesheet" href="assets/css/style.css?v=1788188593" />
+  <link rel="stylesheet" href="assets/css/style.css?v=1788191000" />
 </head>
 <body>
 
@@ -492,13 +492,15 @@
         <span class="cart-total-label">Total</span>
         <span class="cart-total-value" id="cart-total">€0</span>
       </div>
-      <button class="cart-checkout-btn">Checkout</button>
-      <p class="cart-note">Payment integration coming soon.</p>
+      <button class="cart-checkout-btn" id="cart-checkout">Checkout</button>
+      <p class="cart-note" id="cart-note">Payment integration coming soon.</p>
     </div>
   </div>
   <div id="cart-overlay" class="cart-overlay"></div>
 
-  <script src="assets/js/products.js?v=1788188593"></script>
-  <script src="assets/js/script.js?v=1788188593"></script>
+  <script src="https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js"></script>
+  <script src="assets/js/products.js?v=1788191000"></script>
+  <script src="assets/js/shopify.js?v=1788191000"></script>
+  <script src="assets/js/script.js?v=1788191000"></script>
 </body>
 </html>

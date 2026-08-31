@@ -733,6 +733,49 @@ btnShop?.addEventListener('click', openCart);
 document.getElementById('cart-close')?.addEventListener('click', closeCart);
 document.getElementById('cart-overlay')?.addEventListener('click', closeCart);
 
+/* ─── Checkout Shopify ───────────────────── */
+(function initCheckout() {
+  const btn  = document.getElementById('cart-checkout');
+  const note = document.getElementById('cart-note');
+  if (!btn) return;
+
+  function syncNote() {
+    const on = window.TATO_shopify && window.TATO_shopify.ready;
+    if (note) note.textContent = on
+      ? 'Secure checkout on Shopify.'
+      : 'Payment integration coming soon.';
+  }
+  document.addEventListener('tato:shopify-ready', syncNote);
+  syncNote();
+
+  btn.addEventListener('click', async () => {
+    if (!window.TATO_shopify || !window.TATO_shopify.ready) return;
+
+    const lineItems = cart
+      .filter(i => i.shopifyVariantId)
+      .map(i => ({ variantId: i.shopifyVariantId, quantity: 1 }));
+
+    if (!lineItems.length) {
+      if (note) note.textContent = 'Nothing linkable to checkout yet.';
+      return;
+    }
+
+    const original = btn.textContent;
+    btn.textContent = 'Redirecting…';
+    btn.disabled = true;
+    try {
+      const url = await window.TATO_shopify.createCheckoutUrl(lineItems);
+      if (url) { window.location.href = url; return; }
+      throw new Error('no url');
+    } catch (e) {
+      console.warn('[TATO] checkout fallito:', e);
+      if (note) note.textContent = 'Checkout error — retry.';
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+  });
+})();
+
 /* ═══════════════════════════════════════════
    CAROSELLI LOOK — crossfade
    ═══════════════════════════════════════════ */
@@ -908,6 +951,11 @@ const pdpEl       = document.getElementById('pdp');
 let shopScope    = 'new';   // 'new' | 'women' | 'men' | 'accessories'
 let shopCategory = 'all';   // 'all' | slug categoria
 let pdpState     = { slug: null, colorIdx: 0, size: null };
+
+/* Prefetch Shopify (no-op se manca il token) */
+if (window.TATO_shopify) {
+  window.TATO_shopify.init(PRODUCTS.map(p => p.slug));
+}
 
 function money(price, currency) {
   return (currency === 'EUR' ? '€' : '') + price;
@@ -1122,6 +1170,9 @@ function renderPDP(slug) {
       look:  window.TATO_getCategoryLabel(p.category),
       color: color.name,
       size:  pdpState.size,
+      shopifyVariantId: window.TATO_shopify
+        ? window.TATO_shopify.variantId(p.slug, color.name, pdpState.size)
+        : null,
     });
     const btn = document.getElementById('pdp-add');
     btn.textContent = 'Added';
