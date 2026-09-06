@@ -300,7 +300,7 @@ ul { list-style: none; }
   padding: 0;
 }
 #home .home-feed {
-  padding-bottom: 0;
+  padding-bottom: 100px;   /* stacco dal footer */
   margin-bottom: 0;
 }
 
@@ -309,6 +309,13 @@ ul { list-style: none; }
   flex-direction: column;
   align-items: center;
 }
+
+/* Foto di look intercalate tra i blocchi di prodotti */
+.home-look {
+  width: var(--image-width);
+  margin: 44px 0;
+}
+.home-look img { width: 100%; height: auto; display: block; }
 
 /* Prima foto: hero fullscreen — altezza = viewport (in CSS, non JS) */
 .home-hero {
@@ -1161,8 +1168,8 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
 }
 .pgrid-card.is-soldout .pgrid-name { color: var(--gray); }
 
-/* Griglia nella Home: a tutta larghezza, stacco dalla hero e 100px dal footer */
-.home-pgrid { margin: 6px 0 100px; }
+/* Griglia nella Home: a tutta larghezza. Lo stacco dal footer è su .home-feed. */
+.home-pgrid { margin: 8px 0; }
 
 
 /* ═══════════════════════════════════════════
@@ -1997,6 +2004,9 @@ body.dark-mode .pdp-ref { color: var(--gray); }
     object-fit: cover;
     object-position: center center;
   }
+  /* Foto di look intercalate: a tutta larghezza, altezza naturale */
+  .home-look { width: 100vw; margin: 2px 0; }
+  #home .home-feed { padding-bottom: 40px; }
 
   /* Collection: i caroselli hanno già position:relative + width:var(--image-width)
      (= 100vw su mobile) dalle regole base. Qui solo l'altezza dvh e lo snap. */

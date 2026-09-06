@@ -261,18 +261,42 @@ function declusterBySlug(arr) {
   const photos = shuffle(allHomePhotos);
   appendPhotos(feed, photos.slice(0, 1), true);
 
-  // Dopo l'hero: TUTTI i prodotti in TUTTE le colorway, mescolati
-  // (posizioni diverse a ogni refresh) e senza due stessi prodotti vicini.
+  // Dopo l'hero: alterna un blocco di prodotti (≈2 righe) e una foto
+  // di look — foto, 2 righe, foto, 2 righe, … Tutte le colorway,
+  // mescolate a ogni load, senza due stessi prodotti vicini.
   let cards = [];
   (window.TATO_PRODUCTS || []).forEach(p => {
     (p.colors || []).forEach((c, ci) => cards.push({ p, ci }));
   });
   cards = declusterBySlug(shuffle(cards));
 
-  const grid = document.createElement('div');
-  grid.className = 'pgrid home-pgrid';
-  grid.innerHTML = cards.map(({ p, ci }) => pgridCardHTML(p, true, ci)).join('');
-  feed.appendChild(grid);
+  // foto di look da intercalare (una diversa per ogni stacco)
+  const lookShots = shuffle(
+    Object.keys(window.TATO_LOOKS || {})
+      .map(n => (window.TATO_lookImages
+        ? window.TATO_lookImages([n], { onePerLook: true, limit: 1 })[0]
+        : null))
+      .filter(Boolean)
+  );
+
+  const PER_BLOCK = 8;   // 2 righe × 4 col su desktop (2 col × 4 righe su mobile)
+  let shot = 0;
+  for (let i = 0; i < cards.length; i += PER_BLOCK) {
+    const grid = document.createElement('div');
+    grid.className = 'pgrid home-pgrid';
+    grid.innerHTML = cards.slice(i, i + PER_BLOCK)
+      .map(({ p, ci }) => pgridCardHTML(p, true, ci)).join('');
+    feed.appendChild(grid);
+
+    if (i + PER_BLOCK < cards.length && lookShots.length) {
+      const fig = document.createElement('figure');
+      fig.className = 'home-look';
+      fig.appendChild(pictureEl(lookShots[shot++ % lookShots.length], {
+        sizes: '(max-width: 768px) 100vw, min(700px, 36vw)',
+      }));
+      feed.appendChild(fig);
+    }
+  }
 })();
 
 /* Il layout di home-hero e caroselli (altezza = viewport, colonna
