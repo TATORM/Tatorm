@@ -1165,22 +1165,8 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
 }
 .pgrid-card.is-soldout .pgrid-name { color: var(--gray); }
 
-/* Griglia nella Home: a tutta larghezza, stacco dalla hero */
-.home-pgrid { margin: 6px 0; }
-
-/* Singolo prodotto in evidenza sotto la riga (es. cappello) */
-.home-feature {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 84px;
-  margin-bottom: 100px;   /* stacco tra il prezzo e la linea del footer */
-  padding: 0 6vw;
-}
-.home-feature .pgrid-card {
-  width: 100%;
-  max-width: 340px;
-}
+/* Griglia nella Home: a tutta larghezza, stacco dalla hero e 100px dal footer */
+.home-pgrid { margin: 6px 0 100px; }
 
 
 /* ═══════════════════════════════════════════
