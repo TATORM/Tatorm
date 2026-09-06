@@ -1,8 +1,89 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-06
-**Branch di lavoro:** `ecommerce-dev`
+**Ultimo aggiornamento:** 2026-09-06 (sera)
+**Branch di lavoro:** `ecommerce-dev` — HEAD `5b9e01f`
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
+
+═══════════════════════════════════════════════════════════════════
+## RIPRENDERE DA QUI (07/09)
+═══════════════════════════════════════════════════════════════════
+
+### Come girare in locale
+```
+cd "/Users/samuelemurru/Desktop/LAVORO/IN CONTINUAZIONE/TATO/SITO"
+python3 -m http.server 8000        # se non è già su
+# desktop:  http://localhost:8000/?vN     (cambia N a ogni modifica → bypassa la cache)
+# mobile:   http://192.168.1.190:8000/?vN (telefono su stessa Wi-Fi)
+```
+`assets/dist/` è generato/gitignored; in locale servono i tag SORGENTE in `index.html`.
+Dopo ogni modifica a css/js: `npm run build` riscrive i tag dist tra i marker →
+**va poi ripristinato ai tag sorgente** (perl one-liner nei log della sessione) e
+bumpato `?v=` con `sed -i '' "s/?v=[0-9]*/?v=$(date +%s)/g" index.html`.
+
+### Stato Git — NIENTE È PUSHATO
+~26 commit locali su `ecommerce-dev`, **0 pushati** (il token in `.git/config` è
+scaduto ed era in chiaro). Working tree pulito.
+Per sbloccare: `gh auth login` + `git remote set-url origin https://github.com/TATORM/Tatorm.git`
+poi `git push origin ecommerce-dev`.
+
+### Blocchi che dipendono da te (non-codice)
+1. **Push** — vedi sopra.
+2. **GitHub Pages** → Settings → Pages → Source da "Deploy from a branch" a
+   **"GitHub Actions"** (cambia come deploia tatorm.com; farlo al merge su `main`).
+3. **Shopify**: stock 0 ovunque (→ tutto sold-out, corretto); 10 prodotti in Bozza;
+   vetrina con password ("opening soon"); gateway "TEST". Nome negozio = "Il mio negozio"
+   (→ Impostazioni → Dettagli negozio → "TATO"; logo checkout → Impostazioni → Check-out → Branding).
+4. **Font**: "Neue Haas Grotesk" è DICHIARATO ma NON caricato → il sito gira su
+   Helvetica Neue (fallback). Serve il `.woff2` con licenza web.
+5. **Analytics + consenso cookie**: non impostati. Non attivare tracker prima del consenso.
+6. **Contenuti legali/spedizioni/resi**: le pagine `#privacy #terms #cookies #shipping
+   #returns #faq` hanno struttura pronta ma tutto marcato `[DA FORNIRE: …]`.
+
+### Fatto oggi (sessione 06/09) — sopra il piano in 5 fasi
+- **Fasi 00–04a** del piano tecnico (build esbuild + GitHub Action, immagini AVIF+lazy,
+  catalogo unico + "Shop the look", layout in CSS puro, via SDK js-buy-sdk).
+- **Production-readiness P1** (`2434775`): Shopify = fonte per prezzo/compare-at/
+  disponibilità/sold-out; variant integrity (taglie/colori disabilitati, add bloccato);
+  carrello in `localStorage` (`tato-cart-v1`) con quantità + sync tra tab; stati e-commerce;
+  size guide modale; pagine `#info` (shipping/returns/legal) con placeholder flaggati;
+  `404.html`, `robots.txt`, `sitemap.xml` (solo `/`), `setMeta()` per vista, JSON-LD Product.
+  Checklist completa: artifact https://claude.ai/code/artifact/9ed06868-85dd-499b-9945-529ed1d32eaa
+- **Fix scroll mobile** (`eb4277b`): `scroll-snap-type` da `mandatory` → `proximity`; Home
+  senza snap → scorre libera; `#info` come documento normale su mobile.
+- **Fix "categorie dal fondo"** (`0b8118f`): `showSection()` → `resetScroll()` nel doppio rAF.
+- **PDP rifatta su modello Dior** (`1055915`, poi `2f20286`/`f2d702b`/`a85ec6b`): immagine a
+  filo sx + info dx; nome+materiale+`Ref. TATO-Pxx`; taglia = `<select>`; `.pdp-add-btn` con
+  prezzo DENTRO il bottone; nuovo `.pdp-express-btn` (checkout diretto singola variante);
+  delivery/phone = placeholder; accordion → `.pdp-tabs`; sezione `.pdp-complete`
+  "Complete the look" = foto look a sx + ≥2 capi consigliati a dx (da tutti i `lookRefs`,
+  riempiti con stessa categoria / altri), allineati in alto, nessun vuoto verso il footer.
+- **Home** (`0b8118f` → `5b9e01f`): dopo l'hero, tutte le colorway (una card per prodotto×colore)
+  mescolate a ogni load (`declusterBySlug`); **alterna 2 righe di prodotti e una foto di look**
+  (`.home-look`); **ogni tanto due foto di look affiancate** (`.home-look-pair`, gap
+  `clamp(24px,4vw,64px)`); 100px di stacco griglia → footer (`.home-feed padding-bottom`).
+- **Testi +25%** (`ef6e1ec`): `html { font-size: 125% }` (16→20px), tutto in `rem` scala.
+- **MENU** (`ef6e1ec`): `body.shop-mode .site-nav { display:none }` — niente MENU su shop/prodotto
+  (resta su Home/Collection). Logo TATO centrato in alto in shop-mode; `.shop-title` più piccolo.
+- **Pagine info** (`12b8e82`): testo tutto centrato (ragged center).
+- **Mobile** (`12b8e82`): foto a filo (niente margini neri): `#shop` padding laterale 0,
+  `.pdp-complete-items` padding 0, packshot flat con meno aria interna.
+
+### Cose ancora aperte / da rivedere
+- **PLP** (griglia shop) come screen Dior: pill flottante "Tutto il prêt-à-porter" +
+  bottone "Filtra e ordina" → NON fatto.
+- **Fase 04b**: `script.js` (~1300 righe, ora ~1350 con le aggiunte) NON spezzato in moduli
+  `src/js/*`. Solo manutenzione. Dead code: `productThumb()`, CSS `.pdp-acc-*` / `.pdp-fit`
+  / `.pdp-model` / `.home-feature` (rimasti da versioni precedenti).
+- **Fase 05**: font self-host, `lang="en"`, a11y audit completo, Lighthouse CI.
+- **Mobile UX pass** (deciso 06/09, non fatto): sticky Add-to-Bag su PDP mobile, gallery a
+  swipe, newsletter popup ritardato, MENU/BAG sempre leggibili (via `mix-blend-mode` fragile).
+- Il **logo TATO fisso** sulla Home si sovrappone alle card della griglia (z-index / pre-esistente).
+- `#collection` deep-link a volte non atterra in cima (~scroll residuo) — `resetScroll` nel rAF
+  aiuta ma non sempre.
+- `og:image` per-prodotto: aggiornato via JS → ok per browser/Googlebot, NON per crawler
+  social senza JS (WhatsApp/iMessage) → serve pre-render/SSG (C1 nel report production).
+
+═══════════════════════════════════════════════════════════════════
 
 ---
 
