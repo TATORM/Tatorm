@@ -5,33 +5,8 @@
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
-/* ─── Catalogo prezzi ────────────────────── */
-const itemPrices = {
-  '2 BUTTON WINDBREAKER':       280,
-  'BACK SHIRT':                 180,
-  'TOBI PANTS':                 220,
-  'CROPPED TAILORED JACKET':    390,
-  '2 BUTTON TAILORED PANTS':    280,
-  'CARDIGAN V NECK':            320,
-  '2 BUTTON SHIRT DRESS':       260,
-  'TAILORED PANTS':             280,
-  'TINY CREWNECK':              160,
-  '2 BUTTON SHIRT':             180,
-  'RIB BOMBER':                 360,
-  '2 BUTTON MIDI SKIRT':        240,
-  'TAILORED JACKET':            390,
-  'SIDE WAY VEST':              220,
-  'SIDE WAY ZIP-UP':            280,
-  'HOODIE':                     200,
-  '3/4 ZIP-UP':                 260,
-  'INSIDE OUT SELVEDGE DENIM':  320,
-  'TATO CAP':                    80,
-  'TATO TAILORING CAP':          90,
-  'SMOCK LONGSLEEVE':            180,
-  'TRIPLE BREASTED COAT':        520,
-  '2 BUTTON LONG SKIRT':         240,
-  'TRIPLE BREASTED BOMBER':      450,
-};
+/* I prezzi dei capi vengono da window.TATO_PRODUCTS (products.js);
+   i 21 look da window.TATO_LOOKS + window.TATO_resolveLook(). */
 
 /* ─── Home feed — ordine casuale + scroll infinito ─ */
 const allHomePhotos = [
@@ -271,184 +246,6 @@ function pgridHTML(list, showTag) {
   layoutHome();
 })();
 
-/* ─── Look data ──────────────────────────── */
-const lookData = {
-  '1': {
-    number: 'LOOK #1',
-    items: [
-      { name: '2 BUTTON WINDBREAKER', info: ['100% Cotton', 'Color: White'] },
-      { name: 'BACK SHIRT',           info: ['100% Cotton', 'Color: White'] },
-      { name: 'TOBI PANTS',           info: ['100% Cotton', 'Color: White'] }
-    ]
-  },
-  '2': {
-    number: 'LOOK #2',
-    items: [
-      { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
-      { name: 'BACK SHIRT',              info: ['100% Cotton', 'Color: Black'] },
-      { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '3': {
-    number: 'LOOK #3',
-    items: [
-      { name: 'CARDIGAN V NECK',         info: ['100% Wool',   'Color: Chocolate'] },
-      { name: 'BACK SHIRT',              info: ['100% Cotton', 'Color: White'] },
-      { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '4': {
-    number: 'LOOK #4',
-    items: [
-      { name: '2 BUTTON SHIRT DRESS', info: ['100% Cotton', 'Color: Baby Blue'] },
-      { name: 'TAILORED PANTS',       info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '5': {
-    number: 'LOOK #5',
-    items: [
-      { name: 'CARDIGAN V NECK',  info: ['100% Wool',   'Color: Lilac'] },
-      { name: 'TINY CREWNECK',    info: ['100% Cotton', 'Color: Baby Blue'] },
-      { name: '2 BUTTON SHIRT',   info: ['100% Cotton', 'Color: White'] },
-      { name: 'TOBI PANTS',       info: ['100% Cotton', 'Color: Black'] }
-    ]
-  },
-  '6': {
-    number: 'LOOK #6',
-    items: [
-      { name: 'RIB BOMBER',        info: ['100% Nylon',  'Color: Green / Chocolate'] },
-      { name: 'CARDIGAN V NECK',   info: ['100% Wool',   'Color: Baby Green'] },
-      { name: '2 BUTTON SHIRT',    info: ['100% Cotton', 'Color: Baby Pink'] },
-      { name: '2 BUTTON MIDI SKIRT', info: ['100% Wool', 'Color: Anthracite'] }
-    ]
-  },
-  '7': {
-    number: 'LOOK #7',
-    items: [
-      { name: 'TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
-      { name: 'BACK SHIRT',      info: ['100% Cotton', 'Color: White'] },
-      { name: 'TAILORED PANTS',  info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '8': {
-    number: 'LOOK #8',
-    items: [
-      { name: 'CARDIGAN V NECK',  info: ['100% Wool',   'Color: Cherry'] },
-      { name: 'SIDE WAY VEST',    info: ['100% Cotton', 'Color: Burgundy'] },
-      { name: '2 BUTTON SHIRT',   info: ['100% Cotton', 'Color: Baby Pink'] },
-      { name: 'TOBI PANTS',       info: ['100% Cotton', 'Color: Baby Pink'] }
-    ]
-  },
-  '9': {
-    number: 'LOOK #9',
-    items: [
-      { name: 'SIDE WAY ZIP-UP',           info: ['100% Cotton', 'Color: Dark Navy'] },
-      { name: 'HOODIE',                    info: ['100% Cotton', 'Color: Dark Navy'] },
-      { name: '3/4 ZIP-UP',               info: ['100% Cotton', 'Color: Dark Navy'] },
-      { name: 'INSIDE OUT SELVEDGE DENIM', info: ['100% Cotton', 'Color: Black Denim'] },
-      { name: 'TATO CAP',                  info: ['100% Cotton', 'Color: Green'] }
-    ]
-  },
-  '10': {
-    number: 'LOOK #10',
-    items: [
-      { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
-      { name: 'SMOCK LONGSLEEVE',        info: ['100% Cotton', 'Color: White'] },
-      { name: 'TOBI PANTS',              info: ['100% Cotton', 'Color: Black'] }
-    ]
-  },
-  '11': {
-    number: 'LOOK #11',
-    items: [
-      { name: 'TRIPLE BREASTED COAT',    info: ['100% Wool',   'Color: Dark Blue'] },
-      { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
-      { name: 'BACK SHIRT',              info: ['100% Cotton', 'Color: White'] },
-      { name: '2 BUTTON LONG SKIRT',     info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '12': {
-    number: 'LOOK #12',
-    items: [
-      { name: 'BACK SHIRT',          info: ['100% Cotton', 'Color: White'] },
-      { name: '2 BUTTON LONG SKIRT', info: ['100% Cotton', 'Color: Shiny White'] }
-    ]
-  },
-  '13': {
-    number: 'LOOK #13',
-    items: [
-      { name: 'CROPPED TAILORED JACKET', info: ['100% Wool',   'Color: Anthracite'] },
-      { name: '2 BUTTON SHIRT',          info: ['100% Cotton', 'Color: White'] },
-      { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '14': {
-    number: 'LOOK #14',
-    items: [
-      { name: 'TRIPLE BREASTED COAT', info: ['100% Wool',   'Color: Dark Blue'] },
-      { name: 'BACK SHIRT',           info: ['100% Cotton', 'Color: White'] },
-      { name: 'TAILORED PANTS',       info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '15': {
-    number: 'LOOK #15',
-    items: [
-      { name: 'RIB BOMBER',             info: ['100% Nylon',  'Color: Green / Chocolate'] },
-      { name: '2 BUTTON WINDBREAKER',   info: ['100% Cotton', 'Color: Grey'] },
-      { name: '2 BUTTON SHIRT',         info: ['100% Cotton', 'Color: Baby Blue'] },
-      { name: '2 BUTTON TAILORED PANTS', info: ['100% Wool',  'Color: Anthracite'] }
-    ]
-  },
-  '16': {
-    number: 'LOOK #16',
-    items: [
-      { name: 'RIB BOMBER',           info: ['100% Nylon',  'Color: Dark Navy / Black'] },
-      { name: '2 BUTTON WINDBREAKER', info: ['100% Cotton', 'Color: White'] },
-      { name: 'TOBI PANTS',           info: ['100% Cotton', 'Color: White'] }
-    ]
-  },
-  '17': {
-    number: 'LOOK #17',
-    items: [
-      { name: 'TAILORED JACKET',     info: ['100% Wool',   'Color: Anthracite'] },
-      { name: 'SMOCK LONGSLEEVE',    info: ['100% Cotton', 'Color: Baby Pink'] },
-      { name: '2 BUTTON MIDI SKIRT', info: ['100% Wool',   'Color: Anthracite'] },
-      { name: '2 BUTTON LONG SKIRT', info: ['100% Wool',   'Color: Black'] }
-    ]
-  },
-  '18': {
-    number: 'LOOK #18',
-    items: [
-      { name: 'BACK SHIRT',          info: ['100% Cotton', 'Color: Black'] },
-      { name: '2 BUTTON LONG SKIRT', info: ['100% Cotton', 'Color: Black'] }
-    ]
-  },
-  '19': {
-    number: 'LOOK #19',
-    items: [
-      { name: 'CARDIGAN V NECK',      info: ['100% Wool',   'Color: Lilac'] },
-      { name: '2 BUTTON WINDBREAKER', info: ['100% Cotton', 'Color: Baby Blue / Oriental Blue'] },
-      { name: 'BACK SHIRT',           info: ['100% Cotton', 'Color: White'] },
-      { name: 'TAILORED PANTS',       info: ['100% Wool',   'Color: Anthracite'] }
-    ]
-  },
-  '20': {
-    number: 'LOOK #20',
-    items: [
-      { name: 'TRIPLE BREASTED BOMBER', info: ['100% Wool',   'Color: Dark Blue'] },
-      { name: 'SMOCK LONGSLEEVE',       info: ['100% Cotton', 'Color: Navy / Bordeaux'] },
-      { name: 'TOBI PANTS',             info: ['100% Cotton', 'Color: Navy'] },
-      { name: 'TATO TAILORING CAP',     info: ['100% Cotton', 'Color: Washed Black'] }
-    ]
-  },
-  '21': {
-    number: 'LOOK #21',
-    items: [
-      { name: '2 BUTTON SHIRT DRESS', info: ['100% Cotton', 'Color: White'] },
-      { name: '2 BUTTON LONG SKIRT',  info: ['100% Cotton', 'Color: Shiny White'] }
-    ]
-  }
-};
-
 /* ═══════════════════════════════════════════
    LAYOUT CAROSELLI — posizionamento forzato
    Usa window.innerHeight in px, zero catene CSS
@@ -653,7 +450,7 @@ function renderNavMenu() {
     a.addEventListener('click', e => {
       e.preventDefault();
       closeNav();
-      showSection(a.dataset.section);
+      navToSection(a.dataset.section);
     });
   });
   navLinks.querySelectorAll('.nav-group-toggle').forEach(btn => {
@@ -731,19 +528,36 @@ function showSection(id) {
   // Modalità header per shop / product
   document.body.classList.toggle('shop-mode', id === 'shop' || id === 'product');
 
-  // Pulisci l'hash quando si torna a una sezione non-shop
-  if (id === 'home' || id === 'collection' || id === 'about') {
+  // Sincronizza l'hash con la sezione (replaceState = niente loop di hashchange)
+  if (id === 'home') {
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  } else if (id === 'collection' || id === 'about') {
+    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
   }
 
   closeNav();
 }
 
-// Click su link breadcrumb (statici nell'HTML)
+/* Naviga a una sezione creando una voce di cronologia (tasto Indietro).
+   collection/about passano per l'hash; home lo pulisce; shop/product
+   restano gestiti dalle proprie rotte. */
+function navToSection(id) {
+  if (id === 'collection' || id === 'about') {
+    if (location.hash === '#' + id) showSection(id);
+    else location.hash = '#' + id;
+  } else if (id === 'home') {
+    if (location.hash) history.pushState(null, '', location.pathname + location.search);
+    showSection('home');
+  } else {
+    showSection(id);
+  }
+}
+
+// Click su link breadcrumb / footer (statici nell'HTML)
 document.querySelectorAll('[data-section]').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    showSection(link.dataset.section);
+    navToSection(link.dataset.section);
   });
 });
 
@@ -948,33 +762,30 @@ lookCarousels.forEach(carousel => {
 
 let activeLook = null;
 
+/* Pannello Collection = "Shop the look".
+   Elenca i capi del look; quello a catalogo è un link alla sua
+   scheda prodotto (con prezzo), gli altri sono "Archive piece".
+   L'acquisto avviene solo sulla PDP → un unico flusso carrello. */
 function renderLookPanel(lookKey) {
   if (lookKey === activeLook) return;
   activeLook = lookKey;
 
-  const data = lookData[lookKey];
+  const data = window.TATO_resolveLook(lookKey);
   if (!data) return;
 
   fixedLookInfo.classList.add('panel-updating');
 
   setTimeout(() => {
-    const itemsHTML = data.items.map((item, idx) => {
-      const price     = itemPrices[item.name] || 0;
-      const colorInfo = item.info.find(i => i.startsWith('Color:')) || '';
+    const itemsHTML = data.items.map(item => {
+      const action = item.slug
+        ? `<a class="panel-item-shop" href="#product/${item.slug}">${money(item.price, item.currency)} — Shop</a>`
+        : `<p class="panel-item-archive">Archive piece</p>`;
       return `
         <div class="panel-item">
           <p class="panel-item-name">${item.name}</p>
-          ${item.info.map(i => `<p class="panel-item-info">${i}</p>`).join('')}
-          <p class="panel-item-price">€${price}</p>
-          <div class="panel-size-row" data-item-idx="${idx}">
-            ${['XS','S','M','L','XL'].map(s => `<button class="size-btn" data-size="${s}">${s}</button>`).join('')}
-          </div>
-          <button class="panel-add-btn"
-            data-name="${item.name}"
-            data-price="${price}"
-            data-look="${data.number}"
-            data-color="${colorInfo}"
-            data-item-idx="${idx}">ADD TO CART</button>
+          <p class="panel-item-info">${item.composition}</p>
+          <p class="panel-item-info">Color: ${item.color}</p>
+          ${action}
         </div>
       `;
     }).join('');
@@ -985,41 +796,6 @@ function renderLookPanel(lookKey) {
     `;
 
     fixedLookInfo.classList.remove('panel-updating');
-
-    fixedLookInfo.querySelectorAll('.panel-size-row').forEach(row => {
-      row.querySelectorAll('.size-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          row.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-        });
-      });
-    });
-
-    fixedLookInfo.querySelectorAll('.panel-add-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const idx      = btn.dataset.itemIdx;
-        const sizeRow  = fixedLookInfo.querySelector(`.panel-size-row[data-item-idx="${idx}"]`);
-        const selected = sizeRow?.querySelector('.size-btn.selected');
-        if (!selected) {
-          sizeRow?.classList.add('size-required');
-          setTimeout(() => sizeRow?.classList.remove('size-required'), 600);
-          return;
-        }
-        addToCart({
-          name:  btn.dataset.name,
-          price: parseInt(btn.dataset.price),
-          look:  btn.dataset.look,
-          color: btn.dataset.color,
-          size:  selected.dataset.size,
-        });
-        btn.textContent = 'ADDED';
-        btn.disabled = true;
-        setTimeout(() => {
-          btn.textContent = 'ADD TO CART';
-          btn.disabled = false;
-        }, 1600);
-      });
-    });
   }, 180);
 }
 
@@ -1272,11 +1048,14 @@ function renderPDP(slug) {
 /* ─── Routing hash ───────────────────────── */
 function handleShopRoute() {
   const hash = location.hash.replace(/^#/, '');
-  if (!hash) return;
   const parts = hash.split('/');
   const route = parts[0];
   const a = parts[1] || '';
   const b = parts[2] || '';
+
+  if (!hash)               { showSection('home');       return; }
+  if (route === 'collection') { showSection('collection'); return; }
+  if (route === 'about')      { showSection('about');      return; }
 
   if (route === 'product' && a) {
     if (renderPDP(a)) {
@@ -1309,11 +1088,12 @@ function handleShopRoute() {
 
 window.addEventListener('hashchange', handleShopRoute);
 
-/* Deep-link all'apertura: #shop o #product/<slug> */
+/* Deep-link all'apertura: #shop · #product/<slug> · #collection · #about */
 (function initShopRoute() {
   renderShop();
   const h = location.hash.replace(/^#/, '');
-  if (h === 'shop' || h.startsWith('shop/') || h.startsWith('product/')) {
+  if (h === 'shop' || h.startsWith('shop/') || h.startsWith('product/') ||
+      h === 'collection' || h === 'about') {
     window.addEventListener('load', handleShopRoute, { once: true });
   }
 })();

@@ -475,6 +475,27 @@ ul { list-style: none; }
   line-height: 1.7;
 }
 
+/* "Shop the look" — link alla PDP del capo a catalogo */
+.panel-item-shop {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--black);
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+.panel-item-shop:hover { border-color: var(--black); opacity: 0.7; }
+
+/* capo da lookbook, non in vendita */
+.panel-item-archive {
+  margin-top: 6px;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--gray);
+}
+
 .panel-footer {
   display: flex;
   flex-direction: column;
@@ -1675,6 +1696,17 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
     line-height: 1.5;
     color: #fff;
   }
+  .fixed-look-info .panel-item-shop {
+    font-size: 0.5rem;
+    margin-top: 3px;
+    color: #fff;
+    border-bottom-color: #fff;
+  }
+  .fixed-look-info .panel-item-archive {
+    font-size: 0.48rem;
+    margin-top: 3px;
+    color: rgba(255, 255, 255, 0.6);
+  }
   .fixed-look-info .panel-details-link {
     font-size: 0.5rem;
     margin-top: 10px;
@@ -1688,9 +1720,8 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
 
   .cart-drawer { width: 100vw; border-left: none; }
 
-  /* Abilita interazione tasti carrello nel pannello mobile */
-  .fixed-look-info .size-btn,
-  .fixed-look-info .panel-add-btn { pointer-events: auto; }
+  /* Il pannello look è pointer-events:none; riabilita solo il link "Shop" */
+  .fixed-look-info .panel-item-shop { pointer-events: auto; }
 
   /* Pannello mobile scrollabile se molti item */
   .fixed-look-info {
