@@ -141,16 +141,68 @@ function shuffle(arr) {
   return a;
 }
 
+/* ═══════════════════════════════════════════
+   <picture> con AVIF (900 / 1440) + originale come fallback.
+   I derivati li genera scripts/images.mjs accanto all'originale:
+     media/…/01.jpg  →  media/…/01-900.avif  media/…/01-1440.avif
+   media/brand/* e assets/* NON hanno derivati → si degradano
+   automaticamente al solo <img>.
+   ═══════════════════════════════════════════ */
+const HAS_DERIVATIVES = /^media\/(looks|home|products)\//;
+
+function pictureHTML(src, opts) {
+  opts = opts || {};
+  const alt   = opts.alt || '';
+  const cls   = opts.cls ? ` class="${opts.cls}"` : '';
+  const sizes = opts.sizes || '100vw';
+  const eager = !!opts.eager;
+  const load  = eager ? 'eager' : 'lazy';
+  const prio  = eager ? ' fetchpriority="high"' : '';
+  const dims  = opts.width && opts.height
+    ? ` width="${opts.width}" height="${opts.height}"` : '';
+  const img = `<img src="${src}" alt="${alt}"${cls} loading="${load}" decoding="async"${prio}${dims} draggable="false">`;
+  if (!HAS_DERIVATIVES.test(src)) return img;
+  const base = src.replace(/\.[^.]+$/, '');
+  return `<picture>` +
+    `<source type="image/avif" srcset="${base}-900.avif 900w, ${base}-1440.avif 1440w" sizes="${sizes}">` +
+    img +
+    `</picture>`;
+}
+
+/* Costruisce <picture> come nodi DOM (source PRIMA di img) così il
+   browser non parte a scaricare l'<img src> jpg prima di valutare la
+   <source> AVIF — succede sulle immagini eager iniettate via innerHTML. */
+function pictureEl(src, opts) {
+  opts = opts || {};
+  const pic = document.createElement('picture');
+  if (HAS_DERIVATIVES.test(src)) {
+    const base = src.replace(/\.[^.]+$/, '');
+    const s = document.createElement('source');
+    s.type = 'image/avif';
+    s.srcset = `${base}-900.avif 900w, ${base}-1440.avif 1440w`;
+    s.sizes = opts.sizes || '100vw';
+    pic.appendChild(s);
+  }
+  const img = document.createElement('img');
+  img.alt = opts.alt || '';
+  img.decoding = 'async';
+  img.draggable = false;
+  if (opts.eager) { img.loading = 'eager'; img.fetchPriority = 'high'; }
+  else img.loading = 'lazy';
+  img.src = src;
+  pic.appendChild(img);
+  return pic;
+}
+
 function appendPhotos(feed, photos, isFirst) {
   photos.forEach((src, i) => {
     const fig = document.createElement('figure');
-    fig.className = (isFirst && i === 0) ? 'home-image-block home-hero' : 'home-image-block';
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = '';
-    img.draggable = false;
-    img.loading = isFirst && i === 0 ? 'eager' : 'lazy';
-    fig.appendChild(img);
+    const hero = isFirst && i === 0;
+    fig.className = hero ? 'home-image-block home-hero' : 'home-image-block';
+    fig.appendChild(pictureEl(src, {
+      eager: hero,
+      sizes: '(max-width: 768px) 100vw, min(700px, 36vw)',
+    }));
     feed.appendChild(fig);
   });
 }
@@ -172,7 +224,7 @@ function productImgSrc(p) {
 function pgridCardHTML(p, showTag) {
   const img   = productImgSrc(p);
   const media = img.src
-    ? `<img src="${img.src}" alt="${p.name}" loading="lazy" draggable="false">`
+    ? pictureHTML(img.src, { alt: p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
     : '<span class="ph-block"></span>';
   const tag = showTag
     ? `<span class="pgrid-tag">${window.TATO_getCategoryLabel ? window.TATO_getCategoryLabel(p.category) : p.category}</span>`
@@ -1095,7 +1147,12 @@ function renderPDP(slug) {
     galleryImgs = window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 8 });
   }
   const gallery = galleryImgs.length
-    ? galleryImgs.map(src => `<img class="pdp-gallery-img" src="${src}" alt="${p.name}">`).join('')
+    ? galleryImgs.map((src, i) => pictureHTML(src, {
+        alt: p.name,
+        cls: 'pdp-gallery-img',
+        eager: i === 0,
+        sizes: '(max-width: 768px) 50vw, min(900px, 60vw)',
+      })).join('')
     : Array.from({ length: 3 }, () => '<span class="ph-block"></span>').join('');
 
   const swatches = p.colors.map((c, i) =>

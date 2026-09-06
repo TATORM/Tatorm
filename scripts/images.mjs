@@ -1,75 +1,99 @@
 /* ═══════════════════════════════════════════
-   TATO — pipeline immagini  (usata dalla fase 02)
+   TATO — pipeline immagini  (fase 02)
    ─────────────────────────────────────────
-   Sorgenti:  media/_src/**/<nome>.{jpg,jpeg,png}   (gitignored)
-   Output:    media/<stesso percorso>/<nome>-<w>.{avif,webp,jpg}
-              per ogni larghezza in WIDTHS
+   Legge gli originali GIÀ nel repo:
+     media/looks/**  media/home/**  media/products/**
+   e genera accanto a ciascuno i derivati:
+     <nome>-900.avif   <nome>-1440.avif
+   L'originale (jpg/png) resta com'è: fa da <img> di fallback.
+   AVIF copre ~95% dei browser, l'originale il resto → niente WebP.
+
+   media/brand/ e assets/ NON vengono toccati (logo/icone).
 
    USO
-     npm run images            — genera i mancanti
+     npm run images            — genera solo i mancanti
      npm run images -- --force — rigenera tutto
-
-   NB: in fase 00 questo script è predisposto ma non ancora
-   invocato. Serve la cartella media/_src/ con gli originali.
    ═══════════════════════════════════════════ */
 
 import sharp from 'sharp';
-import { readdir, mkdir, access } from 'node:fs/promises';
+import { readdir, mkdir, access, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const SRC = path.join(ROOT, 'media', '_src');
-const OUT = path.join(ROOT, 'media');
+const DIRS = ['media/looks', 'media/home', 'media/products'];
 const FORCE = process.argv.includes('--force');
 
 const WIDTHS = [900, 1440];
-const QUALITY = { avif: 50, webp: 72, jpeg: 78 };
+const FORMATS = [
+  ['avif', 'avif', { quality: 48 }],
+];
 const EXT_IN = new Set(['.jpg', '.jpeg', '.png']);
+const IS_DERIVED = /-(?:900|1440)\.(?:avif|webp)$/;
 
 async function* walk(dir) {
   let entries;
   try {
     entries = await readdir(dir, { withFileTypes: true });
   } catch {
-    return; // _src non esiste ancora
+    return;
   }
   for (const e of entries) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) yield* walk(p);
-    else if (EXT_IN.has(path.extname(e.name).toLowerCase())) yield p;
+    else if (EXT_IN.has(path.extname(e.name).toLowerCase()) && !IS_DERIVED.test(e.name)) {
+      yield p;
+    }
   }
 }
 
 const exists = (p) => access(p).then(() => true, () => false);
 
 async function run() {
-  let count = 0;
+  let made = 0;
   let skipped = 0;
-  for await (const file of walk(SRC)) {
-    const rel = path.relative(SRC, file);
-    const dir = path.join(OUT, path.dirname(rel));
-    const base = path.basename(rel, path.extname(rel));
-    await mkdir(dir, { recursive: true });
+  let srcCount = 0;
 
-    const meta = await sharp(file).metadata();
-    for (const w of WIDTHS) {
-      const width = Math.min(w, meta.width || w);
-      for (const [fmt, ext] of [['avif', 'avif'], ['webp', 'webp'], ['jpeg', 'jpg']]) {
-        const dest = path.join(dir, `${base}-${w}.${ext}`);
-        if (!FORCE && (await exists(dest))) { skipped++; continue; }
-        await sharp(file)
-          .resize({ width, withoutEnlargement: true })
-          .toFormat(fmt, { quality: QUALITY[fmt] })
-          .toFile(dest);
-        count++;
-        console.log(`  ${path.relative(ROOT, dest)}`);
+  for (const rel of DIRS) {
+    const abs = path.join(ROOT, rel);
+    for await (const file of walk(abs)) {
+      srcCount++;
+      const dir = path.dirname(file);
+      const base = path.basename(file, path.extname(file));
+      const src = sharp(file, { failOn: 'none' }).rotate(); // applica EXIF orientation
+      const meta = await src.metadata();
+
+      for (const w of WIDTHS) {
+        const width = Math.min(w, meta.width || w);
+        for (const [fmt, ext, opts] of FORMATS) {
+          const dest = path.join(dir, `${base}-${w}.${ext}`);
+          if (!FORCE && (await exists(dest))) { skipped++; continue; }
+          await src
+            .clone()
+            .resize({ width, withoutEnlargement: true })
+            .toFormat(fmt, opts)
+            .toFile(dest);
+          made++;
+        }
       }
     }
   }
-  if (count === 0 && skipped === 0) {
-    console.log('  Nessun originale in media/_src/. Niente da fare.');
-  } else {
-    console.log(`  Generati ${count}, saltati ${skipped}.`);
+
+  let total = 0;
+  for (const rel of DIRS) {
+    for await (const f of walkAll(path.join(ROOT, rel))) total += (await stat(f)).size;
+  }
+  console.log(`  Originali letti: ${srcCount}`);
+  console.log(`  Derivati creati: ${made}  (saltati ${skipped})`);
+  console.log(`  Peso media/looks+home+products: ${(total / 1048576).toFixed(1)} MB`);
+}
+
+async function* walkAll(dir) {
+  let entries;
+  try { entries = await readdir(dir, { withFileTypes: true }); } catch { return; }
+  for (const e of entries) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) yield* walkAll(p);
+    else yield p;
   }
 }
 

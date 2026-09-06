@@ -96,6 +96,10 @@ body {
 
 a { color: inherit; text-decoration: none; }
 img { display: block; width: 100%; height: auto; }
+
+/* <picture> è solo un contenitore per le <source> AVIF: sparisce dal
+   box tree così tutte le regole che targettano `img` valgono invariate. */
+picture { display: contents; }
 button {
   background: none; border: none; cursor: pointer;
   font-family: var(--font); font-weight: 500;
@@ -1154,7 +1158,8 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
-.pdp-gallery .ph-block:first-child,
+.pdp-gallery > .ph-block:first-child,
+.pdp-gallery > picture:first-child .pdp-gallery-img,
 .pdp-gallery .pdp-gallery-img:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
 .pdp-gallery-img {
   width: 100%;
