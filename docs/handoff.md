@@ -34,6 +34,36 @@ Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
   gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
   locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
 
+## Svolta mobile-first (decisa 06/09) — da fare
+
+Priorità: pensare il sito **mobile-first**, flusso d'acquisto perfetto e preciso, poi riadattare il desktop.
+Decisioni prese:
+- **Struttura mobile**: si tiene quella del sito TATO **attualmente online** (swiper di foto fullscreen,
+  layout editoriale in negativo) e ci si integra l'e-commerce — deve restare fluido, intuitivo, veloce,
+  facile da comprare.
+- **Nav mobile**: NO barra fissa in basso. Si tiene minimale — MENU in alto + BAG in alto — ma resi
+  **sempre visibili e leggibili** (togliere la fragilità del `mix-blend-mode: difference` che a volte
+  li fa sparire sopra le foto).
+- **Newsletter popup mobile**: **ritardato** (dopo scroll o exit-intent), non alla prima schermata.
+  Resta il form nel footer.
+- Serve "tutto ciò che serve a un e-commerce di brand" ben fruibile: da definire in dettaglio
+  (sticky Add-to-Bag su PDP mobile, gallery swipe, size guide, trust signal al checkout, ecc.).
+
+### Fase 04a — Via l'SDK Shopify da CDN ✅ (commit `0cc9fd0`)
+
+- `assets/js/shopify.js`: `init()` non usa più `js-buy-sdk`. **Una sola fetch GraphQL** allo Storefront
+  endpoint (`_endpoint()` = `https://<domain>/api/<apiVersion>/graphql.json`, `apiVersion: '2024-10'`
+  in `window.TATO_SHOPIFY`) con `product(handle:)` aliasati `p0`, `p1`, … + fragment `V` sulle varianti
+  (`id availableForSale selectedOptions`). Nuovi helper `_endpoint()` / `_gql(query, variables)`;
+  `createCheckoutUrl()` li riusa (era già `cartCreate` diretto).
+- `index.html`: rimosso `<script src="sdks.shopifycdn.com/js-buy-sdk…">`. `scripts/build.mjs`: via la
+  costante `SHOPIFY_SDK` e la sua iniezione nel blocco `build:js`.
+- Verificato in browser (`javascript_tool`): `init` → `ready:true`, 10 handle con varianti + disponibilità
+  reali (`tato-cap` Black disponibile, Navy/Red/Green no); `variantId()` risolve i GID;
+  `createCheckoutUrl()` → URL `/cart/c/…` valido di Shopify.
+- **Fase 04b (modularizzazione `script.js` → `src/js/modules/*` + event delegation) NON fatta** —
+  è manutenzione, nessun beneficio utente; rimandata (probabilmente dopo/insieme al lavoro mobile).
+
 ### Fase 03 — Layout caroselli/home in CSS puro ✅ (commit `c06122c`)
 
 - `assets/js/script.js`: **rimossi** `layoutCarousels()`, `layoutHome()`, l'handler
