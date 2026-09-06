@@ -34,6 +34,28 @@ Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
   gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
   locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
 
+### Fase 02 — Immagini AVIF + lazy-load ✅ (commit `a005350`)
+
+- `scripts/images.mjs`: legge gli originali in `media/{looks,home,products}` e genera
+  accanto `<nome>-900.avif` + `<nome>-1440.avif` (sharp, q48). Niente WebP:
+  AVIF (~95% browser) + originale jpg/png come fallback = 100%. `media/brand` e `assets` intatti.
+  `npm run images` (solo mancanti) / `-- --force` (rigenera).
+- **230 derivati AVIF committati** (`media/` 42 → 49 MB, `.git` → 83 MB).
+  Hero 467 KB → 65 KB · look più pesante 453 KB → 57 KB · PNG home 838 KB → 11 KB.
+- `assets/js/script.js`: helper `pictureHTML()` (stringa) e `pictureEl()` (DOM) →
+  `<picture><source type="image/avif" srcset="…-900.avif 900w, …-1440.avif 1440w" sizes><img …></picture>`.
+  Usati in: home feed (`appendPhotos`), griglia prodotti (`pgridCardHTML`), gallery PDP (`renderPDP`).
+  L'hero è costruito via DOM (source PRIMA di img) per non scaricare due volte l'eager.
+  Regex `HAS_DERIVATIVES = /^media\/(looks|home|products)\//` — path fuori da lì → solo `<img>`.
+- `scripts/wire-pictures.mjs`: one-shot idempotente, converte i **74 `<img>` statici**
+  dei caroselli in `index.html` in `<picture>` + `loading="lazy"`. Effetto: le ~30 MB di
+  foto della Collection **non si scaricano più al primo load della Home**, solo aprendo la sezione.
+- `assets/css/style.css`: `picture { display: contents }` → il wrapper sparisce dal box tree,
+  tutte le regole `img` esistenti valgono invariate. Fix selettore prima immagine `.pdp-gallery`.
+- Verificato in browser: AVIF servito su hero + caroselli, lazy-load rinvia i look non
+  visibili (3 look su 21 al load), Shop mostra i packshot (prima lenti/vuoti), zero errori console.
+- **Aperto**: hero è random (`shuffle`) → niente `<link rel=preload>` possibile senza fissarlo.
+
 ---
 
 ### Storico precedente
