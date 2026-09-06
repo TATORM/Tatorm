@@ -34,6 +34,31 @@ Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
   gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
   locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
 
+### Fase 01 — Catalogo unico + "Shop the look" ✅ (commit `1b6e403`)
+
+- `assets/js/products.js`: aggiunti `window.TATO_LOOKS` (21 look come lista di capi
+  `{ name, comp, color, slug? }` — `slug` presente se il capo è uno dei 10 prodotti reali)
+  e `window.TATO_resolveLook(n)` (unisce look + `price`/`currency` da `TATO_PRODUCTS`).
+  Mappa nome→slug in `TATO_LOOK_SLUG`.
+- `assets/js/script.js`: **rimossi `lookData` (177 righe) e `itemPrices`**. `renderLookPanel()`
+  riscritto → "Shop the look": ogni capo mostra nome + composizione + colore; se a catalogo
+  un `<a class="panel-item-shop" href="#product/<slug>">€… — Shop</a>`, altrimenti
+  `<p class="panel-item-archive">Archive piece</p>`. Niente più size-picker/ADD TO CART nel pannello.
+- **Routing**: `#collection` e `#about` sono rotte vere (`handleShopRoute` le gestisce,
+  `initShopRoute` fa il deep-link al load, `showSection` sincronizza l'hash con `replaceState`).
+  Nuovo `navToSection(id)` usato dai link `[data-section]` (menu + breadcrumb + footer) →
+  crea la voce di cronologia così il tasto Indietro funziona. Hash vuoto → Home.
+- `assets/css/style.css`: `.panel-item-shop` / `.panel-item-archive` (+ varianti nel blocco mobile,
+  testo bianco). Il vecchio `pointer-events:auto` per `.size-btn`/`.panel-add-btn` → ora su `.panel-item-shop`.
+- Verificato in browser: deep-link `#collection` e `#about`, pannello Shop-the-look (capo a
+  catalogo = link con prezzo, gli altri = "Archive piece"), click sul capo → PDP giusta con
+  "Seen in", zero errori console. Bundle JS 36.5 → 34.8 KB.
+- **Aperto / da rivedere**: (1) il colore mostrato nel pannello è quello *del look* (editoriale) —
+  può non essere un colore acquistabile di quel prodotto (es. Tobi Pants "White" nel Look 1, ma
+  il drop è Black/Navy/Baby Pink). La PDP mostra i colori reali. (2) CSS morto rimasto:
+  `.panel-item-price`, `.panel-size-row`, `.size-btn`, `.panel-add-btn`, `@keyframes size-pulse`,
+  `.size-required` — pulizia in fase 05. (3) `productThumb()` in script.js resta dead code.
+
 ### Fase 02 — Immagini AVIF + lazy-load ✅ (commit `a005350`)
 
 - `scripts/images.mjs`: legge gli originali in `media/{looks,home,products}` e genera
