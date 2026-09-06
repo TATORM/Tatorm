@@ -1149,6 +1149,13 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   text-transform: uppercase;
   color: var(--black);
 }
+.pgrid-colour {
+  text-align: center;
+  margin-top: 3px;
+  font-size: 0.56rem;
+  letter-spacing: 0.06em;
+  color: var(--gray);
+}
 .pgrid-price {
   text-align: center;
   margin-top: 5px;
@@ -1999,6 +2006,7 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   .product-card-name,
   .pgrid-name,
   .pgrid-price { color: #fff; }
+  .pgrid-colour { color: rgba(255,255,255,0.6); }
   .product-card-meta,
   .product-card-price { color: rgba(255,255,255,0.6); }
   .pgrid-tag { color: #0a0a0a; background: rgba(255,255,255,0.9); }

@@ -196,20 +196,29 @@ function productImgSrc(p) {
   return { src: look || '', flat: false };
 }
 
-function pgridCardHTML(p, showTag) {
-  const img   = productImgSrc(p);
+/* colorIdx opzionale: card di una specifica variante colore
+   (immagine + nome colore). Usata dalla Home per mostrare ogni colorway. */
+function pgridCardHTML(p, showTag, colorIdx) {
+  const col = (colorIdx != null && p.colors && p.colors[colorIdx]) ? p.colors[colorIdx] : null;
+  let img;
+  if (col && col.images && col.images.length) img = { src: col.images[0], flat: true };
+  else img = productImgSrc(p);
+
   const media = img.src
-    ? pictureHTML(img.src, { alt: p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
+    ? pictureHTML(img.src, { alt: col ? `${p.name} — ${col.name}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
     : '<span class="ph-block"></span>';
   const tag = showTag
     ? `<span class="pgrid-tag">${window.TATO_getCategoryLabel ? window.TATO_getCategoryLabel(p.category) : p.category}</span>`
     : '';
   const sh = window.TATO_shopify;
   const shReady = !!(sh && sh.ready);
-  const sold = p.status === 'sold-out' || (shReady && sh.soldOut(p.slug));
+  const sold = col
+    ? (shReady && sh.availableColors(p.slug) && !sh.availableColors(p.slug)[col.name])
+    : (p.status === 'sold-out' || (shReady && sh.soldOut(p.slug)));
   const pd = shReady ? sh.productData(p.slug) : null;
   const price = pd && pd.minPrice != null ? pd.minPrice : p.price;
   const cur = (pd && pd.currency) || p.currency || 'EUR';
+  const colName = col ? `<span class="pgrid-colour">${col.name}</span>` : '';
   return `
     <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="#product/${p.slug}" data-slug="${p.slug}">
       <span class="pgrid-media${img.flat ? ' is-flat' : ''}">
@@ -218,6 +227,7 @@ function pgridCardHTML(p, showTag) {
         ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}
       </span>
       <span class="pgrid-name">${p.name}</span>
+      ${colName}
       <span class="pgrid-price">${money(price, cur)}</span>
     </a>`;
 }
@@ -229,26 +239,40 @@ function pgridHTML(list, showTag) {
   return list.map(p => pgridCardHTML(p, showTag)).join('');
 }
 
+/* Evita due card dello stesso prodotto adiacenti (best-effort) */
+function declusterBySlug(arr) {
+  const out = arr.slice();
+  for (let i = 1; i < out.length; i++) {
+    if (out[i].p.slug !== out[i - 1].p.slug) continue;
+    for (let j = i + 1; j < out.length; j++) {
+      const okHere  = out[j].p.slug !== out[i - 1].p.slug;
+      const okThere = j + 1 >= out.length || out[j + 1].p.slug !== out[i].p.slug;
+      if (okHere && okThere) { [out[i], out[j]] = [out[j], out[i]]; break; }
+    }
+  }
+  return out;
+}
+
 (function buildHomeFeed() {
   const feed = document.getElementById('home-feed');
   if (!feed) return;
 
+  // Hero: una foto a tutto schermo, casuale a ogni load
   const photos = shuffle(allHomePhotos);
-  appendPhotos(feed, photos.slice(0, 1), true);          // hero
+  appendPhotos(feed, photos.slice(0, 1), true);
+
+  // Dopo l'hero: TUTTI i prodotti in TUTTE le colorway, mescolati
+  // (posizioni diverse a ogni refresh) e senza due stessi prodotti vicini.
+  let cards = [];
+  (window.TATO_PRODUCTS || []).forEach(p => {
+    (p.colors || []).forEach((c, ci) => cards.push({ p, ci }));
+  });
+  cards = declusterBySlug(shuffle(cards));
+
   const grid = document.createElement('div');
   grid.className = 'pgrid home-pgrid';
-  grid.innerHTML = pgridHTML((window.TATO_PRODUCTS || []).slice(0, 4), true);  // 1 sola riga
+  grid.innerHTML = cards.map(({ p, ci }) => pgridCardHTML(p, true, ci)).join('');
   feed.appendChild(grid);
-
-  // Sotto la riga: il cappello come singolo prodotto in evidenza
-  const cap = window.TATO_getProduct && window.TATO_getProduct('tato-cap');
-  if (cap) {
-    const feature = document.createElement('div');
-    feature.className = 'home-feature';
-    feature.innerHTML = pgridCardHTML(cap, true);
-    feed.appendChild(feature);
-  }
-
 })();
 
 /* Il layout di home-hero e caroselli (altezza = viewport, colonna
@@ -490,12 +514,16 @@ function closeNav() {
   navLinks.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
 }
 
-function showSection(id) {
-  // Reset scroll prima di tutto per evitare che l'IntersectionObserver
-  // legga la posizione della home e mostri il look sbagliato su mobile
+function resetScroll() {
   window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
+}
+
+function showSection(id) {
+  // Reset scroll prima di tutto per evitare che l'IntersectionObserver
+  // legga la posizione della home e mostri il look sbagliato su mobile
+  resetScroll();
 
   // Nascondi tutte le sezioni
   document.querySelectorAll('.page').forEach(p => {
@@ -510,6 +538,12 @@ function showSection(id) {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       target.classList.add('active');
+      // Ri-forza lo scroll a 0: quando la navigazione avviene via
+      // `location.hash = "#shop"` il browser prova a scrollare fino a
+      // <section id="shop"> DOPO che l'abbiamo mostrata → su mobile la
+      // pagina si apriva "dal fondo". Questo la riporta in cima.
+      // (il deep-link ai look da "Seen in" scrolla a t+80ms, quindi vince).
+      resetScroll();
     });
   });
 
