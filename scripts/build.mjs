@@ -28,10 +28,6 @@ const DIST_ABS = path.join(ROOT, DIST_REL);
 const HTML = path.join(ROOT, 'index.html');
 const CHECK_ONLY = process.argv.includes('--check');
 
-/* Lo SDK Shopify da CDN resta un <script> a sé finché non lo
-   sostituiamo con una fetch GraphQL diretta (fase 04). */
-const SHOPIFY_SDK = 'https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js';
-
 const COMMON = {
   absWorkingDir: ROOT,
   bundle: true,
@@ -77,7 +73,6 @@ async function run() {
   html = replaceBlock(html, 'build:css',
     `  <link rel="stylesheet" href="${cssFile}" />`);
   html = replaceBlock(html, 'build:js',
-    `  <script src="${SHOPIFY_SDK}"></script>\n` +
     `  <script type="module" src="${jsFile}"></script>`);
   await writeFile(HTML, html);
   console.log('  index.html riscritto (tag dist tra i marker).');
