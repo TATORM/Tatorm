@@ -34,6 +34,17 @@ Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
   gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
   locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
 
+## Fix mobile scroll ✅ (commit `eb4277b`)
+
+Il body mobile era un contenitore `100dvh` con `scroll-snap-type: y mandatory` su ogni pagina.
+Con la Home ridotta a 1 hero (unico snap point) → il browser risbatteva in cima, impossibile
+navigare griglia prodotti / footer / PDP / pagine info.
+- `body` mobile: `scroll-snap-type: y proximity` (era `mandatory`).
+- `.home-image-block` mobile: rimosso `scroll-snap-align` → Home scorre libera. Lo snap
+  per-look resta solo in `#collection`.
+- `#info` aggiunto alla regola `html body #shop, #product { height:auto; overflow:visible }` mobile.
+- Verificato a 614px: scroll resta a metà pagina (scrollTop 800 sulla griglia), niente overflow orizzontale.
+
 ## Production-readiness — P1 fatto (commit `2434775`)
 
 Passata sulla spec "make it production-ready". Fatto in questo commit:
