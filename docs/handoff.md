@@ -34,6 +34,29 @@ Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
   gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
   locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
 
+## Production-readiness — P1 fatto (commit `2434775`)
+
+Passata sulla spec "make it production-ready". Fatto in questo commit:
+- **Shopify source of truth**: `shopify.js` recupera title/prezzo/compare-at/immagini/disponibilità
+  per prodotto e variante (`productData`, `variantPrice`, `soldOut`, `availableColors`). PDP + griglia
+  leggono da Shopify quando `ready`, fallback locale offline. PDP si ridisegna su `tato:shopify-ready`.
+- **Variant integrity**: via il fallback "One Size" per capi con taglie; taglie/colori disabilitati per
+  disponibilità Shopify; ADD TO BAG bloccato su sold-out o combinazione non disponibile; prezzo reale
+  della variante salvato in carrello.
+- **Cart**: persistenza `localStorage` (`tato-cart-v1`) + restore + sync tra tab; righe unite per
+  variante con quantità (stepper +/−); "Continue shopping"; badge = somma qty; checkout con qty per riga.
+- **Stati**: sold-out (griglia + PDP), swatch colore barrato, hint "not available", aria-busy sui bottoni.
+- **Size guide**: modale `TATO_openSizeGuide(category)` — tabella per categoria, misure "—" + avviso
+  (misure reali DA FORNIRE).
+- **Info/legal**: sezione `#info` + `INFO_PAGES` → `#shipping #returns #faq #privacy #cookies #terms`,
+  struttura pronta, ogni dato fattuale marcato `[DA FORNIRE: …]`. Footer con link reali.
+- **SEO**: `404.html`, `robots.txt`, `sitemap.xml` (solo `/`), `setMeta()` per vista
+  (title/description/canonical/OG), JSON-LD Product+Offer sulla PDP da dati Shopify.
+
+**Da fare** (report completo dato in chat): mobile UX pass, analytics+consent, a11y audit,
+favicon.ico + manifest, contenuti legali/shipping reali, indicizzabilità pagine prodotto
+(SPA hash → serve prerender/SSG per OG e sitemap prodotti).
+
 ## Svolta mobile-first (decisa 06/09) — da fare
 
 Priorità: pensare il sito **mobile-first**, flusso d'acquisto perfetto e preciso, poi riadattare il desktop.
