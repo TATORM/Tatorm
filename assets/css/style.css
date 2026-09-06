@@ -1495,10 +1495,10 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
   column-gap: 2px;
   row-gap: 40px;
-  align-self: center;
+  align-self: start;          /* card allineate in alto con la foto */
   padding: 0 4vw;
 }
-.pdp-complete-items .pgrid-card { max-width: 320px; margin: 0 auto; }
+.pdp-complete-items .pgrid-card { max-width: 340px; margin: 0 auto; }
 
 .pdp-accordion { border-top: 1px solid var(--gray-light); }
 .pdp-acc-item { border-bottom: 1px solid var(--gray-light); }

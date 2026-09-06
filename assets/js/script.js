@@ -1041,12 +1041,30 @@ function renderPDP(slug) {
     : `<span>Add to bag</span><span class="pdp-add-price">${compare && compare > price ? `<s>${money(compare, cur)}</s> ` : ''}${priceLabel}</span>`;
 
   /* "Complete the look": foto del 1° look di questo prodotto a sinistra,
-     gli ALTRI capi a catalogo dello stesso look (consigliati) a destra */
+     i capi consigliati (a catalogo) a destra. Sempre almeno 2 card:
+     prima gli altri capi dei look del prodotto, poi si riempie con capi
+     della stessa categoria e infine con altri prodotti. */
   const lookN = (p.lookRefs || [])[0];
-  const lookData = lookN && window.TATO_resolveLook ? window.TATO_resolveLook(lookN) : null;
-  const completeItems = (lookData
-    ? lookData.items.filter(it => it.slug && it.slug !== slug)
-    : []).slice(0, 3);
+  const relatedSlugs = [];
+  (p.lookRefs || []).forEach(n => {
+    const ld = window.TATO_resolveLook && window.TATO_resolveLook(n);
+    if (!ld) return;
+    ld.items.forEach(it => {
+      if (it.slug && it.slug !== slug && relatedSlugs.indexOf(it.slug) === -1) {
+        relatedSlugs.push(it.slug);
+      }
+    });
+  });
+  if (relatedSlugs.length < 2) {
+    const others = (window.TATO_PRODUCTS || [])
+      .filter(x => x.slug !== slug && relatedSlugs.indexOf(x.slug) === -1);
+    const sameCat = others.filter(x => x.category === p.category);
+    const rest    = others.filter(x => x.category !== p.category);
+    sameCat.concat(rest).forEach(x => {
+      if (relatedSlugs.length < 2) relatedSlugs.push(x.slug);
+    });
+  }
+  const completeItems = relatedSlugs.slice(0, 3);
   const lookPhoto = lookN && window.TATO_lookImages
     ? window.TATO_lookImages([lookN], { onePerLook: true, limit: 1 })[0]
     : null;
@@ -1058,7 +1076,7 @@ function renderPDP(slug) {
           alt: `Look ${lookN}`, sizes: '(max-width: 768px) 100vw, 48vw',
         })}</div>` : ''}
         <div class="pgrid pdp-complete-items" style="--n:${completeItems.length}">
-          ${completeItems.map(it => pgridCardHTML(window.TATO_getProduct(it.slug), false)).join('')}
+          ${completeItems.map(s => pgridCardHTML(window.TATO_getProduct(s), false)).join('')}
         </div>
       </div>
     </section>` : '';
