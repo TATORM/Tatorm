@@ -70,7 +70,9 @@ body.dark-mode .toggle-thumb {
 
 /* ─── Reset ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* Base ingrandita: tutti i testi in rem scalano in proporzione,
+   gerarchia e identità invariate (16px → 20px = +25%). */
+html { scroll-behavior: smooth; font-size: 125%; }
 
 /* ─── Rispetta "riduci animazioni" del sistema ──────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -1044,16 +1046,9 @@ body.shop-mode .site-logo.logo--left {
   width: 74px;
   transition: none;
 }
-/* MENU in alto a destra (sotto la riga di icone), non più accanto al logo.
-   In alto a sinistra resta solo il logo TATO → home. */
-body.shop-mode .site-nav {
-  top: 58px;
-  right: 26px;
-  left: auto;
-  transform: none;
-  text-align: right;
-}
-body.shop-mode .site-nav .nav-links { margin-top: 14px; }
+/* Su shop / prodotto il MENU è tolto dallo stack in alto: navigazione via
+   logo TATO (→ home) e link "← Shop". Resta solo su Home / Collection. */
+body.shop-mode .site-nav { display: none; }
 
 /* Il breadcrumb fisso non serve in shop-mode: c'è il MENU in header */
 body.shop-mode .collection-breadcrumb { display: none !important; }
