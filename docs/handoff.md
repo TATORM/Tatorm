@@ -34,6 +34,31 @@ Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
   gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
   locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
 
+## PDP riorganizzata su modello Dior ✅ (commit `1055915`)
+
+Da 4 screenshot Dior forniti dall'utente. Font/grafica TATO invariati (grottesco, maiuscolo,
+b/n, filetti — nessun serif). `renderPDP` in `script.js` + blocco `.pdp-*` in `style.css` rifatti:
+- `.pdp-main` grid: immagine a filo sinistro + colonna info a destra.
+- Testata: nome grande + `.pdp-material` (grigio) + `.pdp-ref` "Ref. TATO-Pxx" a destra.
+- Taglia: `<select>` nativo (`#pdp-size-select`) con chevron, opzioni "— Sold out".
+- `.pdp-add-btn`: flex space-between, testo a sx + **prezzo dentro il bottone** a dx (`.pdp-add-price`, compare-at `<s>`).
+- Nuovo `.pdp-express-btn` (`#pdp-express`): "Express checkout" + "PayPal · Apple Pay · Card";
+  chiama `TATO_shopify.createCheckoutUrl([variante])` e reindirizza (salta il carrello).
+- `.pdp-delivery-note` / `.pdp-phone-note`: placeholder "to be configured/provided" (DA FORNIRE, non inventati).
+- Accordion → **tab** (`.pdp-tabs` / `.pdp-tab` / `.pdp-tab-panel`): Description / Size & fit /
+  Composition & care / Shipping & returns. "Seen in Look N" nel pannello Description.
+- Nuova sezione `.pdp-complete` "Complete the look": altri capi a catalogo del 1° look del prodotto.
+- Mobile PDP CSS aggiornato (negativo).
+- **PLP** (screen 2: pill "Tutto il prêt-à-porter" flottante + "Filtra e ordina") NON ancora fatto.
+
+## Fix categorie "dal fondo" + Home tutte le colorway ✅ (commit `0b8118f`)
+
+- `showSection()`: nuova `resetScroll()` chiamata anche nel doppio rAF. Navigando via
+  `location.hash = "#shop"` il browser scrollava a `<section id="shop">` DOPO averla mostrata
+  → su mobile la pagina si apriva dal fondo. Ora torna sempre in cima.
+- Home dopo l'hero: una card per OGNI prodotto × OGNI colorway (20), rimescolate a ogni load
+  (`shuffle` + `declusterBySlug`). `pgridCardHTML(p, showTag, colorIdx)`. Rimosso `.home-feature`.
+
 ## Fix mobile scroll ✅ (commit `eb4277b`)
 
 Il body mobile era un contenitore `100dvh` con `scroll-snap-type: y mandatory` su ogni pagina.
