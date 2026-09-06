@@ -118,6 +118,7 @@ button {
 }
 ul { list-style: none; }
 .hidden { display: none !important; }
+[hidden] { display: none !important; }
 
 
 /* ═══════════════════════════════════════════
@@ -1525,9 +1526,244 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
 
 
 /* ═══════════════════════════════════════════
+   E-COMMERCE — stati, quantità, size guide, pagine info
+   (aggiunte fase produzione — estetica invariata)
+   ═══════════════════════════════════════════ */
+
+/* Carrello — continua lo shopping + quantità */
+.cart-continue {
+  margin-top: 18px;
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--black);
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 2px;
+  background: none; border: 0; border-bottom: 1px solid var(--gray-light);
+  cursor: pointer;
+  font-family: var(--font); font-weight: 500;
+  align-self: flex-start;
+}
+.cart-continue:hover { border-color: var(--black); }
+.cart-qty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.cart-qty-btn {
+  width: 20px; height: 20px;
+  border: 1px solid rgba(17,17,17,0.25);
+  background: none;
+  font-size: 0.72rem; line-height: 1;
+  color: #111;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: border-color 0.15s;
+}
+.cart-qty-btn:hover { border-color: #111; }
+.cart-qty-val {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  min-width: 14px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sold out */
+.pgrid-soldout {
+  position: absolute;
+  left: 12px; bottom: 12px;
+  font-size: 0.46rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  background: rgba(255,255,255,0.85);
+  padding: 3px 7px;
+}
+.pgrid-card.is-soldout .pgrid-media img { opacity: 0.55; }
+
+/* PDP — prezzo scontato, sold out, colore esaurito, size head, fit/model */
+.pdp-price-sale { color: var(--black); }
+.pdp-price-was {
+  color: var(--gray);
+  text-decoration: line-through;
+  margin-left: 8px;
+}
+.pdp-soldout-tag {
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin: -18px 0 22px;
+}
+.pdp-color.is-soldout { opacity: 0.35; }
+.pdp-color.is-soldout::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 140%; height: 1px;
+  background: var(--gray);
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.pdp-size-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.pdp-sizeguide-link {
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray);
+  background: none; border: 0;
+  border-bottom: 1px solid var(--gray-light);
+  padding: 0 0 1px;
+  cursor: pointer;
+  font-family: var(--font); font-weight: 500;
+  transition: color 0.2s, border-color 0.2s;
+}
+.pdp-sizeguide-link:hover { color: var(--black); border-color: var(--black); }
+.pdp-fit, .pdp-model {
+  font-size: 0.58rem;
+  line-height: 1.7;
+  color: var(--gray);
+  margin-top: 10px;
+}
+
+/* Size guide — modale */
+.sizeguide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.sizeguide {
+  position: relative;
+  background: #f3f3ef;
+  color: #111;
+  max-width: 460px;
+  width: 100%;
+  max-height: 82vh;
+  overflow-y: auto;
+  padding: 32px 26px 26px;
+  border: 1px solid rgba(17,17,17,0.13);
+}
+.sizeguide-close {
+  position: absolute;
+  top: 12px; right: 14px;
+  width: 22px; height: 22px;
+  background: none; border: 0;
+  font-size: 18px; line-height: 1;
+  color: #111;
+  cursor: pointer;
+}
+.sizeguide-title {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.sizeguide-scroll { overflow-x: auto; }
+.sizeguide table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+}
+.sizeguide th, .sizeguide td {
+  border-bottom: 1px solid rgba(17,17,17,0.12);
+  padding: 8px 10px 8px 0;
+  text-align: left;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.sizeguide thead th {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.52rem;
+  color: rgba(17,17,17,0.6);
+}
+.sizeguide-note {
+  margin-top: 14px;
+  font-size: 0.56rem;
+  color: #8a5a16;
+  letter-spacing: 0.03em;
+}
+.sizeguide-how {
+  margin-top: 10px;
+  font-size: 0.54rem;
+  color: rgba(17,17,17,0.55);
+  line-height: 1.6;
+}
+
+/* Pagine info / legali */
+#info.active { display: block; min-height: 100vh; }
+.info-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 120px 6vw 100px;
+}
+.info-doc h1 {
+  font-size: 0.9rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.info-doc h2 {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin: 26px 0 8px;
+}
+.info-doc p {
+  font-size: 0.72rem;
+  line-height: 1.9;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+.info-flag {
+  display: inline-block;
+  font-size: 0.62rem;
+  letter-spacing: 0.02em;
+  color: #8a5a16;
+  background: rgba(138,90,22,0.08);
+  border: 1px dashed rgba(138,90,22,0.4);
+  padding: 6px 10px;
+}
+.info-back {
+  margin-top: 40px;
+}
+.info-back a {
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gray);
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 2px;
+}
+.info-back a:hover { color: var(--black); border-color: var(--black); }
+
+
+/* ═══════════════════════════════════════════
    RESPONSIVE — Mobile ≤ 768px
    ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
+
+  /* Size guide + info in negativo su mobile */
+  .sizeguide { background: #111; color: #fff; border-color: rgba(255,255,255,0.14); }
+  .sizeguide-close { color: #fff; }
+  .sizeguide th, .sizeguide td { border-bottom-color: rgba(255,255,255,0.16); }
+  .sizeguide thead th { color: rgba(255,255,255,0.6); }
+  .sizeguide-how { color: rgba(255,255,255,0.5); }
+  .info-doc p { color: #fff; }
+  .info-flag { color: #e0a95c; background: rgba(224,169,92,0.12); border-color: rgba(224,169,92,0.5); }
+  .cart-qty-btn { border-color: rgba(17,17,17,0.25); }
 
   :root { --image-width: 100vw; }
 

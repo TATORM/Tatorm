@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Il sito è una SPA one-page con routing via hash (#shop, #product/…).
+  Su hosting statico gli hash NON sono URL indicizzabili separatamente:
+  l'unica URL crawlabile è la home. Per avere pagine prodotto/collezione
+  in sitemap servirebbe pre-rendering o un SSG (vedi handoff, PRIORITY 4).
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.tatorm.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

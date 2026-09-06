@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# archive/prototipi non sono contenuto del sito
+Disallow: /archive/
+
+Sitemap: https://www.tatorm.com/sitemap.xml
