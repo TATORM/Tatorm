@@ -1813,9 +1813,12 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   .icon-btn { color: #fff; }
   #btn-monogram img { filter: invert(1); }
 
-  /* Snap scrolling a blocchi — su iOS funziona meglio con overflow scroll su body */
+  /* Scroll a blocchi — su iOS funziona meglio con overflow scroll su body.
+     `proximity` (non `mandatory`): l'hero e i look si agganciano quando ci si
+     avvicina, ma NON impediscono di fermarsi in mezzo alla pagina (griglia
+     prodotti, footer, PDP, pagine info restano navigabili normalmente). */
   html, body { height: 100dvh; overflow: hidden; }
-  body { overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: auto; }
+  body { overflow-y: scroll; scroll-snap-type: y proximity; scroll-behavior: auto; }
 
   /* Home: parte dall'alto senza padding */
   #home { padding: 0; height: auto; }
@@ -1823,12 +1826,12 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   .about-wrap { padding: 0 28px; }
   #collection { padding-left: 0; padding-top: 0; height: auto; }
 
-  /* Home: ogni foto fullscreen */
+  /* Home: hero fullscreen, poi la pagina scorre libera (nessuno snap:
+     sotto l'hero ci sono griglia prodotti + footer da raggiungere). */
   .home-image-block {
     width: 100vw;
     height: 100dvh;
     overflow: hidden;
-    scroll-snap-align: start;
     flex-shrink: 0;
   }
   .home-image-block img {
@@ -1969,16 +1972,20 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
     overflow-y: auto !important;
   }
 
-  /* ─── SHOP mobile ─────────────────────────── */
+  /* ─── SHOP / PRODUCT / INFO mobile — documenti a scroll normale ─── */
   html body #shop,
-  html body #product {
+  html body #product,
+  html body #info {
     height: auto;
+    min-height: 0;
     overflow: visible;
     padding: 80px 16px 80px;
     scroll-snap-align: none;
   }
   #shop { background: #000; }
   #product { background: #000; }
+  #info { background: #000; }
+  .info-wrap { padding: 24px 4px 60px; }
   .shop-title { color: #fff; }
   .shop-grid,
   .pgrid {
