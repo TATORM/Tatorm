@@ -1041,8 +1041,8 @@ body.dark-mode .ph-block { background: #1e1e1e; }
 body.shop-mode .site-logo,
 body.shop-mode .site-logo.logo--left {
   top: 24px;
-  left: 3vw;
-  transform: none;
+  left: 50%;
+  transform: translateX(-50%);
   width: 74px;
   transition: none;
 }
@@ -1062,11 +1062,12 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
 }
 
 .shop-head {
-  margin: 0 3vw 48px;
+  margin: 24px auto 44px;
+  text-align: center;
 }
 .shop-title {
-  font-size: 0.68rem;
-  letter-spacing: 0.24em;
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--black);
 }
@@ -1853,31 +1854,33 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   line-height: 1.6;
 }
 
-/* Pagine info / legali */
+/* Pagine info / legali — testo tutto centrato (ragged center) */
 #info.active { display: block; min-height: 100vh; }
 .info-wrap {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 120px 6vw 100px;
+  text-align: center;
 }
 .info-doc h1 {
   font-size: 0.9rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 .info-doc h2 {
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--gray);
-  margin: 26px 0 8px;
+  margin: 28px 0 8px;
 }
 .info-doc p {
   font-size: 0.72rem;
   line-height: 1.9;
   color: var(--black);
-  margin-bottom: 6px;
+  margin: 0 auto 6px;
+  max-width: 44ch;
 }
 .info-flag {
   display: inline-block;
@@ -1887,9 +1890,11 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   background: rgba(138,90,22,0.08);
   border: 1px dashed rgba(138,90,22,0.4);
   padding: 6px 10px;
+  text-align: center;
 }
 .info-back {
-  margin-top: 40px;
+  margin-top: 44px;
+  text-align: center;
 }
 .info-back a {
   font-size: 0.56rem;
@@ -2125,7 +2130,13 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   }
 
   /* ─── SHOP / PRODUCT / INFO mobile — documenti a scroll normale ─── */
-  html body #shop,
+  html body #shop {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 80px 0 80px;      /* niente margini laterali: le foto riempiono */
+    scroll-snap-align: none;
+  }
   html body #info {
     height: auto;
     min-height: 0;
@@ -2140,6 +2151,7 @@ body.dark-mode .pdp-ref { color: var(--gray); }
     padding: 80px 0 24px;
     scroll-snap-align: none;
   }
+  .shop-head { margin: 0 16px 36px; }
   #shop { background: #000; }
   #product { background: #000; }
   #info { background: #000; }
@@ -2154,6 +2166,8 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .ph-block,
   body.dark-mode .ph-block { background: #1c1c1c; }
   .pgrid-media { background: #1c1c1c; }
+  /* packshot flat su mobile: meno aria interna, riempie di più */
+  .pgrid-media.is-flat img { padding: 3% 5%; }
   .product-card-name,
   .pgrid-name,
   .pgrid-price { color: #fff; }
@@ -2192,10 +2206,11 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .pdp-tab-panel a, .pdp-inline-link { color: #fff; border-bottom-color: rgba(255,255,255,0.35); }
   .pdp-complete-title { color: #fff; }
   .pdp-complete { padding: 0; }
-  .pdp-complete-row { grid-template-columns: 1fr; gap: 24px; }
+  .pdp-complete-row { grid-template-columns: 1fr; gap: 0; }
   .pdp-complete-items {
     grid-template-columns: repeat(2, 1fr) !important;
-    padding: 0 16px;
+    padding: 0;                /* foto a filo, riempiono il nero */
+    column-gap: 2px;
     row-gap: 28px;
   }
   .pdp-complete-items .pgrid-card { max-width: none; }
