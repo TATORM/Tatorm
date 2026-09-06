@@ -243,48 +243,11 @@ function pgridHTML(list, showTag) {
     feed.appendChild(feature);
   }
 
-  layoutHome();
 })();
 
-/* ═══════════════════════════════════════════
-   LAYOUT CAROSELLI — posizionamento forzato
-   Usa window.innerHeight in px, zero catene CSS
-   ═══════════════════════════════════════════ */
-function layoutCarousels() {
-  const vh = window.innerHeight;
-  const vc = document.querySelector('.visual-column');
-  const carousels = document.querySelectorAll('.look-carousel');
-  if (!vc || !carousels.length) return;
-
-  vc.style.height   = (carousels.length * vh) + 'px';
-  vc.style.position = 'relative';
-
-  carousels.forEach((c, i) => {
-    c.style.position = 'absolute';
-    c.style.top      = (i * vh) + 'px';
-    c.style.height   = vh + 'px';
-    const track = c.querySelector('.carousel-track');
-    if (track) track.style.height = vh + 'px';
-
-  });
-}
-
-layoutCarousels();
-
-function layoutHome() {
-  const vh = window.innerHeight;
-  const hero = document.querySelector('.home-hero');
-  if (!hero) return;
-  hero.style.height = vh + 'px';
-  const img = hero.querySelector('img');
-  if (img) img.style.height = vh + 'px';
-}
-layoutHome();
-
-window.addEventListener('resize', () => {
-  layoutCarousels();
-  layoutHome();
-});
+/* Il layout di home-hero e caroselli (altezza = viewport, colonna
+   verticale) è tutto in CSS: .home-hero / .look-carousel = 100svh in
+   flusso normale. Niente più posizionamento in JS né handler di resize. */
 
 /* ─── DOM refs ───────────────────────────── */
 const splashBg          = document.getElementById('splash-bg');
@@ -497,7 +460,6 @@ function showSection(id) {
     siteBreadcrumb.classList.add('visible');
     siteNav.style.opacity       = '0';
     siteNav.style.pointerEvents = 'none';
-    layoutCarousels();
     activeLook = null;
     renderLookPanel('1');
   } else if (id === 'about') {

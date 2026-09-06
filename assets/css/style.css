@@ -72,6 +72,17 @@ body.dark-mode .toggle-thumb {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
+/* ─── Rispetta "riduci animazioni" del sistema ──────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  #splash-bg { transition: none; }
+}
+
 /* ─── Protezione immagini ────────────────── */
 img {
   pointer-events: none;
@@ -296,10 +307,11 @@ ul { list-style: none; }
   align-items: center;
 }
 
-/* Prima foto: hero fullscreen */
+/* Prima foto: hero fullscreen — altezza = viewport (in CSS, non JS) */
 .home-hero {
   width: var(--image-width);
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   margin: 0;
   position: relative;
@@ -336,7 +348,9 @@ ul { list-style: none; }
   padding-top: 0;
 }
 
-/* Colonna centrale centrata */
+/* Colonna centrale — i caroselli sono in flusso normale, uno per
+   schermata. Niente altezza forzata da JS: l'altezza totale è la
+   somma dei .look-carousel (21 × 100dvh). */
 .visual-column {
   width: 100%;
   position: relative;
@@ -344,10 +358,11 @@ ul { list-style: none; }
 
 /* ─── Carosello look ──────────────────────── */
 .look-carousel {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;          /* era absolute + top da JS */
   width: var(--image-width);
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;              /* centrato, al posto di left:50% + translateX */
 }
 
 .carousel-track {
@@ -1587,22 +1602,11 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
     object-position: center center;
   }
 
-  /* Collection: override layout assoluto — carousels in flow normale */
-  .visual-column {
-    position: static !important;
-    height: auto !important;
-  }
+  /* Collection: i caroselli hanno già position:relative + width:var(--image-width)
+     (= 100vw su mobile) dalle regole base. Qui solo l'altezza dvh e lo snap. */
   .look-carousel {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    width: 100vw !important;
-    height: 100dvh !important;
+    height: 100dvh;
     scroll-snap-align: start;
-  }
-  .carousel-track {
-    height: 100dvh !important;
   }
   .carousel-slide img {
     object-fit: cover;
