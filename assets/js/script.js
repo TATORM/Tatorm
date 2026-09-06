@@ -1025,62 +1025,108 @@ function renderPDP(slug) {
     ? `<span class="pdp-price-sale">${money(price, cur)}</span> <span class="pdp-price-was">${money(compare, cur)}</span>`
     : money(price, cur);
 
-  const lookLinks = (p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ');
-  const fitHTML = p.fit ? `<p class="pdp-fit">${p.fit}</p>` : '';
-  const modelHTML = p.model && p.model.height && p.model.wears
-    ? `<p class="pdp-model">Model is ${p.model.height} and wears size ${p.model.wears}.</p>` : '';
+  const ref = (p.id ? 'TATO-' + String(p.id).toUpperCase() : '').trim();
+  const singleSizeLabel = singleSize ? color.sizes[0].label : null;
+
+  /* opzioni della tendina taglia (native <select> = accessibile) */
+  const sizeOptions = ['<option value="">Select a size</option>'].concat(
+    color.sizes.map(s => {
+      const avail = shReady ? sh.variantAvailable(slug, color.name, s.label) : (s.available !== false);
+      return `<option value="${s.label}"${s.label === pdpState.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${s.label}${avail ? '' : ' — Sold out'}</option>`;
+    })
+  ).join('');
+
+  const priceLabel = money(price, cur);
+  const addLabel = soldOut ? 'Sold out'
+    : `<span>Add to bag</span><span class="pdp-add-price">${compare && compare > price ? `<s>${money(compare, cur)}</s> ` : ''}${priceLabel}</span>`;
+
+  /* "Complete the look": gli ALTRI capi a catalogo del 1° look di questo prodotto */
+  const lookN = (p.lookRefs || [])[0];
+  const lookData = lookN && window.TATO_resolveLook ? window.TATO_resolveLook(lookN) : null;
+  const completeItems = lookData
+    ? lookData.items.filter(it => it.slug && it.slug !== slug)
+    : [];
+  const completeHTML = completeItems.length ? `
+    <section class="pdp-complete">
+      <p class="pdp-complete-title">Complete the look</p>
+      <div class="pgrid pdp-complete-grid">
+        ${completeItems.map(it => pgridCardHTML(window.TATO_getProduct(it.slug), false)).join('')}
+      </div>
+    </section>` : '';
 
   pdpEl.innerHTML = `
-    <div class="pdp-gallery${galleryFlat ? ' is-flat' : ''}">${gallery}</div>
-    <div class="pdp-info">
-      <button class="pdp-back" id="pdp-back">← Shop</button>
-      <h1 class="pdp-name">${p.name}</h1>
-      <p class="pdp-price">${priceHTML}</p>
-      ${soldOut ? '<p class="pdp-soldout-tag">Sold out</p>' : ''}
+    <div class="pdp-main">
+      <div class="pdp-gallery${galleryFlat ? ' is-flat' : ''}">${gallery}</div>
+      <div class="pdp-info">
+        <button class="pdp-back" id="pdp-back">← Shop</button>
 
-      <p class="pdp-row-label">Colour</p>
-      <div class="pdp-colors">${swatches}</div>
-      <p class="pdp-color-name">${color.name}</p>
-
-      ${singleSize ? '' : `
-      <div class="pdp-size-head">
-        <p class="pdp-row-label">Size</p>
-        <button class="pdp-sizeguide-link" id="pdp-sizeguide" type="button">Size guide</button>
-      </div>
-      <div class="pdp-sizes">${sizes}</div>`}
-      <p class="pdp-size-hint" id="pdp-size-hint"></p>
-
-      <button class="pdp-add-btn" id="pdp-add"${soldOut ? ' disabled' : ''}>${soldOut ? 'Sold out' : 'Add to bag'}</button>
-      ${fitHTML}${modelHTML}
-
-      <div class="pdp-accordion">
-        <div class="pdp-acc-item open">
-          <button class="pdp-acc-head">Description <span class="pdp-acc-sign">–</span></button>
-          <div class="pdp-acc-body">${p.description}</div>
+        <div class="pdp-head">
+          <h1 class="pdp-name">${p.name}</h1>
         </div>
-        <div class="pdp-acc-item">
-          <button class="pdp-acc-head">Composition &amp; Care <span class="pdp-acc-sign">+</span></button>
-          <div class="pdp-acc-body">${p.composition}<br>${p.care}</div>
+        <div class="pdp-subhead">
+          <p class="pdp-material">${p.composition}</p>
+          ${ref ? `<p class="pdp-ref">Ref. ${ref}</p>` : ''}
         </div>
-        <div class="pdp-acc-item">
-          <button class="pdp-acc-head">Shipping &amp; Returns <span class="pdp-acc-sign">+</span></button>
-          <div class="pdp-acc-body">
-            <a href="#shipping" data-section="shipping">Shipping information</a><br>
-            <a href="#returns" data-section="returns">Returns &amp; refunds</a>
+        ${soldOut ? '<p class="pdp-soldout-tag">Sold out</p>' : ''}
+
+        <p class="pdp-row-label">Colour</p>
+        <div class="pdp-colors">${swatches}</div>
+        <p class="pdp-color-name">${color.name}</p>
+
+        ${singleSize ? '' : `
+        <div class="pdp-size-row">
+          <label class="pdp-row-label" for="pdp-size-select">Select the size</label>
+          <button class="pdp-sizeguide-link" id="pdp-sizeguide" type="button">Size guide</button>
+        </div>
+        <div class="pdp-select-wrap">
+          <select class="pdp-size-select" id="pdp-size-select" aria-describedby="pdp-size-hint">${sizeOptions}</select>
+        </div>`}
+        <p class="pdp-size-hint" id="pdp-size-hint"></p>
+
+        <button class="pdp-add-btn" id="pdp-add"${soldOut ? ' disabled' : ''}>${addLabel}</button>
+        <button class="pdp-express-btn" id="pdp-express"${soldOut ? ' disabled' : ''}>
+          <span>Express checkout</span>
+          <span class="pdp-pay-marks">PayPal · Apple Pay · Card</span>
+        </button>
+
+        <p class="pdp-delivery-note">Delivery estimate — to be configured</p>
+        <p class="pdp-phone-note">Order by phone — number to be provided</p>
+
+        <div class="pdp-tabs" role="tablist">
+          <button class="pdp-tab active" data-tab="desc" role="tab" aria-selected="true">Description</button>
+          <button class="pdp-tab" data-tab="fit" role="tab" aria-selected="false">Size &amp; fit</button>
+          <button class="pdp-tab" data-tab="care" role="tab" aria-selected="false">Composition &amp; care</button>
+          <button class="pdp-tab" data-tab="ship" role="tab" aria-selected="false">Shipping &amp; returns</button>
+        </div>
+        <div class="pdp-tab-panels">
+          <div class="pdp-tab-panel active" data-panel="desc">
+            <p>${p.description}</p>
+            ${lookN ? `<p class="pdp-seenin">Seen in ${(p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ')}</p>` : ''}
+          </div>
+          <div class="pdp-tab-panel" data-panel="fit">
+            <p>${p.fit ? p.fit : 'Fit information to be provided.'}</p>
+            ${p.model && p.model.height && p.model.wears ? `<p>Model is ${p.model.height} and wears size ${p.model.wears}.</p>` : ''}
+            <p><button class="pdp-inline-link" id="pdp-sizeguide-2" type="button">Open size guide</button></p>
+          </div>
+          <div class="pdp-tab-panel" data-panel="care">
+            <p>${p.composition}<br>${p.care}</p>
+          </div>
+          <div class="pdp-tab-panel" data-panel="ship">
+            <p><a href="#shipping" data-section="shipping">Shipping information</a><br>
+            <a href="#returns" data-section="returns">Returns &amp; refunds</a></p>
           </div>
         </div>
-        ${lookLinks ? `<div class="pdp-acc-item open">
-          <button class="pdp-acc-head">Seen in <span class="pdp-acc-sign">–</span></button>
-          <div class="pdp-acc-body pdp-lookrefs">${lookLinks}</div>
-        </div>` : ''}
       </div>
     </div>
+    ${completeHTML}
   `;
 
-  pdpEl.querySelector('#pdp-sizeguide')?.addEventListener('click', () => {
-    if (window.TATO_openSizeGuide) window.TATO_openSizeGuide(p.category, p.name);
-  });
-  pdpEl.querySelectorAll('.pdp-acc-body [data-section]').forEach(a => {
+  /* ── handlers ── */
+  const openGuide = () => window.TATO_openSizeGuide && window.TATO_openSizeGuide(p.category, p.name);
+  pdpEl.querySelector('#pdp-sizeguide')?.addEventListener('click', openGuide);
+  pdpEl.querySelector('#pdp-sizeguide-2')?.addEventListener('click', openGuide);
+
+  pdpEl.querySelectorAll('[data-section]').forEach(a => {
     a.addEventListener('click', e => { e.preventDefault(); location.hash = '#' + a.dataset.section; });
   });
 
@@ -1092,31 +1138,27 @@ function renderPDP(slug) {
     });
   });
 
-  pdpEl.querySelectorAll('.pdp-size').forEach(btn => {
-    if (btn.disabled) return;
-    btn.addEventListener('click', () => {
-      pdpEl.querySelectorAll('.pdp-size').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      pdpState.size = btn.dataset.size;
-      const hint = document.getElementById('pdp-size-hint');
-      if (hint) { hint.textContent = ''; hint.classList.remove('error'); }
-      // riflette il prezzo della variante selezionata (compare-at incluso)
-      const vp2 = shReady ? sh.variantPrice(slug, color.name, pdpState.size) : null;
-      if (vp2 && vp2.price != null) {
-        const el = pdpEl.querySelector('.pdp-price');
-        if (el) el.innerHTML = (vp2.compareAt && vp2.compareAt > vp2.price)
-          ? `<span class="pdp-price-sale">${money(vp2.price, vp2.currency)}</span> <span class="pdp-price-was">${money(vp2.compareAt, vp2.currency)}</span>`
-          : money(vp2.price, vp2.currency);
-      }
-    });
+  const priceEl = () => pdpEl.querySelector('.pdp-add-price');
+  const sel = pdpEl.querySelector('#pdp-size-select');
+  sel?.addEventListener('change', () => {
+    pdpState.size = sel.value || null;
+    const hint = document.getElementById('pdp-size-hint');
+    if (hint) { hint.textContent = ''; hint.classList.remove('error'); }
+    const vp2 = shReady && pdpState.size ? sh.variantPrice(slug, color.name, pdpState.size) : null;
+    if (vp2 && vp2.price != null && priceEl()) {
+      priceEl().innerHTML = (vp2.compareAt && vp2.compareAt > vp2.price)
+        ? `<s>${money(vp2.compareAt, vp2.currency)}</s> ${money(vp2.price, vp2.currency)}`
+        : money(vp2.price, vp2.currency);
+    }
   });
 
-  pdpEl.querySelectorAll('.pdp-acc-head').forEach(head => {
-    head.addEventListener('click', () => {
-      const item = head.closest('.pdp-acc-item');
-      item.classList.toggle('open');
-      const sign = head.querySelector('.pdp-acc-sign');
-      if (sign) sign.textContent = item.classList.contains('open') ? '–' : '+';
+  pdpEl.querySelectorAll('.pdp-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      pdpEl.querySelectorAll('.pdp-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+      pdpEl.querySelectorAll('.pdp-tab-panel').forEach(pnl => pnl.classList.remove('active'));
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      pdpEl.querySelector(`.pdp-tab-panel[data-panel="${tab.dataset.tab}"]`)?.classList.add('active');
     });
   });
 
@@ -1132,45 +1174,71 @@ function renderPDP(slug) {
     });
   });
 
-  document.getElementById('pdp-add')?.addEventListener('click', () => {
-    const btn = document.getElementById('pdp-add');
-    if (!btn || btn.disabled) return;
+  /* validazione condivisa add / express */
+  function resolveSelection() {
     const hint = document.getElementById('pdp-size-hint');
-    const chosenSize = singleSize ? color.sizes[0].label : pdpState.size;
-
+    const chosenSize = singleSizeLabel || pdpState.size;
     if (!chosenSize) {
       if (hint) { hint.textContent = 'Select a size'; hint.classList.add('error'); }
-      return;
+      return null;
     }
-
     const variantId = sh ? sh.variantId(slug, color.name, chosenSize) : null;
     if (shReady && (!variantId || !sh.variantAvailable(slug, color.name, chosenSize))) {
       if (hint) { hint.textContent = 'This option is not available'; hint.classList.add('error'); }
-      return;
+      return null;
     }
-
     const vpAdd = shReady ? sh.variantPrice(slug, color.name, chosenSize) : null;
-    addToCart({
-      name:  p.name,
-      slug:  slug,
+    return {
+      chosenSize, variantId,
       price: vpAdd && vpAdd.price != null ? vpAdd.price : (p.price || 0),
       currency: (vpAdd && vpAdd.currency) || p.currency || 'EUR',
-      look:  window.TATO_getCategoryLabel(p.category),
-      color: color.name,
-      size:  chosenSize,
-      shopifyVariantId: variantId,
-      qty: 1,
-    });
+    };
+  }
 
+  document.getElementById('pdp-add')?.addEventListener('click', () => {
+    const btn = document.getElementById('pdp-add');
+    if (!btn || btn.disabled) return;
+    const s = resolveSelection();
+    if (!s) return;
+    addToCart({
+      name: p.name, slug, price: s.price, currency: s.currency,
+      look: window.TATO_getCategoryLabel(p.category),
+      color: color.name, size: s.chosenSize, shopifyVariantId: s.variantId, qty: 1,
+    });
+    const orig = btn.innerHTML;
     btn.textContent = 'Added';
     btn.disabled = true;
     btn.setAttribute('aria-busy', 'true');
     openCart();
     setTimeout(() => {
-      btn.textContent = soldOut ? 'Sold out' : 'Add to bag';
+      btn.innerHTML = soldOut ? 'Sold out' : orig;
       btn.disabled = soldOut;
       btn.removeAttribute('aria-busy');
     }, 1400);
+  });
+
+  document.getElementById('pdp-express')?.addEventListener('click', async () => {
+    const btn = document.getElementById('pdp-express');
+    if (!btn || btn.disabled) return;
+    if (!shReady) { const h = document.getElementById('pdp-size-hint'); if (h) { h.textContent = 'Checkout unavailable right now'; h.classList.add('error'); } return; }
+    const s = resolveSelection();
+    if (!s || !s.variantId) return;
+    const orig = btn.innerHTML;
+    btn.textContent = 'Redirecting…';
+    btn.disabled = true;
+    btn.setAttribute('aria-busy', 'true');
+    try {
+      const url = await sh.createCheckoutUrl([{ variantId: s.variantId, quantity: 1 }]);
+      if (url) { window.location.href = url; return; }
+      throw new Error('no url');
+    } catch (e) {
+      console.warn('[TATO] express checkout fallito:', e);
+      btn.innerHTML = orig;
+      btn.disabled = false;
+      btn.removeAttribute('aria-busy');
+      const h = document.getElementById('pdp-size-hint');
+      if (h) { h.textContent = 'Checkout error — please retry'; h.classList.add('error'); }
+    }
   });
 
   return true;
