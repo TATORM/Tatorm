@@ -1186,7 +1186,12 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
 /* ═══════════════════════════════════════════
    PDP — scheda prodotto
    ═══════════════════════════════════════════ */
-#product { padding: 96px 0 100px; }
+#product { padding: 96px 0 0; }
+#pdp { padding-bottom: 0; }
+/* niente vuoto tra "Complete the look" e il footer: la sezione si chiude
+   sulla foto (elemento più alto della riga) e il footer arriva subito. */
+.pdp-complete { margin-bottom: 0; }
+.pdp-complete-look { line-height: 0; }
 
 .pdp-main {
   display: grid;
@@ -2140,12 +2145,18 @@ body.dark-mode .pdp-ref { color: var(--gray); }
 
   /* ─── SHOP / PRODUCT / INFO mobile — documenti a scroll normale ─── */
   html body #shop,
-  html body #product,
   html body #info {
     height: auto;
     min-height: 0;
     overflow: visible;
     padding: 80px 16px 80px;
+    scroll-snap-align: none;
+  }
+  html body #product {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 80px 0 24px;
     scroll-snap-align: none;
   }
   #shop { background: #000; }
