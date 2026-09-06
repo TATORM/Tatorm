@@ -7,3 +7,12 @@ archive/unused-photos/
 
 # Export / bozze locali
 *.numbers
+
+# Toolchain
+node_modules/
+
+# Generati dal build (li produce la GitHub Action)
+assets/dist/
+
+# Originali immagini ad alta risoluzione (input di scripts/images.mjs)
+media/_src/

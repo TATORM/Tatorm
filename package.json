@@ -1,0 +1,16 @@
+{
+  "name": "tato-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "tatorm.com — sito one-page statico (HTML/CSS/JS vanilla). Build con esbuild.",
+  "scripts": {
+    "dev": "esbuild --servedir=. --serve=127.0.0.1:8000",
+    "build": "node scripts/build.mjs",
+    "images": "node scripts/images.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2",
+    "sharp": "^0.33.5"
+  }
+}

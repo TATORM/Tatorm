@@ -1,9 +1,45 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-01
-**Branch di lavoro:** `ecommerce-dev` — ultimo commit `09ce392`
-**Tutto il lavoro della sessione 01/09 è NON committato** (vedi `git status` sotto).
+**Ultimo aggiornamento:** 2026-09-06
+**Branch di lavoro:** `ecommerce-dev`
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
+
+---
+
+## Rifacimento tecnico — piano in 5 fasi (dal 06/09)
+
+Obiettivo: sito fluido e ottimizzato, aspetto invariato, resta vanilla su GitHub Pages.
+Piano completo: artifact `Piano Tecnico TATO`
+(https://claude.ai/code/artifact/825b75c5-4f41-484d-ac38-ebd7f8b3b5eb).
+Decisioni bloccate: modello dati = **Opzione A "Shop the look"**; build = **esbuild + GitHub Action**.
+Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
+
+### Fase 00 — Fondamenta & build ✅ (commit su `ecommerce-dev`)
+
+- `package.json` (type: module). Script:
+  - `npm run dev` → `esbuild --servedir=. --serve=127.0.0.1:8000` (statico, niente cache di index.html)
+  - `npm run build` → `node scripts/build.mjs`
+  - `npm run images` → `node scripts/images.mjs` (predisposto, usato in fase 02)
+- `scripts/build.mjs`: esbuild bundla+minifica `assets/js/main.js` → `assets/dist/app-[hash].js`
+  e `assets/css/style.css` → `assets/dist/app-[hash].css`, poi riscrive i tag in `index.html`
+  tra i marker `<!-- build:css -->…` e `<!-- build:js -->…`. Flag `--check` = build senza toccare l'HTML.
+  Prima prova: JS 35.5 KB, CSS 27.1 KB.
+- `assets/js/main.js`: entry del bundle — `import` di products.js, shopify.js, script.js nell'ordine dei `<script>`.
+  I file restano caricati singolarmente in dev (i sorgenti NON sono ancora moduli: quello è fase 04).
+- `.github/workflows/deploy.yml`: al push su `main` → `npm ci && npm run build` → deploy Pages.
+  **NON attivo finché Settings → Pages → Source non passa da "Deploy from a branch" a "GitHub Actions"**
+  (cambia come si aggiorna tatorm.com — da fare a mano quando si è pronti al merge).
+- `.gitignore`: aggiunti `node_modules/`, `assets/dist/`, `media/_src/`.
+- **Modello:** `index.html` nel repo tiene sempre i tag SORGENTE tra i marker; `assets/dist/` è
+  gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
+  locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
+
+---
+
+### Storico precedente
+
+**Sessione 01/09** committata il 06/09 come `df80777`
+(griglia editoriale, packshot, tassonomia ridotta, footer, menu shop-mode).
 
 ---
 
