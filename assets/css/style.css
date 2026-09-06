@@ -224,10 +224,11 @@ ul { list-style: none; }
   border: 0;
   font-family: var(--font);
   font-weight: 500;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  /* stessa dimensione del bottone MENU (.nav-toggle) */
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  line-height: 2.35;
+  line-height: 2.6;
   color: var(--black);
   cursor: pointer;
   transition: opacity 0.2s ease;
@@ -250,12 +251,12 @@ ul { list-style: none; }
 .nav-sub a {
   display: block;
   text-align: right;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  line-height: 2;
+  line-height: 2.2;
   color: var(--black);
-  opacity: 0.78;
+  opacity: 0.6;
   transition: opacity 0.2s ease;
 }
 .nav-sub a:hover { opacity: 1; }
@@ -1002,12 +1003,14 @@ body.shop-mode .site-logo.logo--left {
   width: 74px;
   transition: none;
 }
+/* MENU in alto a destra (sotto la riga di icone), non più accanto al logo.
+   In alto a sinistra resta solo il logo TATO → home. */
 body.shop-mode .site-nav {
-  top: 22px;
-  left: calc(3vw + 104px);
-  right: auto;
+  top: 58px;
+  right: 26px;
+  left: auto;
   transform: none;
-  text-align: left;
+  text-align: right;
 }
 body.shop-mode .site-nav .nav-links { margin-top: 14px; }
 
@@ -1019,103 +1022,117 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
    SHOP — griglia prodotti
    ═══════════════════════════════════════════ */
 #shop {
-  padding: 100px 3vw 100px;
-  max-width: 1500px;
-  margin: 0 auto;
+  padding: 90px 0 120px;
 }
 
 .shop-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
+  margin: 0 3vw 48px;
 }
 .shop-title {
-  font-size: 0.6rem;
-  letter-spacing: 0.28em;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--black);
 }
-.shop-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-}
-.shop-filter {
-  font-size: 0.56rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gray);
-  background: none;
-  border: none;
-  padding: 0 0 3px;
-  border-bottom: 1px solid transparent;
-  cursor: pointer;
-  font-family: var(--font);
-  font-weight: 500;
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-.shop-filter:hover { color: var(--black); }
-.shop-filter.active {
-  color: var(--black);
-  border-bottom-color: var(--black);
-}
 
-.shop-empty {
-  grid-column: 1 / -1;
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gray);
-  padding: 40px 0;
-}
-
-.shop-grid {
+/* ═══════════════════════════════════════════
+   GRIGLIA PRODOTTI — stile editoriale (rif. Dior)
+   4 colonne a tutta larghezza, colonne quasi
+   attaccate, righe distanziate, didascalie centrate.
+   Riusata da Shop e Home.
+   ═══════════════════════════════════════════ */
+.pgrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 48px 32px;
+  column-gap: 2px;
+  row-gap: 84px;
+  width: 100%;
 }
-.product-card {
-  cursor: pointer;
+.pgrid-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  padding: 60px 0;
+}
+.pgrid-card {
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--black);
 }
-.product-card .ph-block,
-.product-card .product-card-img { transition: opacity 0.25s ease; }
-.product-card:hover .ph-block,
-.product-card:hover .product-card-img { opacity: 0.72; }
-.product-card-img {
+.pgrid-media {
+  position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--gray-light);
+}
+.pgrid-media img,
+.pgrid-media .ph-block {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center top;
   display: block;
+  transition: opacity 0.3s ease;
 }
-.product-card-body {
-  margin-top: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+/* Packshot = flat tecnico su fondo bianco: si mostra intero, con aria attorno.
+   (quando arriveranno le foto vere, togliere il ramo .is-flat) */
+.pgrid-media.is-flat { background: #fff; }
+.pgrid-media.is-flat img {
+  object-fit: contain;
+  object-position: center;
+  padding: 7% 11%;
 }
-.product-card-name {
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
+.pgrid-card:hover .pgrid-media img { opacity: 0.8; }
+.pgrid-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 0.48rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 3px 7px;
+}
+.pgrid-name {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--black);
 }
-.product-card-meta {
-  font-size: 0.58rem;
-  letter-spacing: 0.04em;
-  color: var(--gray);
-}
-.product-card-price {
-  font-size: 0.6rem;
+.pgrid-price {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 0.62rem;
   letter-spacing: 0.04em;
   color: var(--black);
 }
-.product-card.is-soldout .product-card-name { color: var(--gray); }
+.pgrid-card.is-soldout .pgrid-name { color: var(--gray); }
+
+/* Griglia nella Home: a tutta larghezza, stacco dalla hero */
+.home-pgrid { margin: 6px 0; }
+
+/* Singolo prodotto in evidenza sotto la riga (es. cappello) */
+.home-feature {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 84px;
+  margin-bottom: 100px;   /* stacco tra il prezzo e la linea del footer */
+  padding: 0 6vw;
+}
+.home-feature .pgrid-card {
+  width: 100%;
+  max-width: 340px;
+}
 
 
 /* ═══════════════════════════════════════════
@@ -1145,6 +1162,13 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   object-fit: cover;
   object-position: center top;
   display: block;
+}
+/* Packshot flat: intero, su bianco (vedi nota in .pgrid-media.is-flat) */
+.pdp-gallery.is-flat .pdp-gallery-img {
+  object-fit: contain;
+  object-position: center;
+  background: #fff;
+  padding: 6% 9%;
 }
 
 .pdp-info {
@@ -1303,6 +1327,160 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 .pdp-lookrefs a:hover { color: var(--black); border-color: var(--black); }
+
+
+/* ═══════════════════════════════════════════
+   FOOTER — estetica TATO (testo micro, uppercase,
+   letter-spacing ampio, filetti sottili)
+   ═══════════════════════════════════════════ */
+.site-footer {
+  /* sempre su fondo grigio scuro, testo chiaro (indipendente dal tema) */
+  --fg: #f0f0f0;
+  --fg-dim: rgba(255, 255, 255, 0.5);
+  --fg-line: rgba(255, 255, 255, 0.14);
+  position: relative;
+  z-index: 70;               /* copre logo/MENU fissi quando si arriva in fondo */
+  border-top: 1px solid var(--fg-line);
+  background: #1e1e1e;
+  color: var(--fg);
+}
+.site-footer__inner {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 80px 3vw 40px;
+}
+
+.footer-col__title {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 18px;
+}
+
+/* — Newsletter — */
+.footer-news { max-width: 420px; margin-bottom: 64px; }
+.footer-news__copy {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  color: var(--fg-dim);
+  margin-bottom: 20px;
+}
+.footer-news__form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--fg);
+  padding-bottom: 8px;
+}
+.footer-news__input {
+  flex: 1;
+  border: 0;
+  background: none;
+  font-family: var(--font);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.footer-news__input::placeholder { color: var(--fg-dim); }
+.footer-news__input:focus { outline: none; }
+.footer-news__btn {
+  border: 0;
+  background: none;
+  font-family: var(--font);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--fg);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.footer-news__btn:hover { opacity: 0.45; }
+.footer-news__status {
+  margin-top: 12px;
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.footer-news__status.is-visible { opacity: 1; }
+
+/* — Colonne link — */
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  padding: 48px 0;
+  border-top: 1px solid var(--fg-line);
+}
+.footer-col ul { list-style: none; margin: 0; padding: 0; }
+.footer-col li { margin-bottom: 12px; }
+.footer-col a {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+.footer-col a:hover { opacity: 1; }
+
+/* — Barra in basso — */
+.footer-bottom {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding-top: 40px;
+  border-top: 1px solid var(--fg-line);
+}
+.footer-social {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.footer-social span { color: var(--fg-dim); }
+.footer-social a {
+  color: var(--fg);
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+.footer-social a:hover { opacity: 1; }
+.footer-wordmark {
+  display: block;
+  width: 120px;
+  transition: opacity 0.2s ease;
+}
+.footer-wordmark img { width: 100%; height: auto; display: block; filter: invert(1); }
+.footer-wordmark:hover { opacity: 0.5; }
+.footer-meta {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.footer-region {
+  grid-column: 3;
+  grid-row: 1;                /* stessa riga di Follow · Instagram, a destra */
+  justify-self: end;
+  align-self: center;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
 
 
 /* ═══════════════════════════════════════════
@@ -1526,18 +1704,21 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   #shop { background: #000; }
   #product { background: #000; }
   .shop-title { color: #fff; }
-  .shop-filter { color: rgba(255,255,255,0.5); }
-  .shop-filter:hover,
-  .shop-filter.active { color: #fff; border-bottom-color: #fff; }
-  .shop-grid {
+  .shop-grid,
+  .pgrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 28px 12px;
+    column-gap: 2px;
+    row-gap: 44px;
   }
   .ph-block,
   body.dark-mode .ph-block { background: #1c1c1c; }
-  .product-card-name { color: #fff; }
+  .pgrid-media { background: #1c1c1c; }
+  .product-card-name,
+  .pgrid-name,
+  .pgrid-price { color: #fff; }
   .product-card-meta,
   .product-card-price { color: rgba(255,255,255,0.6); }
+  .pgrid-tag { color: #0a0a0a; background: rgba(255,255,255,0.9); }
 
   /* ─── PDP mobile ──────────────────────────── */
   .pdp {
@@ -1556,4 +1737,21 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   .pdp-accordion, .pdp-acc-item { border-color: rgba(255,255,255,0.18); }
   .pdp-acc-head { color: #fff; }
   .pdp-acc-body { color: rgba(255,255,255,0.6); }
+
+  /* ─── Footer mobile (solo layout — i colori scuri sono già di base) ─── */
+  .site-footer { scroll-snap-align: start; }
+  .site-footer__inner { padding: 56px 20px 32px; }
+  .footer-news { margin-bottom: 44px; }
+  .footer-cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 24px;
+    padding: 40px 0;
+  }
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 18px;
+  }
+  .footer-region { grid-column: auto; grid-row: auto; justify-self: center; }
 }

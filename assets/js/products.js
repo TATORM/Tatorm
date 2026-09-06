@@ -4,17 +4,15 @@
    Catalogo prodotti singoli, derivato dai capi
    della collezione (21 look).
 
-   FOTO: per ora `images: []` → il front-end
-   mostra blocchi grigi placeholder.
-   Quando arrivano i packshot, popolare così:
-     images: [
-       'FOTO PRODOTTI/<slug>/<colore-slug>/01.jpg',
-       'FOTO PRODOTTI/<slug>/<colore-slug>/02.jpg'
-     ]
+   FOTO: ogni colore punta al packshot (flat
+   tecnico su bianco) in
+     media/products/<slug>/<colore-slug>/01.png
+   Fallback se `images` è vuoto → foto dei look
+   in cui il capo compare (vedi TATO_lookImages).
 
    MODELLO: un prodotto per capo, con varianti
    colore selezionabili. Ogni colore ha le sue
-   taglie e (in futuro) le sue foto.
+   taglie e le sue foto.
    ═══════════════════════════════════════════ */
 
 /* Reparti (menu WOMEN / MEN). ACCESSORIES è una
@@ -27,15 +25,11 @@ window.TATO_DEPARTMENTS = [
 /* Categorie merceologiche — sottomenu di WOMEN / MEN.
    (accessories è gestita separatamente, vedi sotto) */
 window.TATO_CATEGORIES = [
-  { slug: 'outerwear', label: 'Outerwear' },
-  { slug: 'tailoring', label: 'Tailoring' },
+  { slug: 'outerwear', label: 'Outerwear' },   // cappotti + giacche tailoring
   { slug: 'shirts',    label: 'Shirts' },
-  { slug: 'dresses',   label: 'Dresses' },
-  { slug: 'jersey',    label: 'Jersey' },
+  { slug: 'knitwear',  label: 'Knitwear' },    // jersey / maglieria
   { slug: 'pants',     label: 'Pants' },
   { slug: 'skirts',    label: 'Skirts' },
-  { slug: 'knit',      label: 'Knit' },
-  { slug: 'vquarto',   label: 'V° Quarto' },
 ];
 
 /* Etichette di tutte le categorie, accessories inclusa */
@@ -49,12 +43,18 @@ const NUM_SIZES_3 = ['1', '2', '3'];
 const NUM_SIZES_2 = ['1', '2'];
 const ONE_SIZE    = ['One Size'];
 
-/* Helper variante colore */
-function tatoColor(name, hex, sizes) {
+/* Packshot di un colore: media/products/<slug>/<colore-slug>/01.png */
+function pshot(slug, colorSlug) {
+  return ['media/products/' + slug + '/' + colorSlug + '/01.png'];
+}
+
+/* Helper variante colore. `images` opzionale (array di URL);
+   se omesso → fallback alle foto dei look. */
+function tatoColor(name, hex, sizes, images) {
   return {
     name,
     hex,
-    images: [],   // vuoto → placeholder grigio
+    images: images || [],
     sizes: (sizes || NUM_SIZES_3).map(s => ({ label: s, available: true })),
   };
 }
@@ -66,9 +66,9 @@ window.TATO_PRODUCTS = [
     composition: '100% Cotton', care: 'Dyed garment. Machine wash cold, inside out.',
     description: 'Dyed-garment cotton twill trouser. Single pleat, hook-and-bar closure at the hem, double fit (relaxed / baloon). Designed in Rome, made in Italy.',
     colors: [
-      tatoColor('Black',     '#141414', NUM_SIZES_5),
-      tatoColor('Navy',      '#232b3a', NUM_SIZES_5),
-      tatoColor('Baby Pink', '#e9cdd2', NUM_SIZES_5),
+      tatoColor('Black',     '#141414', NUM_SIZES_5, pshot('tobi-pants', 'black')),
+      tatoColor('Navy',      '#232b3a', NUM_SIZES_5, pshot('tobi-pants', 'navy')),
+      tatoColor('Baby Pink', '#e9cdd2', NUM_SIZES_5, pshot('tobi-pants', 'baby-pink')),
     ],
     genders: ['women', 'men'],
     lookRefs: [1, 5, 8, 10, 16, 20], status: 'available',
@@ -79,9 +79,9 @@ window.TATO_PRODUCTS = [
     composition: '100% Cotton', care: 'Machine wash cold',
     description: 'Poplin shirt with a two-button collar stand and regular fit. Designed in Rome, made in Italy.',
     colors: [
-      tatoColor('White',              '#f4f4f0', NUM_SIZES_3),
-      tatoColor('Light Grey / White', '#d9d9d6', NUM_SIZES_3),
-      tatoColor('Baby Blue',          '#bcd3e6', NUM_SIZES_3),
+      tatoColor('White',              '#f4f4f0', NUM_SIZES_3, pshot('2-button-shirt', 'white')),
+      tatoColor('Light Grey / White', '#d9d9d6', NUM_SIZES_3, pshot('2-button-shirt', 'light-grey-white')),
+      tatoColor('Baby Blue',          '#bcd3e6', NUM_SIZES_3, pshot('2-button-shirt', 'baby-blue')),
     ],
     genders: ['women', 'men'],
     lookRefs: [5, 6, 8, 13, 15], status: 'available',
@@ -92,7 +92,7 @@ window.TATO_PRODUCTS = [
     composition: '100% Fine wool', care: 'Dry clean only',
     description: 'Column-length wool skirt, tailoring construction. Two-button closure flap, pockets hidden under the front flap, straight fit, raw-cut finishing. Designed in Rome, made in Italy.',
     colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3),
+      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('2-button-long-skirt', 'anthracite')),
     ],
     genders: ['women'],
     lookRefs: [11, 12, 17, 18, 21], status: 'available',
@@ -103,18 +103,18 @@ window.TATO_PRODUCTS = [
     composition: '100% Fine wool', care: 'Dry clean only',
     description: 'Full-length wool coat, tailoring construction. Triple-breasted closure with multiple ways to close and wear the piece, inside pocket.',
     colors: [
-      tatoColor('Dark Blue', '#22304a', NUM_SIZES_2),
+      tatoColor('Dark Blue', '#22304a', NUM_SIZES_2, pshot('triple-breasted-coat', 'dark-blue')),
     ],
     genders: ['women', 'men'],
     lookRefs: [11, 14], status: 'available',
   },
   {
     id: 'p05', slug: 'cropped-tailored-jacket', name: 'CROPPED TAILORED JACKET',
-    category: 'tailoring', price: 680, currency: 'EUR',
+    category: 'outerwear', price: 680, currency: 'EUR',
     composition: '100% Fine wool', care: 'Dry clean only',
     description: 'Cropped wool jacket, tailoring construction. Modular button closure, splint on the back for freedom of movement, standing collar with hook-and-bar closure, multiple ways to wear.',
     colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3),
+      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('cropped-tailored-jacket', 'anthracite')),
     ],
     genders: ['women', 'men'],
     lookRefs: [2, 10, 11, 13], status: 'available',
@@ -125,7 +125,7 @@ window.TATO_PRODUCTS = [
     composition: '100% Fine wool', care: 'Dry clean only',
     description: 'Wool tailoring trouser with a double pleat and relaxed fit.',
     colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3),
+      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('tailored-pants', 'anthracite')),
     ],
     genders: ['women', 'men'],
     lookRefs: [4, 7, 14, 19], status: 'available',
@@ -136,32 +136,32 @@ window.TATO_PRODUCTS = [
     composition: '100% Fine wool', care: 'Dry clean only',
     description: 'Wool tailoring trouser with a two-button closure flap, pockets hidden under the front flap, straight fit.',
     colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3),
+      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('2-button-tailored-pants', 'anthracite')),
     ],
     genders: ['women', 'men'],
     lookRefs: [2, 3, 13, 15], status: 'available',
   },
   {
     id: 'p08', slug: 'tiny-crewneck', name: 'TINY CREWNECK',
-    category: 'jersey', price: 180, currency: 'EUR',
+    category: 'knitwear', price: 180, currency: 'EUR',
     composition: '100% Cotton', care: 'Hand wash cold',
     description: 'Dyed-garment cotton crewneck. Horizontal-rib raglan sleeve, straight-cut neck construction, cropped fit, faded wrist. Designed in Rome, made in Italy.',
     colors: [
-      tatoColor('Black',     '#141414', NUM_SIZES_3),
-      tatoColor('Baby Blue', '#bcd3e6', NUM_SIZES_3),
+      tatoColor('Black',     '#141414', NUM_SIZES_3, pshot('tiny-crewneck', 'black')),
+      tatoColor('Baby Blue', '#bcd3e6', NUM_SIZES_3, pshot('tiny-crewneck', 'baby-blue')),
     ],
     genders: ['women', 'men'],
     lookRefs: [5], status: 'available',
   },
   {
     id: 'p09', slug: 'smock-longsleeve', name: 'SMOCK LONGSLEEVE',
-    category: 'jersey', price: 100, currency: 'EUR',
+    category: 'knitwear', price: 100, currency: 'EUR',
     composition: '100% Cotton', care: 'Machine wash cold',
     description: 'Horizontal-cut cotton jersey longsleeve with a smock neck construction and straight fit. Designed in Rome, made in Italy.',
     colors: [
-      tatoColor('White',             '#f4f4f0', NUM_SIZES_3),
-      tatoColor('Burgundy / Navy',   '#4a2230', NUM_SIZES_3),
-      tatoColor('Black / Dark Grey', '#2b2b2e', NUM_SIZES_3),
+      tatoColor('White',             '#f4f4f0', NUM_SIZES_3, pshot('smock-longsleeve', 'white')),
+      tatoColor('Burgundy / Navy',   '#4a2230', NUM_SIZES_3, pshot('smock-longsleeve', 'burgundy-navy')),
+      tatoColor('Black / Dark Grey', '#2b2b2e', NUM_SIZES_3, pshot('smock-longsleeve', 'black-dark-grey')),
     ],
     genders: ['women', 'men'],
     lookRefs: [10, 17, 20], status: 'available',
@@ -172,10 +172,10 @@ window.TATO_PRODUCTS = [
     composition: '100% Cotton', care: 'Spot clean',
     description: 'Six-panel cotton twill cap. Faded visor with sticker shadow, TATO embroidery. Designed in Rome, made in Italy.',
     colors: [
-      tatoColor('Black', '#141414', ONE_SIZE),
-      tatoColor('Navy',  '#232b3a', ONE_SIZE),
-      tatoColor('Red',   '#7c1f2b', ONE_SIZE),
-      tatoColor('Green', '#3f4a2e', ONE_SIZE),
+      tatoColor('Black', '#141414', ONE_SIZE, pshot('tato-cap', 'black')),
+      tatoColor('Navy',  '#232b3a', ONE_SIZE, pshot('tato-cap', 'navy')),
+      tatoColor('Red',   '#7c1f2b', ONE_SIZE, pshot('tato-cap', 'red')),
+      tatoColor('Green', '#3f4a2e', ONE_SIZE, pshot('tato-cap', 'green')),
     ],
     genders: ['women', 'men'],
     lookRefs: [9], status: 'available',
@@ -226,4 +226,15 @@ window.TATO_getCategoryLabel = function (slug) {
 window.TATO_getDepartmentLabel = function (slug) {
   const d = window.TATO_DEPARTMENTS.find(d => d.slug === slug);
   return d ? d.label : slug;
+};
+
+/* Categorie che hanno almeno 1 capo nel reparto dato — per non
+   mostrare voci vuote nei sottomenu (es. Skirts sotto Men). */
+window.TATO_categoriesFor = function (dept) {
+  return window.TATO_CATEGORIES.filter(c =>
+    window.TATO_PRODUCTS.some(p =>
+      p.category === c.slug &&
+      (p.genders || ['women', 'men']).includes(dept)
+    )
+  );
 };

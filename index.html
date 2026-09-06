@@ -51,7 +51,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/favicon-192.png" />
   <link rel="shortcut icon" href="assets/icons/favicon-32.png" />
 
-  <link rel="stylesheet" href="assets/css/style.css?v=1788193200" />
+  <link rel="stylesheet" href="assets/css/style.css?v=1788270548" />
 </head>
 <body>
 
@@ -387,9 +387,8 @@
     <section id="shop" class="page">
       <div class="shop-head">
         <p class="shop-title" id="shop-title">New Arrivals</p>
-        <nav class="shop-filters" id="shop-filters"><!-- popolato da script.js --></nav>
       </div>
-      <div class="shop-grid" id="shop-grid"><!-- popolato da script.js --></div>
+      <div class="pgrid" id="shop-grid"><!-- popolato da script.js --></div>
     </section>
 
     <!-- ══════════════════════════════════════════
@@ -421,6 +420,84 @@
     </section>
 
   </div><!-- /site -->
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+
+      <div class="footer-news">
+        <p class="footer-col__title">Newsletter</p>
+        <p class="footer-news__copy">Sign up for updates, releases and occasional news.</p>
+        <form
+          class="footer-news__form"
+          id="footerMailchimpForm"
+          action="https://tatorm.us18.list-manage.com/subscribe/post?u=573643a50c63106afa383770e&amp;id=a57e40d1d5&amp;f_id=0052b3e6f0"
+          method="post"
+          target="hidden_mailchimp_iframe"
+          novalidate
+        >
+          <input class="footer-news__input" id="footer-EMAIL" name="EMAIL" type="email"
+                 required autocomplete="email" inputmode="email" placeholder="Email">
+          <div aria-hidden="true" style="position:absolute;left:-5000px;">
+            <input type="text" name="b_573643a50c63106afa383770e_a57e40d1d5" tabindex="-1" value="">
+          </div>
+          <button class="footer-news__btn" type="submit" name="subscribe">Subscribe</button>
+        </form>
+        <p class="footer-news__status" id="footerMailchimpStatus">You've been added to the newsletter.</p>
+      </div>
+
+      <nav class="footer-cols">
+        <div class="footer-col">
+          <p class="footer-col__title">Shop</p>
+          <ul>
+            <li><a href="#shop">New Arrivals</a></li>
+            <li><a href="#shop/women">Women</a></li>
+            <li><a href="#shop/men">Men</a></li>
+            <li><a href="#shop/accessories">Accessories</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col__title">Customer Care</p>
+          <ul>
+            <li><a href="mailto:info@tatorm.com">Contact</a></li>
+            <li><a href="#">Shipping &amp; Returns</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col__title">TATO</p>
+          <ul>
+            <li><a href="#" data-section="about">About</a></li>
+            <li><a href="#" data-section="collection">Collection</a></li>
+            <li><a href="mailto:press@tatorm.com">Press</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <p class="footer-col__title">Legal</p>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">Terms of Sale</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="footer-bottom">
+        <div class="footer-social">
+          <span>Follow</span>
+          <a href="#" data-social="instagram">Instagram</a>
+        </div>
+        <a class="footer-wordmark" href="#" data-section="home" aria-label="TATO — home">
+          <img src="media/brand/logotype.png" alt="TATO" />
+        </a>
+        <p class="footer-meta">Designed in Rome — Made in Italy &nbsp;·&nbsp; © <span id="footer-year">2026</span> TATO</p>
+        <p class="footer-region">Italy — EUR €</p>
+      </div>
+
+    </div>
+  </footer>
 
   <!-- ══════════════════════════════════════════
        PANNELLO LOOK FISSO
@@ -499,8 +576,8 @@
   <div id="cart-overlay" class="cart-overlay"></div>
 
   <script src="https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js"></script>
-  <script src="assets/js/products.js?v=1788193200"></script>
-  <script src="assets/js/shopify.js?v=1788193200"></script>
-  <script src="assets/js/script.js?v=1788193200"></script>
+  <script src="assets/js/products.js?v=1788270548"></script>
+  <script src="assets/js/shopify.js?v=1788270548"></script>
+  <script src="assets/js/script.js?v=1788270548"></script>
 </body>
 </html>

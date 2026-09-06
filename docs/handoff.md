@@ -1,202 +1,266 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-08-31
-**Branch attivo:** `ecommerce-dev`
-**Branch live:** `main` → tatorm.com
+**Ultimo aggiornamento:** 2026-09-01
+**Branch di lavoro:** `ecommerce-dev` — ultimo commit `09ce392`
+**Tutto il lavoro della sessione 01/09 è NON committato** (vedi `git status` sotto).
+**Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ---
 
-## Stato attuale
+## Stato in una riga
 
-Il sito ha:
-1. Un **cart drawer** funzionante — non collegato a pagamento.
-2. Un **e-commerce a prodotti singoli** — sezione **Shop** con griglia + PDP, reparti
-   Women/Men, menu home espandibile. Foto prodotto = foto dei look (fallback). Checkout placeholder.
-3. **Struttura file riorganizzata** (`assets/`, `media/`, `docs/`, `archive/`) — vedi `README.md`.
-
-**Tutto committato sul branch `ecommerce-dev`** (commit `bdd54f9` shop, `14968b0` reorg).
-NON pushato, NON mergiato su `main`. Il sito live è invariato.
+Sito one-page statico (HTML/CSS/JS vanilla) con e-commerce a prodotti singoli
+collegato a Shopify via Storefront Cart API. Catalogo = 10 prodotti reali del primo
+drop, con packshot (flat tecnici) su ogni variante colore. Checkout reale testato.
+In corso: pass di design (griglia editoriale, footer, menu). Manca: foto vere,
+magazzino Shopify, URL pagine legali, merge su `main`.
 
 ---
 
-## Come testare in locale
+## Modifiche non committate (sessione 01/09)
 
-Il `file://` diretto è bloccato dall'estensione Chrome. Serve un server:
+```
+ M index.html
+ M assets/css/style.css
+ M assets/js/products.js
+ M assets/js/script.js
+ M docs/handoff.md
+?? media/products/          20 PNG (~3,8 MB) — packshot flat per variante colore
+```
+
+Sintesi di cosa è cambiato rispetto a `09ce392`:
+
+1. **Griglia prodotti editoriale `.pgrid`** condivisa Shop + Home.
+2. **Packshot**: `colors[].images` popolati con i flat in `media/products/`.
+3. **Tassonomia categorie** ridotta da 9 a **5**.
+4. **Barra filtri Shop rimossa** → categorie nel menu (Women▸ / Men▸).
+5. **Menu**: riposizionato in shop-mode, testi ridotti alla dimensione di "MENU".
+6. **Home** ridotta: 1 riga di 4 prodotti + il cappello come singolo prodotto.
+7. **Footer** nuovo, su fondo grigio scuro.
+
+Dettaglio nelle sezioni sotto.
+
+---
+
+## Come girare in locale
 
 ```
 cd "/Users/samuelemurru/Desktop/LAVORO/IN CONTINUAZIONE/TATO/SITO"
 python3 -m http.server 8777
+# http://localhost:8777/index.html?x   ← la query-string evita la cache di index.html
 ```
 
-Poi apri `http://localhost:8777/index.html?x` (la query-string evita che il browser
-serva `index.html` dalla cache).
-Rotte: `#shop` · `#shop/women` · `#shop/women/knit` · `#shop/men/tailoring`
-· `#shop/accessories` · `#product/cardigan-v-neck`
+`file://` è bloccato dall'estensione Chrome, serve un server.
+Ad ogni modifica di `assets/css/style.css` o `assets/js/*.js` → bumpare `?v=` nei tag
+`<link>`/`<script>` di `index.html`:
+`sed -i '' "s/?v=[0-9]*/?v=$(date +%s)/g" index.html`
 
-**Cache:** ad ogni modifica di `assets/css/style.css` / `assets/js/*.js` bumpare il
-parametro `?v=...` nei tag `<link>` e `<script>` di `index.html`.
+Rotte: `#shop` · `#shop/women` · `#shop/women/pants` · `#shop/men/outerwear`
+· `#shop/accessories` · `#product/tobi-pants`
 
 ---
 
-## Cosa è stato fatto — sessione 30/08/2026
+## Struttura file
 
-### Nuovo file: `data/products.js`
-
-- `window.TATO_PRODUCTS` — **24 prodotti singoli** derivati dai 21 look.
-- `window.TATO_CATEGORIES` — 7 categorie: outerwear, tailoring, knitwear, shirts, trousers,
-  skirts, accessories.
-- Helper: `window.TATO_getProduct(slug)`, `window.TATO_getCategoryLabel(slug)`.
-
-**Modello dati** — un prodotto per capo, varianti colore selezionabili:
-
-```js
-{
-  id, slug, name, category, price, currency: 'EUR',
-  composition, care, description,
-  colors: [
-    { name: 'Chocolate', hex: '#4b3621',
-      images: [],                         // vuoto → placeholder grigio
-      sizes: [{ label: 'S', available: true }, ...] }
-  ],
-  lookRefs: [3, 19],                       // in quali look appare
-  status: 'available'                      // | 'sold-out' | 'coming-soon'
-}
+```
+index.html · CNAME · README.md          root (index.html/CNAME richiesti da GitHub Pages)
+assets/css/style.css
+assets/js/products.js                    catalogo + categorie + helper foto (pshot, TATO_lookImages…)
+assets/js/shopify.js                     integrazione Shopify (Storefront Cart API)
+assets/js/script.js                      logica: splash, home feed, caroselli, shop/PDP, carrello, footer
+assets/icons/                            favicon + apple-touch
+media/brand/                             logotype.png · pictogram.png
+media/home/                              01..21  (feed home; 20-21 .png)
+media/looks/look-NN/                     01.jpg 02.jpg…  (ordine carosello)
+media/products/<slug>/<colore>/01.png    packshot flat per variante colore (NUOVO, non committato)
+docs/handoff.md
+archive/                                 shop-test.html + unused-photos/ (gitignored) — fuori sito
 ```
 
-### `index.html`
-
-- Nuova `<section id="shop">` → `#shop-filters` (barra categorie) + `#shop-grid` (griglia).
-- Nuova `<section id="product">` → `#pdp` (scheda prodotto).
-- Voce `SHOP` aggiunta al breadcrumb (`#site-breadcrumb`).
-- `<script src="data/products.js?v=...">` prima di `script.js`.
-
-### `style.css`
-
-- `.ph-block` — blocco grigio placeholder (aspect-ratio 3/4), scuro in dark mode.
-- `.shop-head`, `.shop-filters`, `.shop-filter`, `.shop-grid` (4 colonne), `.product-card*`.
-- `.pdp*` — layout scheda: `.pdp-gallery` (blocchi grigi), `.pdp-colors`/`.pdp-color`
-  (swatch), `.pdp-sizes`/`.pdp-size`, `.pdp-add-btn`, `.pdp-accordion`.
-- `body.shop-mode` — logo + `MENU` diventano header in alto a sinistra (evitano che il
-  logo fisso centrato copra la griglia); `.collection-breadcrumb` nascosto.
-- Override mobile (≤768px) in negativo, griglia a 2 colonne, PDP a colonna singola.
-
-### `script.js`
-
-- `renderShop()` = `renderShopFilters()` + `renderShopGrid()`.
-- `renderPDP(slug)` — cambio colore, selezione taglia (avviso "Select a size" se manca),
-  accordion, link "Seen in Look #X" → apre il lookbook sullo scroll del look, `ADD TO BAG`
-  → `addToCart({ name, price, look: categoria, color, size })` + apre il drawer.
-- `handleShopRoute()` — routing hash: `#shop`, `#shop/<categoria>`, `#product/<slug>`.
-  Registrato su `hashchange` e (per deep-link) su `load`.
-- `showSection()` esteso con i rami `shop` / `product` (toggle `body.shop-mode`,
-  breadcrumb visibile, hash pulito solo per home/collection/about).
-- `NAV_PAGES` — aggiunta la voce `shop`.
-
-### Verificato (test end-to-end)
-
-Griglia → click prodotto → PDP → cambio colore → scelta taglia → `ADD TO BAG` →
-cart drawer con riga corretta (`RIB BOMBER · L · Dark Navy / Black · Outerwear · €360`),
-totale, rimozione item. Filtro categoria (es. Knitwear → 6 prodotti). Deep-link rotte OK.
+Niente spazi/%20 nei path.
 
 ---
 
-## Cosa è stato fatto — sessione 31/08/2026
+## Catalogo — `assets/js/products.js`
 
-### Foto prodotto = foto dei look (fallback)
-- `data/products.js`: nuova mappa `TATO_LOOK_PHOTOS` (look № → file in `FOTO LOOK/LOOK n/`)
-  + helper `TATO_lookImages(lookRefs, { onePerLook, limit })`.
-- `script.js`: `productThumb()` e la gallery della PDP, se `colors[].images` è vuoto,
-  usano la 1ª foto di ogni look in `lookRefs` (griglia = 1 foto, PDP = fino a 8).
-  I packshot veri, quando arrivano, hanno la precedenza.
-- **Nota:** prodotti che compaiono nello stesso look "di testa" mostrano la stessa
-  thumbnail (es. Windbreaker/Back Shirt/Tobi Pants → tutti Look 1). Riordinare
-  `lookRefs` o aggiungere un campo `heroPhoto` per differenziarle.
+`window.TATO_PRODUCTS` — **10 prodotti reali** (drop TA001), slug = handle Shopify:
 
-### Menu home + reparti WOMEN / MEN + nuova tassonomia
-- `data/products.js`:
-  - `TATO_DEPARTMENTS` = women, men.
-  - `TATO_CATEGORIES` rifatta: outerwear, tailoring, shirts, dresses, jersey, pants,
-    skirts, knit, **vquarto** (V° Quarto, 0 prodotti → griglia "Coming soon").
-  - `accessories` NON è più in `TATO_CATEGORIES`: è voce di menu a sé, senza genere.
-    Etichette via `TATO_ALL_CATEGORY_LABELS`.
-  - Ogni prodotto ha ora `genders: ['women','men']`. **Eccezioni women-only:**
-    `2-button-shirt-dress`, `2-button-midi-skirt`, `2-button-long-skirt`.
-    Per spostare un capo in un reparto → editare `genders` sul prodotto.
-  - Categorie riassegnate (scelte da rivedere): knitwear→**knit** (cardigan, vest lana),
-    crewneck/hoodie/zip-up cotone→**jersey**, trousers e "tailored pants"→**pants**,
-    shirt dress→**dresses**.
-- `script.js`:
-  - Menu home ora: New Arrivals · Women▸ · Men▸ · Accessories · Collection · About.
-    `renderNavMenu()` / `closeNav()` sostituiscono `updateNavLinks`. Women/Men sono
-    accordion con sottomenu categorie (`.nav-group` / `.nav-sub`).
-  - Stato shop: `shopScope` ('new'|'women'|'men'|'accessories') + `shopCategory`.
-  - Rotte: `#shop` · `#shop/women` · `#shop/women/<cat>` · `#shop/men[/<cat>]` ·
-    `#shop/accessories` · `#shop/<cat>` (retro-compat) · `#product/<slug>`.
-  - `renderShopHead()` aggiorna il titolo (`#shop-title`); barra filtri categorie
-    solo per Women/Men; `shopFilteredProducts()` applica genere + categoria.
-  - **New Arrivals** = tutti i capi tranne accessories (accessories solo dal suo tab).
-- `index.html`: `<p class="shop-title" id="shop-title">New Arrivals</p>`; bump `?v=`.
-- `style.css`: stile menu (`.nav-group`, `.nav-group-toggle`, `.nav-sub`, `.nav-spacer`),
-  `.nav-links.open` max-height 78vh + scroll, `.shop-empty`, hover-fade su `.product-card-img`.
+| slug | nome | categoria | colori | taglie | € |
+|---|---|---|---|---|---|
+| tobi-pants | TOBI PANTS | pants | Black · Navy · Baby Pink | 1–5 | 295 |
+| 2-button-shirt | 2 BUTTON SHIRT | shirts | White · Light Grey/White · Baby Blue | 1–3 | 230 |
+| 2-button-long-skirt | 2 BUTTON LONG SKIRT | skirts | Anthracite | 1–3 | 380 |
+| triple-breasted-coat | TRIPLE BREASTED COAT | outerwear | Dark Blue | 1–2 | 950 |
+| cropped-tailored-jacket | CROPPED TAILORED JACKET | outerwear | Anthracite | 1–3 | 680 |
+| tailored-pants | TAILORED PANTS | pants | Anthracite | 1–3 | 490 |
+| 2-button-tailored-pants | 2 BUTTON TAILORED PANTS | pants | Anthracite | 1–3 | 425 |
+| tiny-crewneck | TINY CREWNECK | knitwear | Black · Baby Blue | 1–3 | 180 |
+| smock-longsleeve | SMOCK LONGSLEEVE | knitwear | White · Burgundy/Navy · Black/Dark Grey | 1–3 | 100 |
+| tato-cap | TATO CAP | accessories | Black · Navy · Red · Green | One Size | 70 |
 
-### Da rivedere (scelte fatte in autonomia)
-1. **Genere per prodotto** — quasi tutto è `['women','men']`. Assegnare i generi reali.
-2. **Categoria per prodotto** — vedi mappatura sopra (jersey vs knit, pants vs tailoring).
-3. **V° Quarto** — categoria vuota, mostra "Coming soon".
-4. **New Arrivals senza accessories** — cambiare se li si vuole includere.
+Modello prodotto: `{ id, slug, name, category, price, currency, composition, care,
+description, colors:[{ name, hex, images:[…], sizes:[{label,available}] }],
+genders:['women','men'], lookRefs:[…], status:'available' }`.
+Helper colore: `tatoColor(name, hex, sizes, images)` + `pshot(slug, colorSlug)`.
+
+### Tassonomia (consolidata 01/09)
+
+`window.TATO_CATEGORIES` — **5 voci**: **outerwear** (cappotti + giacche tailoring),
+**shirts**, **knitwear** (ex "jersey"), **pants**, **skirts**.
+`accessories` è gestita a parte (voce di menu a sé, senza filtro genere).
+`window.TATO_DEPARTMENTS` = women, men.
+Prima erano 9 (con dresses/knit/vquarto vuote): `cropped-tailored-jacket` spostato in
+`outerwear`, `tiny-crewneck` + `smock-longsleeve` in `knitwear`.
+
+### Filtri categoria → nel menu
+
+Niente più barra `.shop-filters` sulla pagina Shop (rimossa da HTML + JS + CSS).
+Le categorie si scelgono **dal menu**: voci `Women▸` / `Men▸` con sottomenu
+(`navDeptSub()` in `script.js`). Il sottomenu mostra solo le categorie con ≥1 capo
+per quel reparto (`window.TATO_categoriesFor(dept)` in `products.js` → niente "Skirts"
+sotto Men). Il titolo della sezione Shop riporta reparto + categoria attiva
+(`renderShopHead()`, es. "Men / Knitwear").
+Le rotte `#shop/<dept>/<cat>` restano invariate; vecchi slug (`jersey`, `tailoring`, …)
+non matchano più → degradano a "View All".
+
+### Foto prodotto — packshot flat
+
+Ogni colore ha il suo **packshot** (disegno tecnico su fondo bianco) in
+`media/products/<slug>/<colore-slug>/01.png` — 20 file, ~3,8 MB, PNG 8-bit ridotti a
+max 1800px. Popolati in `colors[].images` via `pshot()`. Sorgente:
+`~/Desktop/SHOPIFY EXPORT/packshot/<slug>/` (flat trasparenti, appiattiti su bianco).
+Se un colore avesse `images` vuoto → fallback alle foto dei look (`TATO_lookImages()`).
+
+- Sono **disegni tecnici, non foto**: il front-end li rende con `object-fit: contain`
+  + aria attorno + fondo bianco (classe `.is-flat` su `.pgrid-media` / `.pdp-gallery`,
+  aggiunta quando la sorgente è un packshot). Quando arriveranno le **foto vere**:
+  sostituire i file e togliere il ramo `.is-flat` dal CSS (torna a `object-fit: cover`).
+- Mappatura colore→file verificata a vista (i multi-colore erano ambigui, vedi
+  `SHOPIFY EXPORT/NOTE.md` punto 6). Es. tobi-pants: Black=`TOBI PANTS-01-31`,
+  Navy=`BALOON PANTS-05-32`, Baby Pink=`BALOON PANTS-21-33`.
+
+### Scelte fatte in autonomia, da confermare
+
+1. `genders` — quasi tutto `['women','men']`; solo `2-button-long-skirt` è `['women']`.
+2. `tailored-pants` e `2-button-tailored-pants` → categoria `pants` (non `outerwear`).
+3. `tiny-crewneck` baby blue → SKU `TA001JE004BB` (nel Numbers era duplicato del nero).
+4. Taglie `2-button-long-skirt` = 1–3 (nel file Shopify erano vuote).
 
 ---
 
-## Catalogo — prezzi placeholder
+## Design — sessione 01/09 (rif. dior.com)
 
-Stessi di `itemPrices` in `script.js`. Da sostituire con i prezzi reali sia in
-`data/products.js` (`price`) sia in `itemPrices` (usato ancora dal pannello look della
-collection).
+### Griglia `.pgrid` (Shop + Home)
 
-| Capo | € | | Capo | € |
-|---|---|---|---|---|
-| 2 Button Windbreaker | 280 | | 3/4 Zip-up | 260 |
-| Back Shirt | 180 | | Inside Out Selvedge Denim | 320 |
-| Tobi Pants | 220 | | Tato Cap | 80 |
-| Cropped Tailored Jacket | 390 | | Tato Tailoring Cap | 90 |
-| 2 Button Tailored Pants | 280 | | Smock Longsleeve | 180 |
-| Cardigan V Neck | 320 | | Triple Breasted Coat | 520 |
-| 2 Button Shirt Dress | 260 | | 2 Button Long Skirt | 240 |
-| Tailored Pants | 280 | | Triple Breasted Bomber | 450 |
-| Tiny Crewneck | 160 | | Rib Bomber | 360 |
-| 2 Button Shirt | 180 | | 2 Button Midi Skirt | 240 |
-| Tailored Jacket | 390 | | Side Way Vest | 220 |
-| Hoodie | 200 | | Side Way Zip-up | 280 |
+- `.pgrid` / `.pgrid-card` / `.pgrid-media` / `.pgrid-tag` / `.pgrid-name` / `.pgrid-price`
+  in `style.css`; builder `pgridHTML(list, showTag)` / `pgridCardHTML(p, showTag)` in `script.js`.
+- 4 colonne full-bleed, gap colonne **2px**, righe distanziate **84px**, nome + prezzo
+  **centrati**, prezzo **nero** (`var(--black)`; mobile in negativo → `#fff`).
+- Pill categoria: **solo in Home e in New Arrivals** (`shopScope==='new' && shopCategory==='all'`),
+  nascosta nelle viste per reparto/categoria — passata via `showTag` a `pgridHTML()`.
+- Shop: `#shop` full-bleed, `.shop-head` con solo il titolo (`#shop-grid` = `class="pgrid"`).
+
+### Home (`buildHomeFeed()`)
+
+- Hero foto a tutto schermo → **una sola riga** `.pgrid.home-pgrid` (primi 4 prodotti) →
+  `.home-feature` = **il cappello come singolo prodotto** (card centrata, `max-width:340px`,
+  `margin-bottom:100px` di stacco dal footer).
+- Rimossi il resto del feed foto e lo scroll infinito.
+
+### Menu
+
+- **Shop-mode**: in alto a sinistra resta **solo il logo TATO** (→ home). Il bottone MENU
+  è in alto a destra sotto le icone (`body.shop-mode .site-nav { top:58px; right:26px }`).
+  Sulla home il MENU resta a destra centrato come prima.
+- Testi delle voci ridotti alla dimensione del bottone MENU:
+  `.nav-links > li > a` / `.nav-group-toggle` = `0.6rem` / `0.2em`; sottovoci `0.54rem`.
+
+### Footer — `<footer class="site-footer">` in `index.html`
+
+Fuori da `#site`, `z-index:70` (copre logo/MENU fissi quando ci si arriva).
+Struttura ispirata a Dior, estetica TATO (testo micro uppercase, filetti sottili).
+**Fondo grigio scuro `#1e1e1e` sempre** (token locali `--fg` / `--fg-dim` / `--fg-line`),
+testo chiaro, logotipo invertito in bianco. Blocco mobile = solo layout (2 col, centrature).
+
+- **Newsletter** — stesso endpoint Mailchimp del popup (form `#footerMailchimpForm`,
+  IIFE dedicato in `script.js` che mostra la conferma; `#footer-year` = anno corrente).
+- **4 colonne**: Shop (rotte `#shop*`) · Customer Care (Contact mailto + Shipping/FAQ
+  placeholder `#`) · TATO (About/Collection via `data-section`, Press mailto) ·
+  Legal (Privacy/Cookie/Terms placeholder `#`).
+- **Barra bassa** (grid 3 colonne): riga 1 = "Follow · Instagram" (sx, link `#` — handle
+  da mettere) · logotipo `media/brand/logotype.png` (centro, → home) · "Italy — EUR €"
+  (dx, `.footer-region` su `grid-column:3; grid-row:1`). Riga 2 = "Designed in Rome —
+  Made in Italy · © <anno> TATO" (centrato, `.footer-meta` span 1/-1). Su mobile tutto
+  in colonna centrata.
+
+### Ancora da rivedere
+
+- Il logo `TATO` fisso si intravede dietro la 1ª card della griglia Home (z-index).
+- Le icone fisse in alto a destra (toggle/monogramma/bag) sono scure e poco visibili
+  sopra il footer grigio scuro.
+- Menu: resta il dubbio dell'utente su un menu che entra da sinistra tipo Dior.
+- PDP in stile Dior (foto piena a sx, nome grande, taglia a tendina, bottone scuro con
+  prezzo dentro) — non ancora toccata.
+
+---
+
+## Shopify
+
+- Negozio: **`pshgtp-ak.myshopify.com`** (admin.shopify.com/store/pshgtp-ak).
+- **10 prodotti importati** da CSV (`~/Desktop/SHOPIFY EXPORT/tato-shopify-import.csv`),
+  57 varianti, Vendor TATO. Import fatto il 31/08.
+- Canale **Buy Button** installato, prodotti resi disponibili sul canale.
+- Metodo di pagamento **manuale "TEST"** attivo (per gli ordini di prova).
+- Vetrina: "Modalità privata" (password `thaosh`) — verificare se è ancora attiva.
+- Packshot: `~/Desktop/SHOPIFY EXPORT/packshot/<slug>/` — da caricare a mano sui prodotti
+  Shopify (il CSV non include immagini).
+- Aperti: quantità di magazzino (ora ~0), foto, i 4 punti "da confermare", poi prodotti
+  da Bozza ad Attivo.
+
+### Integrazione — `assets/js/shopify.js`
+
+- `window.TATO_SHOPIFY = { domain, storefrontToken }`. Token Storefront reale già dentro:
+  `387e563b969e48b03ea0be98c1851e2f` (i token Storefront sono pubblici by design → ok in repo).
+- SDK `js-buy-sdk` da CDN (in `index.html`) usato **solo** per il prefetch prodotti/varianti.
+- `TATO_shopify.init(handles)` — costruisce la mappa `{ handle: { "Colore||Taglia": {id, available} } }`.
+- **Checkout = Cart API** (`createCheckoutUrl`): la Checkout API è stata rimossa da Shopify,
+  quindi mutation `cartCreate` diretta su `/api/2024-10/graphql.json` → `cart.checkoutUrl`.
+- `script.js`: `ADD TO BAG` salva `shopifyVariantId`; `#cart-checkout` crea il carrello
+  Shopify e reindirizza; `#cart-note` sincronizzato via evento `tato:shopify-ready`.
+  Senza token il sito funziona lo stesso (checkout resta placeholder).
+
+### Test fatto (31/08)
+
+Sito locale → PDP TATO CAP → colore Black + One Size → ADD TO BAG → CHECKOUT →
+pagina di pagamento reale Shopify raggiunta (`/checkouts/cn/…`), riga e totale corretti
+(€70). Ordine non finalizzato.
 
 ---
 
 ## Prossimi passi
 
-1. **Foto prodotto** — creare `FOTO PRODOTTI/<slug>/<colore>/01.jpg` (packshot),
-   poi popolare `colors[].images` in `data/products.js`. Comprimere con `sips` prima
-   del commit (max 1800px, q82), come per le FOTO LOOK.
-2. **Prezzi reali** — aggiornare `data/products.js` + `itemPrices` in `script.js`.
-3. **Taglie / disponibilità reali** — impostare `available: false` sulle taglie esaurite,
-   `status: 'sold-out'` sui prodotti finiti.
-4. **Checkout** — scegliere la piattaforma (consigliato: Shopify Starter $5/mese, Buy Button)
-   e sostituire il pulsante `.cart-checkout-btn` nel drawer + `Payment integration coming soon.`.
-5. **Decisione lookbook** — la sezione Collection resta com'è (editoriale). Valutare se
-   collegare ogni item del pannello look alla relativa scheda prodotto.
-6. **Pulizia** — decidere di `shop-test.html` (prototipo standalone, tenere o eliminare) e
-   delle 4 foto `LOOK 11_PHOTO* extended.jpg` non tracciate.
-7. **Merge su `main`** quando approvato:
+1. **Design** — chiudere il pass griglia (fatto), menu (in dubbio), poi PDP stile Dior.
+2. **Footer** — mettere gli URL veri: Shipping & Returns, FAQ, Privacy Policy,
+   Cookie Policy, Terms of Sale; handle Instagram reale.
+3. **Packshot** — sul sito FATTO. Ancora: caricare i flat su Shopify (per variante) e,
+   quando ci sono, sostituire i flat con le **foto vere** (poi togliere `.is-flat` dal CSS).
+4. **Magazzino Shopify** — quantità reali per variante.
+5. **Verifiche catalogo** — i 4 punti "da confermare" sopra.
+6. **Pagamenti** — quando il negozio è su piano attivo, sostituire "TEST" con
+   Shopify Payments / PayPal reali.
+7. **Prodotti Shopify** da Bozza → Attivo.
+8. **Commit + merge su `main`**:
    ```
-   git checkout main
-   git merge ecommerce-dev
-   git push origin main
+   git add -A && git commit -m "..."          # su ecommerce-dev
+   git checkout main && git merge ecommerce-dev && git push origin main
    ```
+9. **Vetrina** — togliere/rimettere "Modalità privata" secondo quando aprire.
 
 ---
 
-## File non tracciati / in sospeso
+## Lookbook InDesign (invariato, non parte del sito)
 
-- `data/` — nuovo, da aggiungere al commit.
-- `FOTO LOOK/LOOK 11/LOOK 11_PHOTO {1,3,5,6} extended.jpg` — non tracciate.
-- `shop-test.html` — prototipo standalone della sessione di agosto.
-- `handoff.md` — questo file.
-- `FOTO LOOK/LOOK 18/LOOK 17_PHOTO4.jpg` — eliminata (già in staging come `D`).
+Script `.jsx` nella cartella del progetto + copia in
+`~/Library/Preferences/Adobe InDesign/Version 21.0/it_IT/Scripts/Scripts Panel/`.
+Bug noto: con `MeasurementUnits.MILLIMETERS`, `pointSize`/`leading`/`strokeWeight`
+vengono letti in mm → dividere per 2.834645669. Vedi `lookbook-tato-biblio.jsx`.

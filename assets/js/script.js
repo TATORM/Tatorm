@@ -155,26 +155,68 @@ function appendPhotos(feed, photos, isFirst) {
   });
 }
 
+/* ═══════════════════════════════════════════
+   GRIGLIA PRODOTTI condivisa (Shop + Home)
+   Markup: .pgrid > a.pgrid-card
+   ═══════════════════════════════════════════ */
+/* Sorgente immagine di anteprima + se è un packshot flat (media/products/…) */
+function productImgSrc(p) {
+  const c = p.colors && p.colors[0];
+  if (c && c.images && c.images.length) return { src: c.images[0], flat: true };
+  const look = window.TATO_lookImages
+    ? window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 1 })[0]
+    : null;
+  return { src: look || '', flat: false };
+}
+
+function pgridCardHTML(p, showTag) {
+  const img   = productImgSrc(p);
+  const media = img.src
+    ? `<img src="${img.src}" alt="${p.name}" loading="lazy" draggable="false">`
+    : '<span class="ph-block"></span>';
+  const tag = showTag
+    ? `<span class="pgrid-tag">${window.TATO_getCategoryLabel ? window.TATO_getCategoryLabel(p.category) : p.category}</span>`
+    : '';
+  const sold = p.status === 'sold-out';
+  return `
+    <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="#product/${p.slug}" data-slug="${p.slug}">
+      <span class="pgrid-media${img.flat ? ' is-flat' : ''}">
+        ${media}
+        ${tag}
+      </span>
+      <span class="pgrid-name">${p.name}</span>
+      <span class="pgrid-price">${sold ? 'Sold out' : money(p.price, p.currency)}</span>
+    </a>`;
+}
+
+/* showTag: pill categoria mostrata solo in Home e in New Arrivals
+   (nascosta quando si sta filtrando per una categoria o un reparto) */
+function pgridHTML(list, showTag) {
+  if (!list || !list.length) return '<p class="pgrid-empty">Coming soon.</p>';
+  return list.map(p => pgridCardHTML(p, showTag)).join('');
+}
+
 (function buildHomeFeed() {
   const feed = document.getElementById('home-feed');
   if (!feed) return;
 
-  appendPhotos(feed, shuffle(allHomePhotos), true);
+  const photos = shuffle(allHomePhotos);
+  appendPhotos(feed, photos.slice(0, 1), true);          // hero
+  const grid = document.createElement('div');
+  grid.className = 'pgrid home-pgrid';
+  grid.innerHTML = pgridHTML((window.TATO_PRODUCTS || []).slice(0, 4), true);  // 1 sola riga
+  feed.appendChild(grid);
+
+  // Sotto la riga: il cappello come singolo prodotto in evidenza
+  const cap = window.TATO_getProduct && window.TATO_getProduct('tato-cap');
+  if (cap) {
+    const feature = document.createElement('div');
+    feature.className = 'home-feature';
+    feature.innerHTML = pgridCardHTML(cap, true);
+    feed.appendChild(feature);
+  }
+
   layoutHome();
-
-  // Sentinel per scroll infinito
-  const sentinel = document.createElement('div');
-  sentinel.id = 'home-sentinel';
-  feed.appendChild(sentinel);
-
-  const infiniteObs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      appendPhotos(feed, shuffle(allHomePhotos), false);
-      feed.appendChild(sentinel);
-    }
-  }, { rootMargin: '400px' });
-
-  infiniteObs.observe(sentinel);
 })();
 
 /* ─── Look data ──────────────────────────── */
@@ -519,8 +561,11 @@ window.addEventListener('load', () => {
    · Collection · About
    Women/Men aprono il sottomenu categorie.     */
 function navDeptSub(dept) {
+  const cats = window.TATO_categoriesFor
+    ? window.TATO_categoriesFor(dept)
+    : (window.TATO_CATEGORIES || []);
   const items = [`<li><a href="#" data-nav="shop/${dept}">View All</a></li>`].concat(
-    (window.TATO_CATEGORIES || []).map(c =>
+    cats.map(c =>
       `<li><a href="#" data-nav="shop/${dept}/${c.slug}">${c.label}</a></li>`)
   );
   return `<ul class="nav-sub">${items.join('')}</ul>`;
@@ -723,6 +768,23 @@ document.addEventListener('click', e => {
     form.style.display = 'none';
     status.classList.add('is-visible');
     setTimeout(closePopup, 2500);
+  });
+})();
+
+/* ─── Newsletter nel footer (stesso endpoint Mailchimp) ─── */
+(function () {
+  const fy = document.getElementById('footer-year');
+  if (fy) fy.textContent = new Date().getFullYear();
+
+  const form   = document.getElementById('footerMailchimpForm');
+  const status = document.getElementById('footerMailchimpStatus');
+  if (!form || !status) return;
+  const email = form.querySelector('#footer-EMAIL');
+  form.addEventListener('submit', e => {
+    if (!email.value.trim() || !email.checkValidity()) { e.preventDefault(); return; }
+    form.style.display = 'none';
+    status.classList.add('is-visible');
+    try { localStorage.setItem('tato-nl-done', '1'); } catch (_) {}
   });
 })();
 
@@ -944,7 +1006,6 @@ lookCarousels.forEach(c => observer.observe(c));
 const PRODUCTS    = window.TATO_PRODUCTS    || [];
 const CATEGORIES  = window.TATO_CATEGORIES  || [];
 const shopGrid    = document.getElementById('shop-grid');
-const shopFilters = document.getElementById('shop-filters');
 const shopTitleEl = document.getElementById('shop-title');
 const pdpEl       = document.getElementById('pdp');
 
@@ -961,29 +1022,21 @@ function money(price, currency) {
   return (currency === 'EUR' ? '€' : '') + price;
 }
 
-/* ─── SHOP: titolo sezione ───────────────── */
+/* ─── SHOP: titolo sezione ───────────────────
+   Le categorie si scelgono dal menu (Women▸ / Men▸),
+   non c'è più la barra filtri sulla pagina: il titolo
+   riporta reparto + categoria attiva.               */
 function renderShopHead() {
   if (!shopTitleEl) return;
-  shopTitleEl.textContent =
-    shopScope === 'women'       ? 'Women'
-    : shopScope === 'men'       ? 'Men'
+  const scopeLabel =
+    shopScope === 'women'         ? 'Women'
+    : shopScope === 'men'         ? 'Men'
     : shopScope === 'accessories' ? 'Accessories'
     : 'New Arrivals';
-}
-
-/* ─── SHOP: filtri categoria (solo Women / Men) ─ */
-function renderShopFilters() {
-  if (!shopFilters) return;
-  if (shopScope !== 'women' && shopScope !== 'men') {
-    shopFilters.innerHTML = '';
-    return;
-  }
-  const base = '#shop/' + shopScope;
-  const cats = [{ slug: 'all', label: 'View All' }, ...CATEGORIES];
-  shopFilters.innerHTML = cats.map(c => {
-    const href = c.slug === 'all' ? base : base + '/' + c.slug;
-    return `<a class="shop-filter${c.slug === shopCategory ? ' active' : ''}" href="${href}">${c.label}</a>`;
-  }).join('');
+  const cat = (shopCategory && shopCategory !== 'all')
+    ? window.TATO_getCategoryLabel(shopCategory)
+    : '';
+  shopTitleEl.textContent = cat ? `${scopeLabel} / ${cat}` : scopeLabel;
 }
 
 function productThumb(p) {
@@ -1018,39 +1071,13 @@ function shopFilteredProducts() {
 
 function renderShopGrid() {
   if (!shopGrid) return;
-  const list = shopFilteredProducts();
-
-  if (!list.length) {
-    shopGrid.innerHTML = '<p class="shop-empty">Coming soon.</p>';
-    return;
-  }
-
-  shopGrid.innerHTML = list.map(p => {
-    const sold = p.status === 'sold-out';
-    const meta = p.colors.length > 1
-      ? `${p.colors.length} colours`
-      : (p.colors[0] ? p.colors[0].name : '');
-    return `
-      <article class="product-card${sold ? ' is-soldout' : ''}" data-slug="${p.slug}">
-        ${productThumb(p)}
-        <div class="product-card-body">
-          <p class="product-card-name">${p.name}</p>
-          <p class="product-card-meta">${meta}</p>
-          <p class="product-card-price">${sold ? 'Sold out' : money(p.price, p.currency)}</p>
-        </div>
-      </article>`;
-  }).join('');
-
-  shopGrid.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('click', () => {
-      location.hash = '#product/' + card.dataset.slug;
-    });
-  });
+  shopGrid.className = 'pgrid';
+  const showTag = shopScope === 'new' && shopCategory === 'all';   // solo New Arrivals
+  shopGrid.innerHTML = pgridHTML(shopFilteredProducts(), showTag);
 }
 
 function renderShop() {
   renderShopHead();
-  renderShopFilters();
   renderShopGrid();
 }
 
@@ -1063,6 +1090,7 @@ function renderPDP(slug) {
   const color = p.colors[pdpState.colorIdx] || p.colors[0];
 
   let galleryImgs = (color.images && color.images.length) ? color.images.slice() : [];
+  const galleryFlat = galleryImgs.length > 0;   // packshot flat vs foto dei look
   if (!galleryImgs.length && window.TATO_lookImages) {
     galleryImgs = window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 8 });
   }
@@ -1081,7 +1109,7 @@ function renderPDP(slug) {
   const lookLinks = (p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ');
 
   pdpEl.innerHTML = `
-    <div class="pdp-gallery">${gallery}</div>
+    <div class="pdp-gallery${galleryFlat ? ' is-flat' : ''}">${gallery}</div>
     <div class="pdp-info">
       <button class="pdp-back" id="pdp-back">← Shop</button>
       <h1 class="pdp-name">${p.name}</h1>
