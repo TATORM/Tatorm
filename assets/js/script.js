@@ -281,6 +281,24 @@ function declusterBySlug(arr) {
 
   const PER_BLOCK = 8;   // 2 righe × 4 col su desktop (2 col × 4 righe su mobile)
   let shot = 0;
+  const nextShot = () => lookShots[shot++ % lookShots.length];
+  const lookFig = (src, sizes) => {
+    const fig = document.createElement('figure');
+    fig.className = 'home-look';
+    fig.appendChild(pictureEl(src, { sizes }));
+    return fig;
+  };
+
+  // quanti stacchi foto ci sono, e quali diventano una coppia (fianco a fianco)
+  const slotCount = Math.max(0, Math.ceil(cards.length / PER_BLOCK) - 1);
+  const pairSlots = new Set();
+  if (lookShots.length > 1 && slotCount >= 1) {
+    // almeno uno stacco è una coppia; gli altri lo diventano ~1 volta su 3
+    pairSlots.add(Math.floor(Math.random() * slotCount));
+    for (let s = 0; s < slotCount; s++) if (Math.random() < 0.33) pairSlots.add(s);
+  }
+
+  let slot = 0;
   for (let i = 0; i < cards.length; i += PER_BLOCK) {
     const grid = document.createElement('div');
     grid.className = 'pgrid home-pgrid';
@@ -289,12 +307,16 @@ function declusterBySlug(arr) {
     feed.appendChild(grid);
 
     if (i + PER_BLOCK < cards.length && lookShots.length) {
-      const fig = document.createElement('figure');
-      fig.className = 'home-look';
-      fig.appendChild(pictureEl(lookShots[shot++ % lookShots.length], {
-        sizes: '(max-width: 768px) 100vw, min(700px, 36vw)',
-      }));
-      feed.appendChild(fig);
+      if (pairSlots.has(slot)) {
+        const pair = document.createElement('div');
+        pair.className = 'home-look-pair';
+        pair.appendChild(lookFig(nextShot(), '(max-width: 768px) 50vw, 38vw'));
+        pair.appendChild(lookFig(nextShot(), '(max-width: 768px) 50vw, 38vw'));
+        feed.appendChild(pair);
+      } else {
+        feed.appendChild(lookFig(nextShot(), '(max-width: 768px) 100vw, min(700px, 36vw)'));
+      }
+      slot++;
     }
   }
 })();

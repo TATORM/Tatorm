@@ -317,6 +317,16 @@ ul { list-style: none; }
 }
 .home-look img { width: 100%; height: auto; display: block; }
 
+/* Ogni tanto due foto di look una accanto all'altra */
+.home-look-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  width: min(1060px, 78vw);
+  margin: 44px 0;
+}
+.home-look-pair .home-look { width: 100%; margin: 0; }
+
 /* Prima foto: hero fullscreen — altezza = viewport (in CSS, non JS) */
 .home-hero {
   width: var(--image-width);
@@ -2006,6 +2016,7 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   }
   /* Foto di look intercalate: a tutta larghezza, altezza naturale */
   .home-look { width: 100vw; margin: 2px 0; }
+  .home-look-pair { width: 100vw; margin: 2px 0; gap: 2px; }
   #home .home-feed { padding-bottom: 40px; }
 
   /* Collection: i caroselli hanno già position:relative + width:var(--image-width)
