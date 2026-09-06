@@ -34,6 +34,26 @@ Ordine fasi: 00 → 02 → 01 → 03 → 04 → 05.
   gitignored e lo rigenera la Action su un checkout usa-e-getta. Se lanci `npm run build` in
   locale ti riscrive `index.html` → `git checkout -- index.html` per tornare indietro.
 
+### Fase 03 — Layout caroselli/home in CSS puro ✅ (commit `c06122c`)
+
+- `assets/js/script.js`: **rimossi** `layoutCarousels()`, `layoutHome()`, l'handler
+  `window.addEventListener('resize', …)` e la chiamata `layoutCarousels()` in `showSection`. −44 righe.
+- `assets/css/style.css`:
+  - `.look-carousel` — da `position:absolute` + `top`/`height` iniettati da JS → `position:relative`
+    in flusso normale, `height:100vh; height:100dvh`, `margin:0 auto`. `.visual-column` senza altezza
+    forzata (si somma da sé: 21 × 100dvh — verificato 16107px con vh 767).
+  - `.home-hero` — `height:100dvh` in CSS invece di `innerHeight`px da JS.
+  - **Blocco mobile Collection**: eliminati ~15 `!important` (`position/top/left/transform/width/height`
+    su `.visual-column` / `.look-carousel` / `.carousel-track`) — le regole base ora fanno già la cosa
+    giusta. Resta `.look-carousel { height:100dvh; scroll-snap-align:start }`.
+  - Aggiunto `@media (prefers-reduced-motion: reduce)`.
+- `100svh` scartato: su alcuni Chrome rende meno del viewport → uso `100dvh` (che è anche quello
+  che il resto del blocco mobile usa già).
+- Verificato: caroselli full-height impilati (0 / 767 / 1534 …), pannello IntersectionObserver
+  sincronizzato allo scroll, hero full-height, zero errori console. Bundle JS 34.8 → 34.2 KB.
+- **Aperto**: il deep-link `#collection` non sempre atterra in cima (scroll ~72px). Non è una
+  regressione di layout (misure DOM perfette). Eventuale fix: `scrollTo(0,0)` dopo il doppio rAF.
+
 ### Fase 01 — Catalogo unico + "Shop the look" ✅ (commit `1b6e403`)
 
 - `assets/js/products.js`: aggiunti `window.TATO_LOOKS` (21 look come lista di capi
