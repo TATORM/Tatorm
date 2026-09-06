@@ -1040,17 +1040,26 @@ function renderPDP(slug) {
   const addLabel = soldOut ? 'Sold out'
     : `<span>Add to bag</span><span class="pdp-add-price">${compare && compare > price ? `<s>${money(compare, cur)}</s> ` : ''}${priceLabel}</span>`;
 
-  /* "Complete the look": gli ALTRI capi a catalogo del 1° look di questo prodotto */
+  /* "Complete the look": foto del 1° look di questo prodotto a sinistra,
+     gli ALTRI capi a catalogo dello stesso look (consigliati) a destra */
   const lookN = (p.lookRefs || [])[0];
   const lookData = lookN && window.TATO_resolveLook ? window.TATO_resolveLook(lookN) : null;
-  const completeItems = lookData
+  const completeItems = (lookData
     ? lookData.items.filter(it => it.slug && it.slug !== slug)
-    : [];
+    : []).slice(0, 3);
+  const lookPhoto = lookN && window.TATO_lookImages
+    ? window.TATO_lookImages([lookN], { onePerLook: true, limit: 1 })[0]
+    : null;
   const completeHTML = completeItems.length ? `
     <section class="pdp-complete">
       <p class="pdp-complete-title">Complete the look</p>
-      <div class="pgrid pdp-complete-grid">
-        ${completeItems.map(it => pgridCardHTML(window.TATO_getProduct(it.slug), false)).join('')}
+      <div class="pdp-complete-row">
+        ${lookPhoto ? `<div class="pdp-complete-look">${pictureHTML(lookPhoto, {
+          alt: `Look ${lookN}`, sizes: '(max-width: 768px) 100vw, 48vw',
+        })}</div>` : ''}
+        <div class="pgrid pdp-complete-items" style="--n:${completeItems.length}">
+          ${completeItems.map(it => pgridCardHTML(window.TATO_getProduct(it.slug), false)).join('')}
+        </div>
       </div>
     </section>` : '';
 

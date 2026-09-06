@@ -1465,27 +1465,40 @@ body.dark-mode .pdp-ref { color: var(--gray); }
 }
 .pdp-inline-link:hover { color: var(--black); border-color: var(--black); }
 
-/* Completa il look */
+/* Completa il look — foto del look a sinistra, capi consigliati a destra */
 .pdp-complete {
-  margin-top: 72px;
-  padding: 0 4vw;
+  margin-top: 80px;
 }
 .pdp-complete-title {
   text-align: center;
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-size: 0.8rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--black);
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
-.pdp-complete-grid {
-  grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
-  justify-content: center;
+.pdp-complete-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2px;
+  align-items: start;
+}
+.pdp-complete-look img {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
+}
+.pdp-complete-items {
+  grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
   column-gap: 2px;
   row-gap: 40px;
-  max-width: 940px;
-  margin: 0 auto;
+  align-self: center;
+  padding: 0 4vw;
 }
+.pdp-complete-items .pgrid-card { max-width: 320px; margin: 0 auto; }
 
 .pdp-accordion { border-top: 1px solid var(--gray-light); }
 .pdp-acc-item { border-bottom: 1px solid var(--gray-light); }
@@ -2186,7 +2199,14 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .pdp-tab-panel p { color: rgba(255,255,255,0.65); }
   .pdp-tab-panel a, .pdp-inline-link { color: #fff; border-bottom-color: rgba(255,255,255,0.35); }
   .pdp-complete-title { color: #fff; }
-  .pdp-complete-grid { grid-template-columns: repeat(2, 1fr); }
+  .pdp-complete { padding: 0; }
+  .pdp-complete-row { grid-template-columns: 1fr; gap: 24px; }
+  .pdp-complete-items {
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 0 16px;
+    row-gap: 28px;
+  }
+  .pdp-complete-items .pgrid-card { max-width: none; }
 
   /* ─── Footer mobile (solo layout — i colori scuri sono già di base) ─── */
   .site-footer { scroll-snap-align: start; }
