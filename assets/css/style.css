@@ -313,7 +313,7 @@ ul { list-style: none; }
   max-height: 0; overflow: hidden;
   transition: max-height 0.35s ease;
 }
-.nav-group.open > .nav-sub { max-height: 460px; }
+.nav-group.open > .nav-sub { max-height: 460px; margin-top: 8px; }
 .nav-sub a {
   display: block;
   text-align: right;
