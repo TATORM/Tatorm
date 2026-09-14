@@ -16,3 +16,8 @@ assets/dist/
 
 # Originali immagini ad alta risoluzione (input di scripts/images.mjs)
 media/_src/
+
+# Materiale di riferimento/lavoro, non asset del sito (i file che servono
+# davvero — packshot, font — sono già dentro media/ e assets/fonts/)
+ESHOP/
+SHOPIFY EXPORT/
