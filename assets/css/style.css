@@ -1161,6 +1161,7 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   padding: 60px 0;
 }
 .pgrid-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -1202,6 +1203,19 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   color: #0a0a0a;
   background: rgba(255, 255, 255, 0.85);
   padding: 3px 7px;
+}
+/* Packshot flat: il tag sopra l'immagine copriva il disegno tecnico
+   (niente foto dietro cui "sparire" come nelle foto vere) → esce
+   dall'overlay, torna in flusso sopra la card, taglia/colore come il menu. */
+.pgrid-tag--flat {
+  position: static;
+  display: block;
+  width: fit-content;
+  margin-bottom: 8px;
+  background: none;
+  padding: 0;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
 }
 .pgrid-name {
   text-align: center;
@@ -2245,6 +2259,9 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .product-card-meta,
   .product-card-price { color: rgba(255,255,255,0.6); }
   .pgrid-tag { color: #0a0a0a; background: rgba(255,255,255,0.9); }
+  /* --flat non è più un overlay sulla foto ma testo in flusso sul nero
+     di #shop mobile → bianco, niente pillola (come .pgrid-name/-price). */
+  .pgrid-tag--flat { color: #fff; background: none; }
 
   /* ─── PDP mobile ──────────────────────────── */
   .pdp-main {

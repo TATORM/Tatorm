@@ -217,7 +217,7 @@ function pgridCardHTML(p, showTag, colorIdx) {
     ? pictureHTML(img.src, { alt: col ? `${p.name} — ${col.name}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
     : '<span class="ph-block"></span>';
   const tag = showTag
-    ? `<span class="pgrid-tag">${window.TATO_getCategoryLabel ? window.TATO_getCategoryLabel(p.category) : p.category}</span>`
+    ? `<span class="pgrid-tag${img.flat ? ' pgrid-tag--flat' : ''}">${window.TATO_getCategoryLabel ? window.TATO_getCategoryLabel(p.category) : p.category}</span>`
     : '';
   const sh = window.TATO_shopify;
   const shReady = !!(sh && sh.ready);
@@ -230,9 +230,9 @@ function pgridCardHTML(p, showTag, colorIdx) {
   const colName = col ? `<span class="pgrid-colour">${col.name}</span>` : '';
   return `
     <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="#product/${p.slug}" data-slug="${p.slug}">
+      ${tag}
       <span class="pgrid-media${img.flat ? ' is-flat' : ''}">
         ${media}
-        ${tag}
         ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}
       </span>
       <span class="pgrid-name">${p.name}</span>
