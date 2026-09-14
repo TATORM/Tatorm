@@ -169,6 +169,14 @@ function pictureEl(src, opts) {
   return pic;
 }
 
+/* Foto di brand/editoriali senza un capo o un look specifico da nominare
+   (mix di scatti studio in media/home/ e still dai look) → un alt
+   generico ma reale (non decorativo: è il contenuto della Home). */
+function homePhotoAlt(src) {
+  const look = src.match(/look-(\d+)/);
+  return look ? `TATO — Look ${parseInt(look[1], 10)}` : 'TATO — editorial photography';
+}
+
 function appendPhotos(feed, photos, isFirst) {
   photos.forEach((src, i) => {
     const fig = document.createElement('figure');
@@ -176,6 +184,7 @@ function appendPhotos(feed, photos, isFirst) {
     fig.className = hero ? 'home-image-block home-hero' : 'home-image-block';
     fig.appendChild(pictureEl(src, {
       eager: hero,
+      alt: homePhotoAlt(src),
       sizes: '(max-width: 768px) 100vw, min(700px, 36vw)',
     }));
     feed.appendChild(fig);
@@ -285,7 +294,7 @@ function declusterBySlug(arr) {
   const lookFig = (src, sizes) => {
     const fig = document.createElement('figure');
     fig.className = 'home-look';
-    fig.appendChild(pictureEl(src, { sizes }));
+    fig.appendChild(pictureEl(src, { alt: homePhotoAlt(src), sizes }));
     return fig;
   };
 
@@ -546,18 +555,26 @@ function renderNavMenu() {
     });
   });
   navLinks.querySelectorAll('.nav-group-toggle').forEach(btn => {
+    btn.setAttribute('aria-expanded', 'false');
     btn.addEventListener('click', () => {
       const grp = btn.closest('.nav-group');
       const wasOpen = grp.classList.contains('open');
-      navLinks.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
-      if (!wasOpen) grp.classList.add('open');
+      navLinks.querySelectorAll('.nav-group').forEach(g => {
+        g.classList.remove('open');
+        g.querySelector('.nav-group-toggle')?.setAttribute('aria-expanded', 'false');
+      });
+      if (!wasOpen) { grp.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
     });
   });
 }
 
 function closeNav() {
   navLinks.classList.remove('open');
-  navLinks.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+  navLinks.querySelectorAll('.nav-group').forEach(g => {
+    g.classList.remove('open');
+    g.querySelector('.nav-group-toggle')?.setAttribute('aria-expanded', 'false');
+  });
+  navToggle.setAttribute('aria-expanded', 'false');
 }
 
 function resetScroll() {
@@ -674,7 +691,7 @@ renderNavMenu();
 /* ─── Toggle menu ────────────────────────── */
 navToggle.addEventListener('click', () => {
   if (navLinks.classList.contains('open')) closeNav();
-  else navLinks.classList.add('open');
+  else { navLinks.classList.add('open'); navToggle.setAttribute('aria-expanded', 'true'); }
 });
 
 document.addEventListener('click', e => {
@@ -1622,13 +1639,19 @@ const btnTheme = document.getElementById('btn-theme');
 
 function applyTheme(dark) {
   document.body.classList.toggle('dark-mode', dark);
+  btnTheme.setAttribute('aria-pressed', String(dark));
 }
 
 // Ripristina preferenza salvata
 applyTheme(localStorage.getItem('tato-dark') === 'true');
 
-btnTheme.addEventListener('click', () => {
+function toggleTheme() {
   const isDark = !document.body.classList.contains('dark-mode');
   applyTheme(isDark);
   localStorage.setItem('tato-dark', isDark);
+}
+btnTheme.addEventListener('click', toggleTheme);
+// role="button" su un <div>: la tastiera non lo attiva da sé.
+btnTheme.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); }
 });

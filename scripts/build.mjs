@@ -54,6 +54,12 @@ async function run() {
     ...COMMON,
     entryPoints: ['assets/css/style.css'],
     loader: { '.css': 'css' },
+    // I font referenziati da @font-face restano dove sono (assets/fonts/):
+    // "esterni" per esbuild = non li tocca, il path relativo nel CSS
+    // bundlato resta valido perché assets/dist/ e assets/css/ sono allo
+    // stesso livello sotto assets/. Evita di doverli hashare e tenere
+    // sincronizzato il <link rel=preload> in index.html con quel hash.
+    external: ['*.woff', '*.woff2'],
   });
 
   const jsFile = pickOutput(js, '.js');

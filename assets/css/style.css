@@ -2,6 +2,31 @@
    TATO — style.css
    ═══════════════════════════════════════════ */
 
+/* Neue Haas Grotesk — self-hosted, licenza web acquistata.
+   Solo i 3 pesi usati nel sito (300/500/600); font-display:swap
+   evita il blocco render, il fallback di --font copre il resto. */
+@font-face {
+  font-family: "Neue Haas Grotesk Display";
+  src: url("../fonts/NeueHaasDisplay-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Neue Haas Grotesk Display";
+  src: url("../fonts/NeueHaasDisplay-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Neue Haas Grotesk Display";
+  src: url("../fonts/NeueHaasDisplay-Bold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --black:      #0a0a0a;
   --gray:       #888888;
@@ -109,6 +134,29 @@ body {
 
 a { color: inherit; text-decoration: none; }
 img { display: block; width: 100%; height: auto; }
+
+/* Visibile solo agli screen reader — es. l'h1 della Home, che nel
+   design non ha un titolo a video (il layout è tutto foto). */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus da tastiera — visibile e coerente ovunque, sopra il default
+   del browser. Solo :focus-visible (tastiera), non al click/tap.
+   :where() azzera la specificità dei selettori-tag così i campi con
+   un trattamento focus già disegnato (es. .mailchimp-custom-input,
+   .pdp-size-select) continuano a vincere senza bisogno di eccezioni.
+   var(--black) si inverte già da sé in dark-mode → alto contrasto. */
+:where(a, button, [role="button"], input, select, textarea):focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 3px;
+}
 
 /* <picture> è solo un contenitore per le <source> AVIF: sparisce dal
    box tree così tutte le regole che targettano `img` valgono invariate. */
