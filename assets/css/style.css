@@ -842,6 +842,19 @@ ul { list-style: none; }
   padding: 16px 0;
   border-bottom: 1px solid rgba(17,17,17,0.08);
 }
+.cart-item-thumb {
+  display: block;
+  width: 56px;
+  flex-shrink: 0;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--gray-light);
+}
+.cart-item-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+/* Packshot flat: intero, su bianco (vedi .pgrid-media.is-flat) */
+.cart-item-thumb.is-flat { background: #fff; }
+.cart-item-thumb.is-flat img { object-fit: contain; object-position: center; padding: 8%; }
+
 .cart-item-info { flex: 1; min-width: 0; }
 .cart-item-name {
   font-size: 0.62rem;

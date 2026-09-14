@@ -429,6 +429,9 @@ function renderCart() {
 
   body.innerHTML = cart.map(item => `
     <div class="cart-item-row" data-key="${item.key}">
+      ${item.image
+        ? `<span class="cart-item-thumb${item.imageFlat ? ' is-flat' : ''}">${pictureHTML(item.image, { alt: item.name, sizes: '56px' })}</span>`
+        : '<span class="cart-item-thumb ph-block"></span>'}
       <div class="cart-item-info">
         <p class="cart-item-name">${item.name}</p>
         <p class="cart-item-meta">${item.color ? item.color + ' · ' : ''}${item.size || ''}</p>
@@ -1294,6 +1297,7 @@ function renderPDP(slug) {
       name: p.name, slug, price: s.price, currency: s.currency,
       look: window.TATO_getCategoryLabel(p.category),
       color: color.name, size: s.chosenSize, shopifyVariantId: s.variantId, qty: 1,
+      image: galleryImgs[0] || '', imageFlat: galleryFlat,
     });
     const orig = btn.innerHTML;
     btn.textContent = 'Added';
