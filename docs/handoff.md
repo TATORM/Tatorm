@@ -1,12 +1,58 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-06 (sera)
-**Branch di lavoro:** `ecommerce-dev` — HEAD `5b9e01f`
+**Ultimo aggiornamento:** 2026-09-14
+**Branch di lavoro:** `ecommerce-dev` — HEAD `a1cd622`
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ═══════════════════════════════════════════════════════════════════
-## RIPRENDERE DA QUI (07/09)
+## RIPRENDERE DA QUI (14/09)
 ═══════════════════════════════════════════════════════════════════
+
+### Fase 05 ✅ (commit `a1cd622`) — font self-host, a11y, Lighthouse CI
+- **Font**: Neue Haas Grotesk Display self-hosted in `assets/fonts/` (solo i 3 pesi
+  usati: Light 300, Medium 500, Bold→600), `@font-face` + `font-display:swap` in
+  `style.css`, `<link rel=preload>` del peso Medium in `index.html`. File sorgente
+  dell'utente: `~/Desktop/font/` (kit woff/woff2/ttf/eot con licenza web). `build.mjs`
+  aggiornato (`external: ['*.woff','*.woff2']`) perché altrimenti esbuild non sapeva
+  bundlare i `.woff2` referenziati dal CSS.
+- **`lang="it"` → `"en"`**: il copy del sito è tutto in inglese, solo le meta
+  description/OG/Twitter/JSON-LD erano rimaste in italiano → tradotte per coerenza.
+- **`<h1>`**: aggiunto (sr-only) in Home — prima non esisteva NESSUN h1 nel sito.
+- **Alt text reali**: le 74 immagini dei caroselli Collection avevano tutte `alt=""`
+  → `"TATO — Look N, view X of Y"` (script Python one-off, non salvato). Stesso
+  trattamento per le foto editoriali/di look nell'home feed (`script.js`,
+  `homePhotoAlt()`) che non avevano alt. Griglia prodotti/PDP erano già a posto.
+- **Focus da tastiera**: `:where(a,button,[role=button],input,select,textarea):focus-visible`
+  globale — `:where()` azzera la specificità apposta così i campi con un trattamento
+  focus già disegnato (`.mailchimp-custom-input`, `.pdp-size-select`, …) continuano
+  a vincere senza bisogno di eccezioni sparse.
+- **`aria-expanded`**: su `#nav-toggle` (MENU) e sui due `.nav-group-toggle`
+  (Women/Men). **Bonus**: il toggle dark mode era un `<div role="button">` senza
+  `tabindex` né gestione tastiera → aggiunto `tabindex="0"`, `aria-pressed`,
+  handler `keydown` (Enter/Spazio).
+- **Lighthouse CI**: `.github/workflows/lighthouse.yml` + `.github/lighthouse/lighthouserc.json`
+  — gira `npm run build` poi audita la build reale (staticDistDir) su Home e
+  `#shop`, preset mobile di default. Accessibilità ≥0.95 **bloccante**; performance/
+  best-practices/seo ≥0.90 solo **warning** (i runner condivisi di GH Actions hanno
+  troppa varianza di CPU per un hard-fail affidabile su performance). Non ancora
+  verificato con una run reale (serve push, vedi sotto).
+- Verificato in browser (locale, sia sorgenti che build `npm run build`): font
+  caricato (`document.fonts` → 3 face "loaded"), zero errori console, nav/tema
+  funzionanti, alt presenti.
+- **Non fatto**: fase 04b (modularizzazione `script.js`) — resta manutenzione,
+  rimandata come da piano.
+
+### Blocchi che dipendono da te (non-codice) — aggiornato
+1. **Push** — ancora bloccato, vedi sotto (invariato dal 06/09).
+2. **GitHub Pages** → Settings → Pages → Source da "Deploy from a branch" a
+   **"GitHub Actions"** (farlo al merge su `main`).
+3. **Shopify**: stock 0 ovunque, 10 prodotti in Bozza, vetrina con password,
+   gateway "TEST", nome negozio da sistemare (invariato dal 06/09).
+4. ~~**Font**~~ — risolto oggi, self-hosted.
+5. **Analytics + consenso cookie**: non impostati.
+6. **Contenuti legali/spedizioni/resi**: tutto marcato `[DA FORNIRE: …]`.
+7. **Lighthouse CI**: la prima run reale richiede il push (workflow gira su
+   push/PR); da controllare i punteggi effettivi appena sbloccato il push.
 
 ### Come girare in locale
 ```
@@ -26,20 +72,7 @@ scaduto ed era in chiaro). Working tree pulito.
 Per sbloccare: `gh auth login` + `git remote set-url origin https://github.com/TATORM/Tatorm.git`
 poi `git push origin ecommerce-dev`.
 
-### Blocchi che dipendono da te (non-codice)
-1. **Push** — vedi sopra.
-2. **GitHub Pages** → Settings → Pages → Source da "Deploy from a branch" a
-   **"GitHub Actions"** (cambia come deploia tatorm.com; farlo al merge su `main`).
-3. **Shopify**: stock 0 ovunque (→ tutto sold-out, corretto); 10 prodotti in Bozza;
-   vetrina con password ("opening soon"); gateway "TEST". Nome negozio = "Il mio negozio"
-   (→ Impostazioni → Dettagli negozio → "TATO"; logo checkout → Impostazioni → Check-out → Branding).
-4. **Font**: "Neue Haas Grotesk" è DICHIARATO ma NON caricato → il sito gira su
-   Helvetica Neue (fallback). Serve il `.woff2` con licenza web.
-5. **Analytics + consenso cookie**: non impostati. Non attivare tracker prima del consenso.
-6. **Contenuti legali/spedizioni/resi**: le pagine `#privacy #terms #cookies #shipping
-   #returns #faq` hanno struttura pronta ma tutto marcato `[DA FORNIRE: …]`.
-
-### Fatto oggi (sessione 06/09) — sopra il piano in 5 fasi
+### Fatto il 06/09 — sopra il piano in 5 fasi
 - **Fasi 00–04a** del piano tecnico (build esbuild + GitHub Action, immagini AVIF+lazy,
   catalogo unico + "Shop the look", layout in CSS puro, via SDK js-buy-sdk).
 - **Production-readiness P1** (`2434775`): Shopify = fonte per prezzo/compare-at/
