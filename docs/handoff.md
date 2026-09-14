@@ -1,12 +1,79 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-14
-**Branch di lavoro:** `ecommerce-dev` — HEAD `a1cd622`
+**Ultimo aggiornamento:** 2026-09-14 (sera)
+**Branch di lavoro:** `ecommerce-dev` — HEAD `ed61e3c`
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ═══════════════════════════════════════════════════════════════════
-## RIPRENDERE DA QUI (14/09)
+## RIPRENDERE DA QUI (14/09 sera)
 ═══════════════════════════════════════════════════════════════════
+
+### Sessione pomeriggio/sera — pass di rifinitura su menu/carrello (commit `9d2e40f`…`ed61e3c`)
+
+Lavoro a piccoli step guidato da screenshot dal vivo (l'utente segue la sessione
+e manda feedback visivo a ogni giro), tutto verificato nel browser reale prima
+del commit.
+
+- **Cartelle riorganizzate**: `SHOPIFY EXPORT/` e il kit font `~/Desktop/font/`
+  sono stati spostati dall'utente dentro `SITO/` (consolidamento manuale, non
+  più sparsi sul Desktop). Aggiunte a `.gitignore` (`ESHOP/`, `SHOPIFY EXPORT/`)
+  — materiale di riferimento/lavoro, non asset del sito, mai da trackare.
+- **Menu desktop** (`.nav-links`/`.nav-group-toggle`/`.nav-sub`, `style.css`):
+  rifatto a più riprese per taglia/colore/interlinea, partendo dal design del
+  sito **live** (`main`) come riferimento (testo non-maiuscolo, colore
+  `var(--gray)` con hover a `var(--black)`, niente più il nero pieno/uppercase
+  di prima). Sequenza reale della sessione (ogni step confermato/corretto
+  dall'utente via screenshot, **non prendere solo l'ultimo valore per buono
+  senza guardare gli step intermedi se si riparte da qui**):
+  1. `b3363e5` — taglia/colore/interlinea come il live, ma col font nuovo:
+     `font-size` invariato a `0.6rem`/`0.54rem`, tolto `text-transform:uppercase`,
+     `line-height` da 2.6/2.2 a 1, colore da nero a `--gray`+hover.
+  2. `162e0b9` — l'utente lo trova ancora troppo grande → **-5pt** un po' a
+     naso su tutti i livelli: `0.6rem→0.35rem` (MENU + voci primo livello),
+     `0.54rem→0.29rem` (sottomenu). **Da queste due modifiche in poi "diminuisci/
+     aumenta di N pt" è stato interpretato come N px letti sul valore calcolato
+     a schermo** (root `html{font-size:125%}` = 20px → 0.35rem = 7px), non pt
+     tipografici in senso stretto: è così che i numeri qui sotto tornano.
+  3. `93a1265` — troppo piccolo e illeggibile con le sottocategorie aperte →
+     **+3pt**: `0.35rem→0.5rem`, `0.29rem→0.44rem`. In più, la spaziatura non
+     reggeva più (era tutta affidata al `line-height`, inaffidabile col
+     maiuscolo): `.nav-links` gap `1px→8px`; `.nav-sub a` passa da spaziatura
+     via `line-height:1.6` a `padding:5px 0` esplicito.
+  4. `c4d1d59` — mancava aria tra il toggle Women/Men e la prima voce del
+     sottomenu (stesso `<li>`, il gap di `.nav-links` non si applica lì) →
+     `.nav-group.open > .nav-sub { margin-top: 8px }`.
+  **Stato finale**: MENU/voci primo livello `0.5rem` (~10px), sottomenu
+  `0.44rem` (~8.8px), tutto in `var(--gray)`/hover `var(--black)`, spaziatura
+  via `gap`/`padding` non più `line-height`. Se si ritocca ancora, ragionare
+  in px assoluti (root a 20px) più che in rem a mente.
+- **Shop grid — tag categoria sui packshot**: provato a spostarlo fuori
+  dall'overlay sull'immagine (era sovrapposto al disegno tecnico) in
+  `4e275f1`, **poi annullato con `git revert` in `65f237f`** su richiesta
+  esplicita ("rimetti la categoria come prima") — è tornato l'overlay
+  assoluto originale (top:12px/left:12px sopra il packshot). Se si riprova
+  in futuro, il codice del tentativo (spostare `${tag}` prima di
+  `.pgrid-media` in `pgridCardHTML`, classe `.pgrid-tag--flat`) è nella storia
+  git di `4e275f1`, non serve reinventarlo da zero — ma **non richiesto ora**.
+- **Carrello — miniatura prodotto** (`ed61e3c`): `addToCart` (nel listener
+  `#pdp-add` di `renderPDP`) ora salva anche `image`/`imageFlat` (stessa foto
+  già calcolata per la gallery PDP: packshot o, in mancanza, foto del look).
+  `renderCart()` la mostra come `<picture>` 56px prima del nome prodotto,
+  classe `.cart-item-thumb` (+ `.is-flat` per i packshot, stesso trattamento
+  `object-fit:contain` su bianco di `.pgrid-media.is-flat`). Righe carrello
+  già in `localStorage` da PRIMA di questa modifica non hanno `image` →
+  fallback `.ph-block` grigio, non si rompe nulla. Verificato end-to-end:
+  miniatura visibile nel drawer E trascinata fino al checkout Shopify reale
+  (Cart API → il checkout Shopify la mostra di suo).
+- **Chiarito, non è un bug nostro**: il logo "TATO" nella pagina di
+  **checkout Shopify** (`pshgtp-ak.myshopify.com/checkouts/...`) porta alla
+  home del tema Shopify di default (non configurato, contenuti placeholder
+  "Browse our latest products") invece che a tatorm.com. Il checkout è
+  **hostato da Shopify**, non è il nostro `index.html`/`script.js` — quel
+  logo è del tema di checkout Shopify, il link va al dominio primario del
+  negozio, che oggi è ancora `pshgtp-ak.myshopify.com` (nessun dominio
+  custom collegato). Si risolve solo da **Shopify Admin**, non da codice:
+  Impostazioni → Domini (collegare `tatorm.com`) + Impostazioni →
+  Check-out → Branding. Stesso blocco già in lista sotto, punto 3.
 
 ### Fase 05 ✅ (commit `a1cd622`) — font self-host, a11y, Lighthouse CI
 - **Font**: Neue Haas Grotesk Display self-hosted in `assets/fonts/` (solo i 3 pesi
@@ -47,7 +114,12 @@
 2. **GitHub Pages** → Settings → Pages → Source da "Deploy from a branch" a
    **"GitHub Actions"** (farlo al merge su `main`).
 3. **Shopify**: stock 0 ovunque, 10 prodotti in Bozza, vetrina con password,
-   gateway "TEST", nome negozio da sistemare (invariato dal 06/09).
+   gateway "TEST", nome negozio da sistemare (invariato dal 06/09). **+ dominio**:
+   nessun dominio custom collegato → il checkout Shopify (logo/link "torna al
+   negozio") rimanda a `pshgtp-ak.myshopify.com` col tema demo non configurato
+   invece che a tatorm.com. Impostazioni → Domini (collega `tatorm.com`) +
+   Impostazioni → Check-out → Branding. Non è un bug nel nostro codice: il
+   checkout è hostato da Shopify, fuori da `index.html`/`script.js`.
 4. ~~**Font**~~ — risolto oggi, self-hosted.
 5. **Analytics + consenso cookie**: non impostati.
 6. **Contenuti legali/spedizioni/resi**: tutto marcato `[DA FORNIRE: …]`.
