@@ -499,9 +499,6 @@ body.header-scrolled:not(.shop-mode) .site-nav {
   position: absolute;
   left: 6%;
   bottom: 9%;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
   color: #fff;
 }
 .home-dept-title {
@@ -510,16 +507,6 @@ body.header-scrolled:not(.shop-mode) .site-nav {
   text-transform: uppercase;
   font-weight: 500;
 }
-.home-dept-link {
-  font-size: 0.5rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
-}
-.home-dept:hover .home-dept-link { opacity: 1; }
 
 /* Foto successive */
 .home-image-block {

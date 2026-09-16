@@ -261,7 +261,7 @@ function renderHomeDepartments() {
     }));
     const cap = document.createElement('span');
     cap.className = 'home-dept-caption';
-    cap.innerHTML = `<span class="home-dept-title">${d.label}</span><span class="home-dept-link">Discover</span>`;
+    cap.innerHTML = `<span class="home-dept-title">${d.label}</span>`;
     a.appendChild(cap);
     wrap.appendChild(a);
   });
