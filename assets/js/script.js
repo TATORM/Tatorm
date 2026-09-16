@@ -301,15 +301,13 @@ function pgridCardHTML(p, colorIdx) {
   const pd = shReady ? sh.productData(p.slug) : null;
   const price = pd && pd.minPrice != null ? pd.minPrice : p.price;
   const cur = (pd && pd.currency) || p.currency || 'EUR';
-  /* card di una singola colorway (Home) → nome del colore attivo;
-     card del prodotto (Shop, Complete the look) → pallini di tutti i colori */
-  const colorInfo = col
-    ? `<span class="pgrid-colour">${col.name}</span>`
-    : (p.colors && p.colors.length > 1
-        ? `<span class="pgrid-swatches">${p.colors.map(c =>
-            `<span class="pgrid-swatch" style="background:${c.hex}" aria-hidden="true"></span>`
-          ).join('')}</span>`
-        : '');
+  /* Pallini di tutti i colori del prodotto, sempre — quello della card
+     (colorIdx, sulle colorway della Home) evidenziato se presente. */
+  const colorInfo = p.colors && p.colors.length > 1
+    ? `<span class="pgrid-swatches">${p.colors.map((c, i) =>
+        `<span class="pgrid-swatch${i === colorIdx ? ' is-active' : ''}" style="background:${c.hex}" aria-hidden="true"></span>`
+      ).join('')}</span>`
+    : '';
   return `
     <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="#product/${p.slug}" data-slug="${p.slug}">
       <span class="pgrid-media${img.flat ? ' is-flat' : ''}">
