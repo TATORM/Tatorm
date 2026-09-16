@@ -231,7 +231,7 @@ function renderHomeHero() {
   fig.appendChild(pictureEl(src, {
     eager: true,
     alt: homePhotoAlt(src),
-    sizes: '(max-width: 768px) 100vw, min(700px, 36vw)',
+    sizes: '100vw',   // hero sempre a tutto schermo, mobile e desktop
   }));
 }
 

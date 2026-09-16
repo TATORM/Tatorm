@@ -401,6 +401,19 @@ body.header-scrolled:not(.shop-mode) .site-nav {
   margin: 0;
   position: relative;
 }
+/* Desktop: l'hero esce dalla colonna centrale ed è a tutto schermo
+   (larghezza + altezza), come il resto del feed sotto resta invece
+   nella colonna editoriale. Mobile invariato (--image-width è già
+   100vw lì, vedi media query ≤768px). */
+@media (min-width: 769px) {
+  /* specificità doppia (.home-hero.home-image-block) per battere
+     .home-image-block { width: var(--image-width) } più sotto nel file */
+  .home-hero.home-image-block {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+}
 .home-hero img {
   position: absolute;
   top: 0; left: 0;
