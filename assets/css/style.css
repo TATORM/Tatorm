@@ -502,8 +502,8 @@ body.header-scrolled:not(.shop-mode) .site-nav {
   color: #fff;
 }
 .home-dept-title {
-  font-size: 1.4rem;
-  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   font-weight: 500;
 }
