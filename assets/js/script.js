@@ -207,7 +207,7 @@ function productImgSrc(p) {
 
 /* colorIdx opzionale: card di una specifica variante colore
    (immagine + nome colore). Usata dalla Home per mostrare ogni colorway. */
-function pgridCardHTML(p, showTag, colorIdx) {
+function pgridCardHTML(p, colorIdx) {
   const col = (colorIdx != null && p.colors && p.colors[colorIdx]) ? p.colors[colorIdx] : null;
   let img;
   if (col && col.images && col.images.length) img = { src: col.images[0], flat: true };
@@ -216,9 +216,6 @@ function pgridCardHTML(p, showTag, colorIdx) {
   const media = img.src
     ? pictureHTML(img.src, { alt: col ? `${p.name} — ${col.name}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
     : '<span class="ph-block"></span>';
-  const tag = showTag
-    ? `<span class="pgrid-tag">${window.TATO_getCategoryLabel ? window.TATO_getCategoryLabel(p.category) : p.category}</span>`
-    : '';
   const sh = window.TATO_shopify;
   const shReady = !!(sh && sh.ready);
   const sold = col
@@ -227,25 +224,30 @@ function pgridCardHTML(p, showTag, colorIdx) {
   const pd = shReady ? sh.productData(p.slug) : null;
   const price = pd && pd.minPrice != null ? pd.minPrice : p.price;
   const cur = (pd && pd.currency) || p.currency || 'EUR';
-  const colName = col ? `<span class="pgrid-colour">${col.name}</span>` : '';
+  /* card di una singola colorway (Home) → nome del colore attivo;
+     card del prodotto (Shop, Complete the look) → pallini di tutti i colori */
+  const colorInfo = col
+    ? `<span class="pgrid-colour">${col.name}</span>`
+    : (p.colors && p.colors.length > 1
+        ? `<span class="pgrid-swatches">${p.colors.map(c =>
+            `<span class="pgrid-swatch" style="background:${c.hex}" aria-hidden="true"></span>`
+          ).join('')}</span>`
+        : '');
   return `
     <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="#product/${p.slug}" data-slug="${p.slug}">
       <span class="pgrid-media${img.flat ? ' is-flat' : ''}">
         ${media}
-        ${tag}
         ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}
       </span>
       <span class="pgrid-name">${p.name}</span>
-      ${colName}
+      ${colorInfo}
       <span class="pgrid-price">${money(price, cur)}</span>
     </a>`;
 }
 
-/* showTag: pill categoria mostrata solo in Home e in New Arrivals
-   (nascosta quando si sta filtrando per una categoria o un reparto) */
-function pgridHTML(list, showTag) {
+function pgridHTML(list) {
   if (!list || !list.length) return '<p class="pgrid-empty">Coming soon.</p>';
-  return list.map(p => pgridCardHTML(p, showTag)).join('');
+  return list.map(p => pgridCardHTML(p)).join('');
 }
 
 /* Evita due card dello stesso prodotto adiacenti (best-effort) */
@@ -312,7 +314,7 @@ function declusterBySlug(arr) {
     const grid = document.createElement('div');
     grid.className = 'pgrid home-pgrid';
     grid.innerHTML = cards.slice(i, i + PER_BLOCK)
-      .map(({ p, ci }) => pgridCardHTML(p, true, ci)).join('');
+      .map(({ p, ci }) => pgridCardHTML(p, ci)).join('');
     feed.appendChild(grid);
 
     if (i + PER_BLOCK < cards.length && lookShots.length) {
@@ -505,6 +507,33 @@ window.addEventListener('load', () => {
   }, 1200);
 
 });
+
+/* ═══════════════════════════════════════════
+   HEADER COMPATTO IN ALTO allo scroll
+   Logo/MENU normalmente restano centrati in
+   verticale (vedi .site-logo/.site-nav); scendendo
+   si spostano negli angoli in alto (body.header-scrolled,
+   regole in style.css). Ascolta sia window (desktop)
+   che body (mobile, dove body stesso è lo scroll
+   container — vedi media query ≤768px). */
+(function () {
+  const THRESHOLD = 80;
+  let ticking = false;
+  function currentScrollY() {
+    return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  }
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      document.body.classList.toggle('header-scrolled', currentScrollY() > THRESHOLD);
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.body.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
 
 /* ═══════════════════════════════════════════
    NAVIGAZIONE SEZIONI
@@ -1031,8 +1060,7 @@ function shopFilteredProducts() {
 function renderShopGrid() {
   if (!shopGrid) return;
   shopGrid.className = 'pgrid';
-  const showTag = shopScope === 'new' && shopCategory === 'all';   // solo New Arrivals
-  shopGrid.innerHTML = pgridHTML(shopFilteredProducts(), showTag);
+  shopGrid.innerHTML = pgridHTML(shopFilteredProducts());
 }
 
 function renderShop() {
@@ -1142,7 +1170,7 @@ function renderPDP(slug) {
           alt: `Look ${lookN}`, sizes: '(max-width: 768px) 100vw, 48vw',
         })}</div>` : ''}
         <div class="pgrid pdp-complete-items" style="--n:${completeItems.length}">
-          ${completeItems.map(s => pgridCardHTML(window.TATO_getProduct(s), false)).join('')}
+          ${completeItems.map(s => pgridCardHTML(window.TATO_getProduct(s))).join('')}
         </div>
       </div>
     </section>` : '';
@@ -1166,7 +1194,9 @@ function renderPDP(slug) {
         <div class="pdp-colors">${swatches}</div>
         <p class="pdp-color-name">${color.name}</p>
 
-        ${singleSize ? '' : `
+        ${singleSize ? `
+        <p class="pdp-row-label">Size</p>
+        <p class="pdp-size-single">OS</p>` : `
         <div class="pdp-size-row">
           <label class="pdp-row-label" for="pdp-size-select">Select the size</label>
           <button class="pdp-sizeguide-link" id="pdp-sizeguide" type="button">Size guide</button>

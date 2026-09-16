@@ -227,10 +227,19 @@ ul { list-style: none; }
 .site-logo.logo--left {
   left: 3vw;
   width: var(--logo-w-final);
-  /* transform: translateY(-50%) — non cambia */
+  /* transform: translateY(-50%) — non cambia (salvo scroll, vedi sotto) */
+  transition: left 0.8s var(--ease), width 0.8s var(--ease), top 0.35s ease, transform 0.35s ease;
 }
 
 .site-logo.logo--left:hover { opacity: 0.5; transition: opacity 0.2s ease; }
+
+/* Scendendo con lo scroll, il logo lascia il centro verticale e si
+   ancora in alto a sx (stessa quota di .top-icons a dx) per liberare
+   il centro schermo. Non su shop-mode: lì il logo è già in alto. */
+body.header-scrolled:not(.shop-mode) .site-logo.logo--left {
+  top: 26px;
+  transform: translateY(0);
+}
 
 
 /* ═══════════════════════════════════════════
@@ -261,6 +270,13 @@ ul { list-style: none; }
   transform: translateY(-50%);
   z-index: 50;
   text-align: right;
+  transition: top 0.35s ease, transform 0.35s ease;
+}
+/* Scendendo con lo scroll, il MENU lascia il centro verticale e si
+   ancora in alto a dx, sotto la riga di .top-icons — mirror del logo. */
+body.header-scrolled:not(.shop-mode) .site-nav {
+  top: 58px;
+  transform: translateY(0);
 }
 .nav-toggle {
   font-size: 0.5rem; letter-spacing: 0.2em;
@@ -1205,17 +1221,6 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   padding: 7% 11%;
 }
 .pgrid-card:hover .pgrid-media img { opacity: 0.8; }
-.pgrid-tag {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  font-size: 0.48rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #0a0a0a;
-  background: rgba(255, 255, 255, 0.85);
-  padding: 3px 7px;
-}
 .pgrid-name {
   text-align: center;
   margin-top: 16px;
@@ -1230,6 +1235,19 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   font-size: 0.56rem;
   letter-spacing: 0.06em;
   color: var(--gray);
+}
+.pgrid-swatches {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.pgrid-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
 }
 .pgrid-price {
   text-align: center;
@@ -1366,6 +1384,12 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   letter-spacing: 0.06em;
   color: var(--black);
   margin-bottom: 24px;
+}
+.pdp-size-single {
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  color: var(--black);
+  margin: 0 0 24px;
 }
 /* Taglia — riga label + link guida, poi tendina nativa */
 .pdp-size-row {
@@ -2257,7 +2281,7 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .pgrid-colour { color: rgba(255,255,255,0.6); }
   .product-card-meta,
   .product-card-price { color: rgba(255,255,255,0.6); }
-  .pgrid-tag { color: #0a0a0a; background: rgba(255,255,255,0.9); }
+  .pgrid-swatch { border-color: rgba(255,255,255,0.35); }
 
   /* ─── PDP mobile ──────────────────────────── */
   .pdp-main {
@@ -2268,7 +2292,7 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .pdp-info { position: static; top: auto; padding: 0 16px; }
   .pdp-back { color: rgba(255,255,255,0.55); }
   .pdp-back:hover { color: #fff; }
-  .pdp-name, .pdp-color-name { color: #fff; }
+  .pdp-name, .pdp-color-name, .pdp-size-single { color: #fff; }
   .pdp-material { color: rgba(255,255,255,0.6); }
   .pdp-ref { color: rgba(255,255,255,0.4); }
   .pdp-row-label, .pdp-size-hint, .pdp-pay-marks,
