@@ -168,9 +168,10 @@ function pictureEl(src, opts) {
   const pic = document.createElement('picture');
   if (HAS_DERIVATIVES.test(src)) {
     const base = src.replace(/\.[^.]+$/, '');
+    const widths = opts.widths || [900, 1440];
     const s = document.createElement('source');
     s.type = 'image/avif';
-    s.srcset = `${base}-900.avif 900w, ${base}-1440.avif 1440w`;
+    s.srcset = widths.map(w => `${base}-${w}.avif ${w}w`).join(', ');
     s.sizes = opts.sizes || '100vw';
     pic.appendChild(s);
   }
@@ -217,7 +218,8 @@ function isDesktopViewport() {
 function renderHomeHero() {
   const feed = document.getElementById('home-feed');
   if (!feed) return;
-  const pool = isDesktopViewport() ? heroPhotosDesktop : allHomePhotos;
+  const desktop = isDesktopViewport();
+  const pool = desktop ? heroPhotosDesktop : allHomePhotos;
   const src = pool[Math.floor(Math.random() * pool.length)];
 
   let fig = document.getElementById('home-hero-fig');
@@ -232,6 +234,9 @@ function renderHomeHero() {
     eager: true,
     alt: homePhotoAlt(src),
     sizes: '100vw',   // hero sempre a tutto schermo, mobile e desktop
+    // pool desktop = full-bleed su schermi grandi → derivati più
+    // larghi/qualità più alta (vedi scripts/images.mjs, cartella hero/)
+    widths: desktop ? [1600, 2400] : [900, 1440],
   }));
 }
 

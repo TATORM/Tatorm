@@ -344,6 +344,33 @@ body.header-scrolled:not(.shop-mode) .site-nav {
 }
 .nav-sub a:hover { opacity: 1; }
 
+/* Desktop: logo + HUD in negativo via mix-blend-mode, stessa tecnica già
+   usata su mobile (vedi media query ≤768px) — si autoadattano al contrasto
+   di quel che hanno dietro (foto scure dell'hero, griglia bianca sotto…)
+   invece di restare sempre neri e sparire sulle foto scure. */
+@media (min-width: 769px) {
+  .site-logo,
+  .site-nav,
+  .top-icons {
+    mix-blend-mode: difference;
+  }
+  .site-logo img,
+  #btn-monogram img {
+    filter: invert(1);
+  }
+  .icon-btn,
+  .nav-toggle,
+  .nav-links > li > a,
+  .nav-group-toggle,
+  .nav-sub a {
+    color: #fff;
+  }
+  .nav-links > li > a:hover,
+  .nav-group-toggle:hover {
+    color: #fff;
+  }
+}
+
 /* Riga vuota tra Accessories e Collection */
 .nav-spacer { height: 1.7em; }
 

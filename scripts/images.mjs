@@ -24,11 +24,15 @@ const DIRS = ['media/looks', 'media/home', 'media/products'];
 const FORCE = process.argv.includes('--force');
 
 const WIDTHS = [900, 1440];
-const FORMATS = [
-  ['avif', 'avif', { quality: 48 }],
-];
+const QUALITY = 48;
+/* media/home/hero/ = foto dell'hero Home, mostrate full-bleed fino alla
+   larghezza reale dello schermo (non più in colonna) → derivati più
+   larghi e qualità più alta, altrimenti sgranano su monitor grandi. */
+const HERO_RE = /[\\/]media[\\/]home[\\/]hero[\\/]/;
+const HERO_WIDTHS = [1600, 2400];
+const HERO_QUALITY = 62;
 const EXT_IN = new Set(['.jpg', '.jpeg', '.png']);
-const IS_DERIVED = /-(?:900|1440)\.(?:avif|webp)$/;
+const IS_DERIVED = /-(?:900|1440|1600|2400)\.(?:avif|webp)$/;
 
 async function* walk(dir) {
   let entries;
@@ -61,19 +65,20 @@ async function run() {
       const base = path.basename(file, path.extname(file));
       const src = sharp(file, { failOn: 'none' }).rotate(); // applica EXIF orientation
       const meta = await src.metadata();
+      const isHero = HERO_RE.test(file);
+      const widths = isHero ? HERO_WIDTHS : WIDTHS;
+      const quality = isHero ? HERO_QUALITY : QUALITY;
 
-      for (const w of WIDTHS) {
+      for (const w of widths) {
         const width = Math.min(w, meta.width || w);
-        for (const [fmt, ext, opts] of FORMATS) {
-          const dest = path.join(dir, `${base}-${w}.${ext}`);
-          if (!FORCE && (await exists(dest))) { skipped++; continue; }
-          await src
-            .clone()
-            .resize({ width, withoutEnlargement: true })
-            .toFormat(fmt, opts)
-            .toFile(dest);
-          made++;
-        }
+        const dest = path.join(dir, `${base}-${w}.avif`);
+        if (!FORCE && (await exists(dest))) { skipped++; continue; }
+        await src
+          .clone()
+          .resize({ width, withoutEnlargement: true })
+          .toFormat('avif', { quality })
+          .toFile(dest);
+        made++;
       }
     }
   }
