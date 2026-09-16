@@ -1,11 +1,110 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-14 (sera)
-**Branch di lavoro:** `ecommerce-dev` — HEAD `ed61e3c`
+**Ultimo aggiornamento:** 2026-09-16
+**Branch di lavoro:** `ecommerce-dev` — HEAD `4db3bd9`
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ═══════════════════════════════════════════════════════════════════
-## RIPRENDERE DA QUI (14/09 sera)
+## RIPRENDERE DA QUI (16/09)
+═══════════════════════════════════════════════════════════════════
+
+### Sessione 16/09 — pass di design sulla Home, solo desktop (commit `402feaa`…`4db3bd9`, 13 commit)
+
+Lavoro a piccoli step guidato da screenshot/feedback dal vivo, ogni pezzo
+verificato nel browser reale (locale, `python3 -m http.server 8777`)
+prima del commit. **Tutto scoped a desktop (`min-width:769px`) — il
+mobile non è stato toccato in nessuno dei punti sotto**, resta come
+da fine sessione 14/09.
+
+- **Shop grid / card prodotto** (`402feaa`, `9e21a83`, `eb3aab4`):
+  - Tolta la pill categoria sopra la foto preview (`.pgrid-tag`, esisteva
+    solo in Home/New Arrivals).
+  - Aggiunti pallini colore (`.pgrid-swatches`/`.pgrid-swatch`) sotto il
+    **prezzo** di ogni card, ovunque: Shop, Home (sia le card di
+    prodotto sia quelle per singola colorway — su queste ultime il
+    pallino della colorway mostrata è evidenziato con un anello,
+    `.pgrid-swatch.is-active`), "Complete the look" in PDP. Prima le
+    card per-colorway della Home mostravano solo il nome testuale del
+    colore (`.pgrid-colour`, ora rimossa) — inconsistente col resto.
+  - `pgridCardHTML(p, colorIdx)`: firma semplificata (via il vecchio
+    parametro `showTag`, morto insieme al tag).
+
+- **Header (logo/MENU) fisso in alto allo scroll** (`ae2cae6`, poi
+  esteso): normalmente centrato in verticale (`.site-logo`/`.site-nav`,
+  invariato); scendendo con lo scroll di 80px si ancora in alto agli
+  angoli (`body.header-scrolled`, listener in script.js su `window` e
+  `body` per coprire anche mobile — ma le regole CSS che spostano
+  top/transform sono dentro `@media (min-width:769px)`).
+
+- **Hero Home ridisegnato, solo desktop** (`b5d4394`→`b446b04`):
+  - Pool dedicato `heroPhotosDesktop` (`media/home/hero/`) invece del
+    vecchio `allHomePhotos` generico (quello resta per il fallback
+    mobile, invariato). Partito da 8 foto "book" fornite dall'utente
+    (compresse con sips 2800px/q92 dagli originali in
+    `~/Desktop/.../TATO/FOTO POST PRODOTTE X BOOK/`), **ridotto a 5**
+    (`02,04,05,06,08.jpg`): le altre 3 (`01,03,07`) erano scatti di
+    dettaglio ravvicinati (piedi/pantaloni, no volto/busto) che a
+    schermo intero restavano tagliati male qualunque object-position
+    si usasse — il soggetto era già al bordo dello scatto originale.
+    Restano nel repo (derivate comprese) ma fuori dal pool random.
+  - `renderHomeHero()`: pesca una foto a caso dal pool e la richiama
+    **anche tornando alla Home da un'altra sezione** (chiamata in
+    `showSection`), non solo al load iniziale come prima.
+  - L'hero è ora **full-bleed** (`width:100vw` + margini negativi,
+    invece della colonna `--image-width` ~700px) e **+100px di
+    altezza** (`100dvh + 100px`). Specificità raddoppiata
+    (`.home-hero.home-image-block`) per battere `.home-image-block`
+    più sotto nel file.
+  - `scripts/images.mjs`: `media/home/hero/` ora genera derivati AVIF
+    **1600/2400w a qualità 62** (il resto del sito resta 900/1440 q48,
+    tarato per le miniature) — a piena larghezza su monitor grandi le
+    derivate piccole sgranavano vistosamente. `pictureEl()` accetta un
+    `opts.widths` per il srcset, usato solo qui.
+  - **HUD in negativo su desktop** (`ab85cdb`, fix toggle `73d4ff9`):
+    logo/`.top-icons`/MENU ora `mix-blend-mode:difference` (stessa
+    tecnica già in uso su mobile) — si autoadattano al contrasto di
+    quel che hanno dietro invece di restare sempre neri e sparire
+    sulle foto scure dell'hero. Il toggle dark/light usava
+    `var(--black)` (quasi nero) per bordo/pallino → differenza minima
+    contro sfondo scuro → sparito anche lui finché non portato a
+    bianco pieno come le altre icone.
+
+- **Nuova sezione Men/Women sotto l'hero, stile Dior** (`7473540`, poi
+  rifinita in `0e21364`/`1b24454`/`4db3bd9`): due foto full-bleed
+  affiancate (`media/home/hero/05.jpg` uomo, `06.jpg` donna — i due
+  ritratti più "puliti" del set), `renderHomeDepartments()` chiamata
+  subito dopo `renderHomeHero()` in `buildHomeFeed`. Link a
+  `#shop/men` / `#shop/women`. Solo titolo **MEN**/**WOMEN** in basso
+  a sx (font-size `0.9rem`, ridotto da un primo `1.4rem` troppo
+  grande) — niente più link "Discover" sotto (tolto su richiesta),
+  niente più zoom al hover (tolto, l'immagine resta ferma). Sezione
+  nascosta `display:none` sotto i 769px, il pass mobile per questo
+  blocco resta da fare.
+
+- **PDP — taglia "OS" sul TATO CAP** (`402feaa`): per i prodotti
+  One Size (`singleSize`) prima la riga taglia spariva del tutto senza
+  mostrare nulla; ora mostra un'etichetta statica "OS" sotto "Size".
+  Non tocca la logica di matching con Shopify (resta `'One Size'`
+  internamente, solo la label mostrata è "OS").
+
+### Blocco push — invariato ma causa chiarita
+Il push resta bloccato (tutti i 13 commit di questa sessione + i
+precedenti restano **solo locali**), ma la causa non è più il token
+scaduto: `gh auth login` risulta autenticato come **`samuelemurru1-wq`**,
+un account **senza permessi di scrittura** su `TATORM/Tatorm` (è il
+repo dell'account org **TATORM**, non dell'account personale). Il
+remote è stato ripulito (tolto il vecchio token in chiaro dall'URL,
+ora `https://github.com/TATORM/Tatorm.git`). Per sbloccare, una di:
+1. generare un nuovo Personal Access Token dall'account GitHub TATORM
+   e usarlo per il push;
+2. `gh auth login` scegliendo l'account TATORM;
+3. aggiungere `samuelemurru1-wq` come collaboratore del repo su TATORM
+   (Settings → Collaborators).
+L'utente ha scelto di rimandare — per ora si continua a lavorare e
+committare in locale.
+
+═══════════════════════════════════════════════════════════════════
+## Sessione precedente (14/09 sera)
 ═══════════════════════════════════════════════════════════════════
 
 ### Sessione pomeriggio/sera — pass di rifinitura su menu/carrello (commit `9d2e40f`…`ed61e3c`)
@@ -187,6 +286,11 @@ poi `git push origin ecommerce-dev`.
   aiuta ma non sempre.
 - `og:image` per-prodotto: aggiornato via JS → ok per browser/Googlebot, NON per crawler
   social senza JS (WhatsApp/iMessage) → serve pre-render/SSG (C1 nel report production).
+- **Hero + sezione Men/Women (16/09) sono desktop-only**: su mobile l'hero resta il vecchio
+  comportamento (pool `allHomePhotos`, fisso al load) e la sezione Men/Women non esiste
+  proprio (`display:none` sotto i 769px). Quando si farà il mobile UX pass, decidere se
+  portare lì lo stesso trattamento (pool curato + full-bleed + sezione Men/Women) o
+  qualcosa di diverso per lo swipe mobile.
 
 ═══════════════════════════════════════════════════════════════════
 
