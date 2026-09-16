@@ -240,6 +240,34 @@ function renderHomeHero() {
   }));
 }
 
+/* Sezione Women/Men sotto l'hero — due foto full-bleed affiancate,
+   didascalia in basso a sx, come il blocco Uomo/Donna della home Dior.
+   Desktop only (vedi .home-depts nella media query ≤768px). */
+function renderHomeDepartments() {
+  const wrap = document.createElement('div');
+  wrap.className = 'home-depts';
+  const depts = [
+    { slug: 'men',   label: 'Men',   img: 'media/home/hero/05.jpg' },
+    { slug: 'women', label: 'Women', img: 'media/home/hero/06.jpg' },
+  ];
+  depts.forEach(d => {
+    const a = document.createElement('a');
+    a.className = 'home-dept';
+    a.href = `#shop/${d.slug}`;
+    a.appendChild(pictureEl(d.img, {
+      alt: `TATO — ${d.label}`,
+      sizes: '50vw',
+      widths: [1600, 2400],
+    }));
+    const cap = document.createElement('span');
+    cap.className = 'home-dept-caption';
+    cap.innerHTML = `<span class="home-dept-title">${d.label}</span><span class="home-dept-link">Discover</span>`;
+    a.appendChild(cap);
+    wrap.appendChild(a);
+  });
+  return wrap;
+}
+
 /* ═══════════════════════════════════════════
    GRIGLIA PRODOTTI condivisa (Shop + Home)
    Markup: .pgrid > a.pgrid-card
@@ -319,6 +347,9 @@ function declusterBySlug(arr) {
 
   // Hero: una foto a tutto schermo, casuale a ogni load (vedi renderHomeHero)
   renderHomeHero();
+
+  // Subito sotto l'hero: blocco Women/Men (due foto affiancate, come Dior)
+  feed.appendChild(renderHomeDepartments());
 
   // Dopo l'hero: alterna un blocco di prodotti (≈2 righe) e una foto
   // di look — foto, 2 righe, foto, 2 righe, … Tutte le colorway,
