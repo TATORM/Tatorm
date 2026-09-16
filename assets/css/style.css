@@ -486,9 +486,7 @@ body.header-scrolled:not(.shop-mode) .site-nav {
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  transition: transform 0.6s ease;
 }
-.home-dept:hover img { transform: scale(1.03); }
 .home-dept::after {
   content: '';
   position: absolute;
