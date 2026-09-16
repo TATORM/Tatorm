@@ -8,7 +8,23 @@ window.scrollTo(0, 0);
 /* I prezzi dei capi vengono da window.TATO_PRODUCTS (products.js);
    i 21 look da window.TATO_LOOKS + window.TATO_resolveLook(). */
 
-/* ─── Home feed — ordine casuale + scroll infinito ─ */
+/* ─── Hero Home (desktop) — pool curato, foto post-prodotte per il libro.
+   Casuale a ogni load E ogni volta che si torna alla Home da un'altra
+   sezione (vedi renderHomeHero / showSection). Solo desktop: su mobile
+   l'hero resta quello di sempre, pescato da allHomePhotos qui sotto. */
+const heroPhotosDesktop = [
+  'media/home/hero/01.jpg',
+  'media/home/hero/02.jpg',
+  'media/home/hero/03.jpg',
+  'media/home/hero/04.jpg',
+  'media/home/hero/05.jpg',
+  'media/home/hero/06.jpg',
+  'media/home/hero/07.jpg',
+  'media/home/hero/08.jpg',
+];
+
+/* ─── Home feed — ordine casuale + scroll infinito.
+   Su mobile questo pool serve anche per l'hero (invariato). ─ */
 const allHomePhotos = [
   'media/home/01.jpg',
   'media/home/02.jpg',
@@ -191,6 +207,34 @@ function appendPhotos(feed, photos, isFirst) {
   });
 }
 
+function isDesktopViewport() {
+  return !window.matchMedia('(max-width: 768px)').matches;
+}
+
+/* Hero Home: crea (o aggiorna sul posto) la prima figure del feed.
+   Desktop → pool curato heroPhotosDesktop, ripescato a ogni chiamata
+   (vedi showSection). Mobile → invariato: allHomePhotos, fissato al load. */
+function renderHomeHero() {
+  const feed = document.getElementById('home-feed');
+  if (!feed) return;
+  const pool = isDesktopViewport() ? heroPhotosDesktop : allHomePhotos;
+  const src = pool[Math.floor(Math.random() * pool.length)];
+
+  let fig = document.getElementById('home-hero-fig');
+  if (!fig) {
+    fig = document.createElement('figure');
+    fig.id = 'home-hero-fig';
+    fig.className = 'home-image-block home-hero';
+    feed.insertBefore(fig, feed.firstChild);
+  }
+  fig.innerHTML = '';
+  fig.appendChild(pictureEl(src, {
+    eager: true,
+    alt: homePhotoAlt(src),
+    sizes: '(max-width: 768px) 100vw, min(700px, 36vw)',
+  }));
+}
+
 /* ═══════════════════════════════════════════
    GRIGLIA PRODOTTI condivisa (Shop + Home)
    Markup: .pgrid > a.pgrid-card
@@ -268,9 +312,8 @@ function declusterBySlug(arr) {
   const feed = document.getElementById('home-feed');
   if (!feed) return;
 
-  // Hero: una foto a tutto schermo, casuale a ogni load
-  const photos = shuffle(allHomePhotos);
-  appendPhotos(feed, photos.slice(0, 1), true);
+  // Hero: una foto a tutto schermo, casuale a ogni load (vedi renderHomeHero)
+  renderHomeHero();
 
   // Dopo l'hero: alterna un blocco di prodotti (≈2 righe) e una foto
   // di look — foto, 2 righe, foto, 2 righe, … Tutte le colorway,
@@ -673,6 +716,9 @@ function showSection(id) {
     siteBreadcrumb.classList.remove('visible');
     siteNav.style.opacity       = '';
     siteNav.style.pointerEvents = '';
+    // Home: nuova foto hero casuale ogni volta che si torna qui da
+    // un'altra sezione. Solo desktop — su mobile l'hero non cambia.
+    if (id === 'home' && isDesktopViewport()) renderHomeHero();
   }
 
   // Modalità header per shop / product
