@@ -13,15 +13,15 @@ window.scrollTo(0, 0);
    sezione (vedi renderHomeHero / showSection). Solo desktop: su mobile
    l'hero resta quello di sempre, pescato da allHomePhotos qui sotto. */
 const heroPhotosDesktop = [
-  'media/home/hero/01.jpg',
   'media/home/hero/02.jpg',
-  'media/home/hero/03.jpg',
   'media/home/hero/04.jpg',
   'media/home/hero/05.jpg',
   'media/home/hero/06.jpg',
-  'media/home/hero/07.jpg',
   'media/home/hero/08.jpg',
 ];
+/* 01/03/07 escluse: dettagli ravvicinati (piedi/pantaloni) senza volto
+   o busto — a tutto schermo restano tagliate a metà comunque le si
+   inquadri, il soggetto è già al bordo dello scatto originale. */
 
 /* ─── Home feed — ordine casuale + scroll infinito.
    Su mobile questo pool serve anche per l'hero (invariato). ─ */
