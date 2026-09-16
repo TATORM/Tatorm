@@ -315,8 +315,8 @@ function pgridCardHTML(p, colorIdx) {
         ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}
       </span>
       <span class="pgrid-name">${p.name}</span>
-      ${colorInfo}
       <span class="pgrid-price">${money(price, cur)}</span>
+      ${colorInfo}
     </a>`;
 }
 
