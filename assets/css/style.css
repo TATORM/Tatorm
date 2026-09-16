@@ -369,6 +369,11 @@ body.header-scrolled:not(.shop-mode) .site-nav {
   .nav-group-toggle:hover {
     color: #fff;
   }
+  /* Il toggle dark/light usa var(--black), quasi nero: contro uno sfondo
+     scuro la differenza è minima e il cerchietto sparisce. Bianco pieno,
+     come le altre icone, così il blend mode ha contrasto da lavorare. */
+  .toggle-track { border-color: #fff; }
+  .toggle-thumb { background: #fff; }
 }
 
 /* Riga vuota tra Accessories e Collection */
