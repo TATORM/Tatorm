@@ -2180,7 +2180,9 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   }
   #btn-theme { display: none; }
   .icon-btn { color: #fff; }
-  #btn-monogram img { filter: invert(1); }
+  /* bianco pieno + opacità 1: col difference un grigio all'80% spariva sui packshot chiari */
+  #btn-monogram img { filter: brightness(0) invert(1); }
+  .top-icons .icon-btn { opacity: 1; }
 
   /* Scroll a blocchi — su iOS funziona meglio con overflow scroll su body.
      `proximity` (non `mandatory`): l'hero e i look si agganciano quando ci si
@@ -2210,8 +2212,23 @@ body.dark-mode .pdp-ref { color: var(--gray); }
     object-position: center center;
   }
   /* Foto di look intercalate: a tutta larghezza, altezza naturale */
-  .home-look { width: 100vw; margin: 2px 0; }
-  .home-look-pair { width: 100vw; margin: 2px 0; gap: 12px; padding: 0 12px; }
+  /* stesso stacco (44px) del row-gap della griglia, così le foto non
+     si incollano ai pallini colore della card sopra */
+  .home-look { width: 100vw; margin: 44px 0; }
+  .home-look-pair { width: 100vw; margin: 44px 0; gap: 12px; padding: 0 12px; }
+
+  /* Hero: leggera sfumatura scura sul fondo, così quando scorre sotto
+     l'header (mix-blend difference) MENU/icone restano leggibili anche
+     sui toni medi (pavimenti, fondali chiari). */
+  .home-hero { position: relative; }
+  .home-hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 22%;
+    background: linear-gradient(to top, rgba(0,0,0,0.45), rgba(0,0,0,0));
+    pointer-events: none;
+  }
   #home .home-feed { padding-bottom: 40px; }
 
   /* Collection: i caroselli hanno già position:relative + width:var(--image-width)
@@ -2387,6 +2404,7 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .product-card-name,
   .pgrid-name,
   .pgrid-price { color: #fff; }
+  .pgrid-name { padding: 0 10px; line-height: 1.3; }
   .product-card-meta,
   .product-card-price { color: rgba(255,255,255,0.6); }
   .pgrid-swatch { border-color: rgba(255,255,255,0.35); }
