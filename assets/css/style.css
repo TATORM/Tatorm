@@ -1307,12 +1307,28 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   .shop-pill.is-active { background: #fff; color: #000; border-color: #fff; }
   .shop-pill.is-scope { border-color: #fff; }   /* reparto attivo dentro una categoria */
 
-  /* Header che si nasconde scendendo (Shop / prodotto) */
+  /* Header che si nasconde scendendo (Shop / prodotto): logo e icone
+     salgono insieme della stessa quota con dissolvenza, curva "decelerate"
+     in uscita/entrata come le app native. */
   body.shop-mode .site-logo,
-  body.shop-mode .top-icons { transition: transform 0.3s ease; }
+  body.shop-mode .site-logo.logo--left,
+  body.shop-mode .top-icons {
+    transition:
+      transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+      opacity 0.3s ease;
+    will-change: transform, opacity;
+  }
   body.shop-mode.header-hidden .site-logo,
-  body.shop-mode.header-hidden .site-logo.logo--left { transform: translate(-50%, -90px); }
-  body.shop-mode.header-hidden .top-icons { transform: translateY(-90px); }
+  body.shop-mode.header-hidden .site-logo.logo--left {
+    transform: translate3d(-50%, -72px, 0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.shop-mode.header-hidden .top-icons {
+    transform: translate3d(0, -72px, 0);
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 /* ═══════════════════════════════════════════
