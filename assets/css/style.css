@@ -2411,7 +2411,9 @@ body.dark-mode .pdp-ref { color: var(--gray); }
 
   /* ─── PDP mobile ──────────────────────────── */
   .pdp-main {
-    grid-template-columns: 1fr;
+    /* minmax(0,…): con 1fr la colonna si allargava al min-content della
+       fila di tab (nowrap) → PDP larga ~520px, bottoni tagliati a dx */
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
   }
   .pdp-gallery { grid-template-columns: 1fr 1fr; }
