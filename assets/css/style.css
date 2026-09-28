@@ -464,10 +464,19 @@ ul { list-style: none; }
 }
 
 /* Women/Men subito sotto l'hero — due foto full-bleed affiancate,
-   come il blocco Uomo/Donna della home Dior. Solo desktop: su mobile
-   il pass è ancora da fare, per ora niente sezione lì (vedi ≤768px). */
+   come il blocco Uomo/Donna della home Dior. Su mobile restano
+   affiancate 50/50 ma a tile verticale 3:4 invece che a tutta altezza. */
 .home-depts {
-  display: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100vw;
+}
+@media (max-width: 768px) {
+  .home-depts { gap: 2px; margin-top: 2px; }
+  .home-depts .home-dept { height: auto; aspect-ratio: 3 / 4; }
+  .home-depts .home-dept img { object-position: center center; }
+  .home-depts .home-dept-caption { left: 12px; bottom: 14px; }
+  .home-depts .home-dept-title { font-size: 0.6rem; letter-spacing: 0.12em; }
 }
 @media (min-width: 769px) {
   .home-depts {
