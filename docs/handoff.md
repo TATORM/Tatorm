@@ -27,7 +27,32 @@ salvo dove indicato.
   mobile via CSS): All · Women · Men · categorie con prodotti nello scope ·
   Accessories; categorie mantengono lo scope; `.is-scope` = reparto attivo.
   `body.header-hidden` (JS nel listener header) nasconde logo/icone scendendo
-  in shop-mode mobile, ricompaiono risalendo.
+  in shop-mode mobile, ricompaiono risalendo (`8bb21d9`).
+- **Header a scomparsa rifatto "più fluido"** (`80eb1db`, soglie `26e157c`):
+  l'utente lo trovava strano (scattava a ogni 4px, rimbalzo iOS lo faceva
+  ricomparire, slide rigido). Ora movimento **accumulato** per direzione:
+  `HIDE_FROM = 60` (sopra resta sempre visibile), `HIDE_AFTER = 8` px giù per
+  sparire, `SHOW_AFTER = 12` px su per ricomparire; scrollY clampato a
+  [0, max] (ignora bounce iOS); su `hashchange` torna sempre visibile.
+  CSS: logo+icone salgono insieme di 72px con fade, `translate3d`,
+  `0.42s cubic-bezier(0.22,0.61,0.36,1)`, `pointer-events:none` da nascosti.
+  Prima taratura era 140/24 → l'utente l'ha voluto "sparire prima".
+  **Da verificare su telefono vero** (Chrome in background sospende rAF → in
+  browser non si è visto l'effetto; logica verificata con simulazione Node).
+  Test da telefono: `python3 -m http.server 8777` + `http://<IP Mac>:8777/#shop`.
+
+### Note di metodo (28/09)
+- Test mobile in Chrome: `resize_window` non ha effetto se la finestra è
+  massimizzata → iniettare in una pagina localhost un `<iframe>` 390×viewport
+  sul sito. Bumpare sempre `?v=` (`sed -E "s/\?v=[0-9]+/?v=$(date +%s)/g" index.html`),
+  altrimenti il CSS vecchio resta in cache.
+
+### Aperto dopo il 28/09
+- Pill categorie anche su desktop? (Shop/PDP desktop non hanno MENU → nessuna
+  navigazione tra categorie). Da decidere con l'utente.
+- Collection mobile non ancora ripassata.
+- Push ancora bloccato (account `samuelemurru1-wq` senza permessi su TATORM),
+  tutti i commit restano locali su `ecommerce-dev`.
 
 ═══════════════════════════════════════════════════════════════════
 ## Sessione 16/09
