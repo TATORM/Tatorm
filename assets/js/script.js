@@ -598,8 +598,8 @@ window.addEventListener('load', () => {
   /* Header a scomparsa (Shop/prodotto mobile, regole in style.css):
      reagisce a un movimento deciso, non a ogni pixel. Scendendo sparisce
      dopo HIDE_AFTER px continui, risalendo torna dopo SHOW_AFTER px. */
-  const HIDE_FROM  = 140;  // sopra questa quota l'header resta sempre visibile
-  const HIDE_AFTER = 24;
+  const HIDE_FROM  = 60;   // sopra questa quota l'header resta sempre visibile
+  const HIDE_AFTER = 8;
   const SHOW_AFTER = 12;
   let ticking = false;
   let lastY = 0;
