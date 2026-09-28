@@ -1,7 +1,7 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-16
-**Branch di lavoro:** `ecommerce-dev` — HEAD `4db3bd9`
+**Ultimo aggiornamento:** 2026-09-28
+**Branch di lavoro:** `ecommerce-dev` — HEAD `dcec316` (+ questo commit docs)
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ═══════════════════════════════════════════════════════════════════
@@ -56,7 +56,6 @@ salvo dove indicato.
 
 ═══════════════════════════════════════════════════════════════════
 ## Sessione 16/09
-
 ═══════════════════════════════════════════════════════════════════
 
 ### Sessione 16/09 — pass di design sulla Home, solo desktop (commit `402feaa`…`4db3bd9`, 13 commit)
