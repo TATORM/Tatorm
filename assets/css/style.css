@@ -235,10 +235,14 @@ ul { list-style: none; }
 
 /* Scendendo con lo scroll, il logo lascia il centro verticale e si
    ancora in alto a sx (stessa quota di .top-icons a dx) per liberare
-   il centro schermo. Non su shop-mode: lì il logo è già in alto. */
-body.header-scrolled:not(.shop-mode) .site-logo.logo--left {
-  top: 26px;
-  transform: translateY(0);
+   il centro schermo. Non su shop-mode: lì il logo è già in alto.
+   Solo desktop: su mobile logo/MENU stanno già fissi in alto e questa
+   regola ne rompeva la centratura (translateY sovrascriveva translateX). */
+@media (min-width: 769px) {
+  body.header-scrolled:not(.shop-mode) .site-logo.logo--left {
+    top: 26px;
+    transform: translateY(0);
+  }
 }
 
 
@@ -274,9 +278,11 @@ body.header-scrolled:not(.shop-mode) .site-logo.logo--left {
 }
 /* Scendendo con lo scroll, il MENU lascia il centro verticale e si
    ancora in alto a dx, sotto la riga di .top-icons — mirror del logo. */
-body.header-scrolled:not(.shop-mode) .site-nav {
-  top: 58px;
-  transform: translateY(0);
+@media (min-width: 769px) {
+  body.header-scrolled:not(.shop-mode) .site-nav {
+    top: 58px;
+    transform: translateY(0);
+  }
 }
 .nav-toggle {
   font-size: 0.5rem; letter-spacing: 0.2em;
@@ -2416,7 +2422,10 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .pdp-complete-items .pgrid-card { max-width: none; }
 
   /* ─── Footer mobile (solo layout — i colori scuri sono già di base) ─── */
-  .site-footer { scroll-snap-align: start; }
+  /* Niente snap sul footer: in Home era l'unico snap point, e al load
+     (feed ancora vuoto → footer vicino) Chrome ci si agganciava e poi
+     ci restava attaccato mentre il feed cresceva → pagina aperta in fondo. */
+  .site-footer { scroll-snap-align: none; }
   .site-footer__inner { padding: 56px 20px 32px; }
   .footer-news { margin-bottom: 44px; }
   .footer-cols {
