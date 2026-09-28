@@ -596,6 +596,7 @@ window.addEventListener('load', () => {
 (function () {
   const THRESHOLD = 80;
   let ticking = false;
+  let lastY = 0;
   function currentScrollY() {
     return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
   }
@@ -603,7 +604,13 @@ window.addEventListener('load', () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
-      document.body.classList.toggle('header-scrolled', currentScrollY() > THRESHOLD);
+      const y = currentScrollY();
+      document.body.classList.toggle('header-scrolled', y > THRESHOLD);
+      /* Shop/prodotto mobile: l'header sparisce scendendo e ricompare
+         risalendo (regole in style.css, ≤768px). */
+      if (y <= THRESHOLD || y < lastY - 4) document.body.classList.remove('header-hidden');
+      else if (y > lastY + 4) document.body.classList.add('header-hidden');
+      lastY = y;
       ticking = false;
     });
   }
@@ -1107,6 +1114,33 @@ function renderShopHead() {
   shopTitleEl.textContent = cat ? `${scopeLabel} / ${cat}` : scopeLabel;
 }
 
+/* Pill categorie (solo mobile, via CSS): una riga scorrevole
+   All · Women · Men · <categorie con prodotti nello scope> · Accessories.
+   Le categorie mantengono lo scope attuale (#shop/women/pants…). */
+function renderShopPills() {
+  const nav = document.getElementById('shop-pills');
+  if (!nav) return;
+  const g = (shopScope === 'women' || shopScope === 'men') ? shopScope : null;
+  const inScope = p => p.category !== 'accessories' &&
+    (!g || (p.genders || ['women', 'men']).includes(g));
+  const cats = CATEGORIES.filter(c => PRODUCTS.some(p => inScope(p) && p.category === c.slug));
+  const base = g ? `#shop/${g}` : '#shop';
+  const pills = [
+    { href: '#shop',       label: 'All',   on: shopScope === 'new' && shopCategory === 'all' },
+    { href: '#shop/women', label: 'Women', on: shopScope === 'women' && shopCategory === 'all', scope: g === 'women' },
+    { href: '#shop/men',   label: 'Men',   on: shopScope === 'men' && shopCategory === 'all',   scope: g === 'men' },
+    ...cats.map(c => ({ href: `${base}/${c.slug}`, label: c.label,
+      on: shopScope !== 'accessories' && shopCategory === c.slug })),
+    { href: '#shop/accessories', label: 'Accessories', on: shopScope === 'accessories' },
+  ];
+  nav.innerHTML = pills.map(x =>
+    `<a class="shop-pill${x.on ? ' is-active' : x.scope ? ' is-scope' : ''}" href="${x.href}"${x.on ? ' aria-current="page"' : ''}>${x.label}</a>`
+  ).join('');
+  /* porta la pill attiva al centro della riga (solo scroll orizzontale) */
+  const act = nav.querySelector('.is-active');
+  if (act) nav.scrollLeft = act.offsetLeft - (nav.clientWidth - act.offsetWidth) / 2;
+}
+
 function productThumb(p) {
   const c = p.colors[0];
   if (c && c.images && c.images.length) {
@@ -1145,6 +1179,7 @@ function renderShopGrid() {
 
 function renderShop() {
   renderShopHead();
+  renderShopPills();
   renderShopGrid();
 }
 

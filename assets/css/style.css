@@ -1280,6 +1280,41 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   color: var(--black);
 }
 
+/* Pill categorie — solo mobile (su desktop c'è il MENU in Home) */
+.shop-pills { display: none; }
+@media (max-width: 768px) {
+  .shop-pills {
+    display: flex;
+    gap: 8px;
+    margin: 22px -16px 0;     /* a filo schermo: .shop-head ha margin 0 16px */
+    padding: 0 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shop-pills::-webkit-scrollbar { display: none; }
+  .shop-pill {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    font-size: 0.5rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .shop-pill.is-active { background: #fff; color: #000; border-color: #fff; }
+  .shop-pill.is-scope { border-color: #fff; }   /* reparto attivo dentro una categoria */
+
+  /* Header che si nasconde scendendo (Shop / prodotto) */
+  body.shop-mode .site-logo,
+  body.shop-mode .top-icons { transition: transform 0.3s ease; }
+  body.shop-mode.header-hidden .site-logo,
+  body.shop-mode.header-hidden .site-logo.logo--left { transform: translate(-50%, -90px); }
+  body.shop-mode.header-hidden .top-icons { transform: translateY(-90px); }
+}
+
 /* ═══════════════════════════════════════════
    GRIGLIA PRODOTTI — stile editoriale (rif. Dior)
    4 colonne a tutta larghezza, colonne quasi

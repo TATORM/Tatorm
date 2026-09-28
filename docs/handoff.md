@@ -5,7 +5,33 @@
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ═══════════════════════════════════════════════════════════════════
-## RIPRENDERE DA QUI (16/09)
+## RIPRENDERE DA QUI (28/09)
+═══════════════════════════════════════════════════════════════════
+
+### Sessione 28/09 — pass mobile (Home, Shop, PDP)
+Verificato in un iframe 390px dentro Chrome (localhost:8777). Desktop non toccato
+salvo dove indicato.
+- **Home si apriva in fondo** (`9691192`): `.site-footer` era l'unico snap point
+  (body `scroll-snap-type: y proximity`) → al load Chrome ci si agganciava e ci
+  restava mentre il feed cresceva. Footer mobile ora `scroll-snap-align:none`.
+- **Header scrollato** (`9691192`): le regole `body.header-scrolled` erano globali
+  → su mobile MENU scendeva a 58px e il logo perdeva `translateX(-50%)`. Ora dentro
+  `@media (min-width:769px)`.
+- **Men/Women su mobile** (`e13e6a2`): tile 3:4 affiancate, gap 2px. Hero mobile
+  resta sulle foto dei look (scelta utente).
+- **Polish Home** (`928c9b9`): sfumatura scura sul fondo hero, monogramma bianco
+  pieno + icone opacity 1, `.pgrid-name` padding 0 10px, `.home-look(-pair)` 44px.
+- **PDP overflow** (`2e60e6d`): `.pdp-main` mobile `minmax(0,1fr)` (con `1fr` la
+  fila `.pdp-tabs` nowrap allargava la PDP a ~520px).
+- **Shop pill + header a scomparsa**: `#shop-pills` + `renderShopPills()` (solo
+  mobile via CSS): All · Women · Men · categorie con prodotti nello scope ·
+  Accessories; categorie mantengono lo scope; `.is-scope` = reparto attivo.
+  `body.header-hidden` (JS nel listener header) nasconde logo/icone scendendo
+  in shop-mode mobile, ricompaiono risalendo.
+
+═══════════════════════════════════════════════════════════════════
+## Sessione 16/09
+
 ═══════════════════════════════════════════════════════════════════
 
 ### Sessione 16/09 — pass di design sulla Home, solo desktop (commit `402feaa`…`4db3bd9`, 13 commit)
