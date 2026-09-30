@@ -7,6 +7,11 @@
 ═══════════════════════════════════════════════════════════════════
 ## RIPRENDERE DA QUI (30/09)
 ═══════════════════════════════════════════════════════════════════
+> ⚠️ **PRIMA DEL LANCIO ONLINE: migrare a Cloudflare Pages** (richiesta dell'utente).
+> GitHub Pages non ammette siti e-commerce; servono anche header di sicurezza
+> (frame-ancestors, HSTS), anteprime per branch, cache lunga. Attenzione ai record
+> della posta Aruba (mx.tatorm.com) e allo SPF mancante.
+
 - **Desktop Shop/PDP** (`2fde548`): MENU di nuovo visibile in shop-mode, ancorato
   in alto a dx a 58px (come Home scrollata); su mobile resta nascosto. Pill
   categorie anche su desktop (riga centrata, a capo, outline grigio chiaro,
