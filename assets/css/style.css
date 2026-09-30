@@ -658,32 +658,33 @@ ul { list-style: none; }
   opacity: 0;
 }
 
-/* Stili interni del pannello (generati da JS) */
+/* Stili interni del pannello (generati da JS) — scala tipografica
+   allineata alla PDP (0.62rem testo, 0.54–0.58rem etichette) */
 .panel-look-number {
-  font-size: 0.72rem;
+  font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-decoration: underline;
   text-underline-offset: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .panel-look-items {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .panel-item { }
 
 .panel-item-name {
-  font-size: 0.68rem;
+  font-size: 0.58rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .panel-item-info {
-  font-size: 0.64rem;
+  font-size: 0.56rem;
   color: var(--gray);
   line-height: 1.7;
 }
@@ -691,8 +692,8 @@ ul { list-style: none; }
 /* "Shop the look" — link alla PDP del capo a catalogo */
 .panel-item-shop {
   display: inline-block;
-  margin-top: 6px;
-  font-size: 0.62rem;
+  margin-top: 5px;
+  font-size: 0.56rem;
   letter-spacing: 0.08em;
   color: var(--black);
   border-bottom: 1px solid var(--gray-light);
@@ -703,8 +704,8 @@ ul { list-style: none; }
 
 /* capo da lookbook, non in vendita */
 .panel-item-archive {
-  margin-top: 6px;
-  font-size: 0.6rem;
+  margin-top: 5px;
+  font-size: 0.54rem;
   letter-spacing: 0.06em;
   color: var(--gray);
 }
