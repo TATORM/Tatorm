@@ -1,11 +1,28 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-28
+**Ultimo aggiornamento:** 2026-09-30
 **Branch di lavoro:** `ecommerce-dev` — HEAD `dcec316` (+ questo commit docs)
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ═══════════════════════════════════════════════════════════════════
-## RIPRENDERE DA QUI (28/09)
+## RIPRENDERE DA QUI (30/09)
+═══════════════════════════════════════════════════════════════════
+- **Desktop Shop/PDP** (`2fde548`): MENU di nuovo visibile in shop-mode, ancorato
+  in alto a dx a 58px (come Home scrollata); su mobile resta nascosto. Pill
+  categorie anche su desktop (riga centrata, a capo, outline grigio chiaro,
+  attiva piena `var(--black)`). Scelta utente: "entrambi".
+- **Collection mobile** (`fde58cf`): `body.collection-mode` (da `showSection`) →
+  `scroll-snap-type: y mandatory` + `scroll-snap-stop: always` sui caroselli
+  (prima proximity → si fermava a metà tra due look e il pannello fisso finiva
+  sulla foto sotto). Pannello: via `mix-blend-mode` (illeggibile sui fondali
+  bianchi) → bianco pieno + text-shadow, sfumatura carosello 45% fino a 0.72.
+  `max-height: calc(100dvh - 140px)`: il pannello è pointer-events:none quindi
+  non scrollabile, deve starci tutto (Look 11 = 4 capi). L'utente NON vuole
+  toggle +/− : tutte le info (composizione, colore) sempre visibili.
+- Aperto: header a scomparsa da provare su telefono vero, push bloccato.
+
+═══════════════════════════════════════════════════════════════════
+## Sessione 28/09
 ═══════════════════════════════════════════════════════════════════
 
 ### Sessione 28/09 — pass mobile (Home, Shop, PDP)
