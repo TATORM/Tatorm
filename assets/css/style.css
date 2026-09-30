@@ -964,6 +964,14 @@ ul { list-style: none; }
   letter-spacing: 0.06em;
   margin-top: 4px;
 }
+.cart-notice {
+  font-size: 0.56rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--gray-light);
+}
 .cart-item-row {
   display: flex;
   justify-content: space-between;
@@ -1522,6 +1530,25 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   transition: color 0.2s ease;
 }
 .pdp-back:hover { color: var(--black); }
+
+/* Prodotto non più disponibile */
+.pdp-missing { padding: 0 0 40px; }
+.pdp-missing .pdp-back { margin: 0 3vw; }
+.pdp-missing-title {
+  margin: 80px auto 12px;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pdp-missing-sub {
+  margin: 0 auto 36px;
+  text-align: center;
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
 .pdp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .pdp-name {
   font-size: 1.15rem;

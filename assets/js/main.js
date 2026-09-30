@@ -7,9 +7,13 @@
    con esbuild in assets/dist/app-[hash].js.
 
    L'ordine degli import replica quello dei <script>:
-   products.js definisce window.TATO_* → shopify.js li
-   usa → script.js consuma entrambi via window.
+   catalog-core.js (config + trasformazione Shopify) →
+   catalog-snapshot.js (copia del catalogo, generata) →
+   products.js (reparti, look, TATO_PRODUCTS) →
+   shopify.js (dati dal vivo) → script.js (UI).
    ═══════════════════════════════════════════ */
+import './catalog-core.js';
+import './catalog-snapshot.js';
 import './products.js';
 import './shopify.js';
 import './script.js';

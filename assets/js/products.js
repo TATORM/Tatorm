@@ -1,18 +1,13 @@
 /* ═══════════════════════════════════════════
-   TATO — data/products.js
+   TATO — products.js
    ─────────────────────────────────────────
-   Catalogo prodotti singoli, derivato dai capi
-   della collezione (21 look).
+   Struttura del negozio (reparti, categorie) e
+   contenuto editoriale (look della collezione).
 
-   FOTO: ogni colore punta al packshot (flat
-   tecnico su bianco) in
-     media/products/<slug>/<colore-slug>/01.png
-   Fallback se `images` è vuoto → foto dei look
-   in cui il capo compare (vedi TATO_lookImages).
-
-   MODELLO: un prodotto per capo, con varianti
-   colore selezionabili. Ogni colore ha le sue
-   taglie e le sue foto.
+   I PRODOTTI NON SI SCRIVONO QUI: arrivano da Shopify
+   (vedi catalog-core.js). All'avvio si usa la copia
+   inclusa nel sito (catalog-snapshot.js); shopify.js
+   poi la aggiorna con i dati dal vivo.
    ═══════════════════════════════════════════ */
 
 /* Reparti (menu WOMEN / MEN). ACCESSORIES è una
@@ -37,150 +32,6 @@ window.TATO_ALL_CATEGORY_LABELS = Object.assign(
   { accessories: 'Accessories' },
   ...window.TATO_CATEGORIES.map(c => ({ [c.slug]: c.label }))
 );
-
-const NUM_SIZES_5 = ['1', '2', '3', '4', '5'];
-const NUM_SIZES_3 = ['1', '2', '3'];
-const NUM_SIZES_2 = ['1', '2'];
-const ONE_SIZE    = ['One Size'];
-
-/* Packshot di un colore: media/products/<slug>/<colore-slug>/01.png */
-function pshot(slug, colorSlug) {
-  return ['media/products/' + slug + '/' + colorSlug + '/01.png'];
-}
-
-/* Helper variante colore. `images` opzionale (array di URL);
-   se omesso → fallback alle foto dei look. */
-function tatoColor(name, hex, sizes, images) {
-  return {
-    name,
-    hex,
-    images: images || [],
-    sizes: (sizes || NUM_SIZES_3).map(s => ({ label: s, available: true })),
-  };
-}
-
-window.TATO_PRODUCTS = [
-  {
-    id: 'p01', slug: 'tobi-pants', name: 'TOBI PANTS',
-    category: 'pants', price: 295, currency: 'EUR',
-    composition: '100% Cotton', care: 'Dyed garment. Machine wash cold, inside out.',
-    description: 'Dyed-garment cotton twill trouser. Single pleat, hook-and-bar closure at the hem, double fit (relaxed / baloon). Designed in Rome, made in Italy.',
-    colors: [
-      tatoColor('Black',     '#141414', NUM_SIZES_5, pshot('tobi-pants', 'black')),
-      tatoColor('Navy',      '#232b3a', NUM_SIZES_5, pshot('tobi-pants', 'navy')),
-      tatoColor('Baby Pink', '#e9cdd2', NUM_SIZES_5, pshot('tobi-pants', 'baby-pink')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [1, 5, 8, 10, 16, 20], status: 'available',
-  },
-  {
-    id: 'p02', slug: '2-button-shirt', name: '2 BUTTON SHIRT',
-    category: 'shirts', price: 230, currency: 'EUR',
-    composition: '100% Cotton', care: 'Machine wash cold',
-    description: 'Poplin shirt with a two-button collar stand and regular fit. Designed in Rome, made in Italy.',
-    colors: [
-      tatoColor('White',              '#f4f4f0', NUM_SIZES_3, pshot('2-button-shirt', 'white')),
-      tatoColor('Light Grey / White', '#d9d9d6', NUM_SIZES_3, pshot('2-button-shirt', 'light-grey-white')),
-      tatoColor('Baby Blue',          '#bcd3e6', NUM_SIZES_3, pshot('2-button-shirt', 'baby-blue')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [5, 6, 8, 13, 15], status: 'available',
-  },
-  {
-    id: 'p03', slug: '2-button-long-skirt', name: '2 BUTTON LONG SKIRT',
-    category: 'skirts', price: 380, currency: 'EUR',
-    composition: '100% Fine wool', care: 'Dry clean only',
-    description: 'Column-length wool skirt, tailoring construction. Two-button closure flap, pockets hidden under the front flap, straight fit, raw-cut finishing. Designed in Rome, made in Italy.',
-    colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('2-button-long-skirt', 'anthracite')),
-    ],
-    genders: ['women'],
-    lookRefs: [11, 12, 17, 18, 21], status: 'available',
-  },
-  {
-    id: 'p04', slug: 'triple-breasted-coat', name: 'TRIPLE BREASTED COAT',
-    category: 'outerwear', price: 950, currency: 'EUR',
-    composition: '100% Fine wool', care: 'Dry clean only',
-    description: 'Full-length wool coat, tailoring construction. Triple-breasted closure with multiple ways to close and wear the piece, inside pocket.',
-    colors: [
-      tatoColor('Dark Blue', '#22304a', NUM_SIZES_2, pshot('triple-breasted-coat', 'dark-blue')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [11, 14], status: 'available',
-  },
-  {
-    id: 'p05', slug: 'cropped-tailored-jacket', name: 'CROPPED TAILORED JACKET',
-    category: 'outerwear', price: 680, currency: 'EUR',
-    composition: '100% Fine wool', care: 'Dry clean only',
-    description: 'Cropped wool jacket, tailoring construction. Modular button closure, splint on the back for freedom of movement, standing collar with hook-and-bar closure, multiple ways to wear.',
-    colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('cropped-tailored-jacket', 'anthracite')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [2, 10, 11, 13], status: 'available',
-  },
-  {
-    id: 'p06', slug: 'tailored-pants', name: 'TAILORED PANTS',
-    category: 'pants', price: 490, currency: 'EUR',
-    composition: '100% Fine wool', care: 'Dry clean only',
-    description: 'Wool tailoring trouser with a double pleat and relaxed fit.',
-    colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('tailored-pants', 'anthracite')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [4, 7, 14, 19], status: 'available',
-  },
-  {
-    id: 'p07', slug: '2-button-tailored-pants', name: '2 BUTTON TAILORED PANTS',
-    category: 'pants', price: 425, currency: 'EUR',
-    composition: '100% Fine wool', care: 'Dry clean only',
-    description: 'Wool tailoring trouser with a two-button closure flap, pockets hidden under the front flap, straight fit.',
-    colors: [
-      tatoColor('Anthracite', '#3a3a3d', NUM_SIZES_3, pshot('2-button-tailored-pants', 'anthracite')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [2, 3, 13, 15], status: 'available',
-  },
-  {
-    id: 'p08', slug: 'tiny-crewneck', name: 'TINY CREWNECK',
-    category: 'knitwear', price: 180, currency: 'EUR',
-    composition: '100% Cotton', care: 'Hand wash cold',
-    description: 'Dyed-garment cotton crewneck. Horizontal-rib raglan sleeve, straight-cut neck construction, cropped fit, faded wrist. Designed in Rome, made in Italy.',
-    colors: [
-      tatoColor('Black',     '#141414', NUM_SIZES_3, pshot('tiny-crewneck', 'black')),
-      tatoColor('Baby Blue', '#bcd3e6', NUM_SIZES_3, pshot('tiny-crewneck', 'baby-blue')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [5], status: 'available',
-  },
-  {
-    id: 'p09', slug: 'smock-longsleeve', name: 'SMOCK LONGSLEEVE',
-    category: 'knitwear', price: 100, currency: 'EUR',
-    composition: '100% Cotton', care: 'Machine wash cold',
-    description: 'Horizontal-cut cotton jersey longsleeve with a smock neck construction and straight fit. Designed in Rome, made in Italy.',
-    colors: [
-      tatoColor('White',             '#f4f4f0', NUM_SIZES_3, pshot('smock-longsleeve', 'white')),
-      tatoColor('Burgundy / Navy',   '#4a2230', NUM_SIZES_3, pshot('smock-longsleeve', 'burgundy-navy')),
-      tatoColor('Black / Dark Grey', '#2b2b2e', NUM_SIZES_3, pshot('smock-longsleeve', 'black-dark-grey')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [10, 17, 20], status: 'available',
-  },
-  {
-    id: 'p10', slug: 'tato-cap', name: 'TATO CAP',
-    category: 'accessories', price: 70, currency: 'EUR',
-    composition: '100% Cotton', care: 'Spot clean',
-    description: 'Six-panel cotton twill cap. Faded visor with sticker shadow, TATO embroidery. Designed in Rome, made in Italy.',
-    colors: [
-      tatoColor('Black', '#141414', ONE_SIZE, pshot('tato-cap', 'black')),
-      tatoColor('Navy',  '#232b3a', ONE_SIZE, pshot('tato-cap', 'navy')),
-      tatoColor('Red',   '#7c1f2b', ONE_SIZE, pshot('tato-cap', 'red')),
-      tatoColor('Green', '#3f4a2e', ONE_SIZE, pshot('tato-cap', 'green')),
-    ],
-    genders: ['women', 'men'],
-    lookRefs: [9], status: 'available',
-  },
-];
 
 /* ═══════════════════════════════════════════
    FOTO LOOK — n° di foto "pulite" per look nella
@@ -242,32 +93,12 @@ window.TATO_categoriesFor = function (dept) {
 /* ═══════════════════════════════════════════
    LOOKS — composizione dei 21 look della collezione.
    ─────────────────────────────────────────
-   Ogni capo è { name, comp, color } + eventuale `slug`
-   se corrisponde a un prodotto a catalogo (→ link alla PDP).
-   Senza `slug` è un capo da lookbook, non in vendita
-   ("Archive piece"). Sorgente unica: qui non ci sono più
-   prezzi scritti a mano, li prende da TATO_PRODUCTS.
+   Ogni capo è { name, comp, color }. Se il nome coincide
+   con il titolo di un prodotto Shopify, nel pannello
+   Collection diventa un link alla PDP; altrimenti è un
+   capo da lookbook ("Archive piece").
    ═══════════════════════════════════════════ */
-const TATO_LOOK_SLUG = {
-  'TOBI PANTS':               'tobi-pants',
-  '2 BUTTON SHIRT':           '2-button-shirt',
-  '2 BUTTON LONG SKIRT':      '2-button-long-skirt',
-  'TRIPLE BREASTED COAT':     'triple-breasted-coat',
-  'CROPPED TAILORED JACKET':  'cropped-tailored-jacket',
-  'TAILORED PANTS':           'tailored-pants',
-  '2 BUTTON TAILORED PANTS':  '2-button-tailored-pants',
-  'TINY CREWNECK':            'tiny-crewneck',
-  'SMOCK LONGSLEEVE':         'smock-longsleeve',
-  'TATO CAP':                 'tato-cap',
-};
-
-/* i(name, comp, color) → oggetto capo, con slug se a catalogo */
-function i(name, comp, color) {
-  const slug = TATO_LOOK_SLUG[name];
-  const item = { name, comp, color };
-  if (slug) item.slug = slug;
-  return item;
-}
+const i = (name, comp, color) => ({ name, comp, color });
 
 window.TATO_LOOKS = {
   '1':  { number: 'LOOK #1',  items: [ i('2 BUTTON WINDBREAKER','100% Cotton','White'), i('BACK SHIRT','100% Cotton','White'), i('TOBI PANTS','100% Cotton','White') ] },
@@ -301,15 +132,23 @@ window.TATO_resolveLook = function (n) {
   return {
     number: look.number,
     items: look.items.map(function (it) {
-      const p = it.slug ? window.TATO_getProduct(it.slug) : null;
+      const p = window.TATO_PRODUCTS.find(x => x.name === String(it.name).toUpperCase()) || null;
       return {
         name: it.name,
         composition: it.comp,
         color: it.color,
-        slug: p ? it.slug : null,
+        slug: p ? p.slug : null,
         price: p ? p.price : null,
         currency: p ? p.currency : 'EUR',
       };
     }),
   };
 };
+
+/* ─── Prodotti: dalla copia del catalogo Shopify ───
+   L'array resta lo stesso oggetto per tutta la vita della
+   pagina: shopify.js lo riempie di nuovo con i dati dal vivo. */
+window.TATO_PRODUCTS = window.TATO_catalogCore.buildCatalog(
+  (window.TATO_CATALOG_SNAPSHOT || {}).nodes || [],
+  window.TATO_LOOKS
+);

@@ -9,6 +9,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Ogni 30 minuti: ricostruisce con la copia aggiornata del catalogo
+  # Shopify (prodotti nuovi/tolti visibili subito anche in Home e al
+  # primo caricamento; prezzi e stock sono comunque sempre dal vivo).
+  schedule:
+    - cron: '*/30 * * * *'
 
 permissions:
   contents: read

@@ -139,7 +139,18 @@ function shuffle(arr) {
    media/brand/* e assets/* NON hanno derivati → si degradano
    automaticamente al solo <img>.
    ═══════════════════════════════════════════ */
-const HAS_DERIVATIVES = /^media\/(looks|home|products)\//;
+const HAS_DERIVATIVES = /^media\/(looks|home)\//;
+
+/* Foto prodotto dalla CDN Shopify: ridimensiona via ?width= e
+   serve da sola WebP/AVIF in base al browser → niente derivati. */
+const IS_SHOPIFY_CDN = /^https:\/\/cdn\.shopify\.com\//;
+const CDN_WIDTHS = [480, 720, 900, 1200, 1600];
+function cdnUrl(src, w) {
+  return src + (src.includes('?') ? '&' : '?') + 'width=' + w;
+}
+function cdnSrcset(src) {
+  return CDN_WIDTHS.map(w => `${cdnUrl(src, w)} ${w}w`).join(', ');
+}
 
 function pictureHTML(src, opts) {
   opts = opts || {};
@@ -151,6 +162,9 @@ function pictureHTML(src, opts) {
   const prio  = eager ? ' fetchpriority="high"' : '';
   const dims  = opts.width && opts.height
     ? ` width="${opts.width}" height="${opts.height}"` : '';
+  if (IS_SHOPIFY_CDN.test(src)) {
+    return `<img src="${cdnUrl(src, 900)}" srcset="${cdnSrcset(src)}" sizes="${sizes}" alt="${alt}"${cls} loading="${load}" decoding="async"${prio}${dims} draggable="false">`;
+  }
   const img = `<img src="${src}" alt="${alt}"${cls} loading="${load}" decoding="async"${prio}${dims} draggable="false">`;
   if (!HAS_DERIVATIVES.test(src)) return img;
   const base = src.replace(/\.[^.]+$/, '');
@@ -176,6 +190,11 @@ function pictureEl(src, opts) {
     pic.appendChild(s);
   }
   const img = document.createElement('img');
+  if (IS_SHOPIFY_CDN.test(src)) {
+    img.srcset = cdnSrcset(src);
+    img.sizes = opts.sizes || '100vw';
+    src = cdnUrl(src, 900);
+  }
   img.alt = opts.alt || '';
   img.decoding = 'async';
   img.draggable = false;
@@ -272,7 +291,7 @@ function renderHomeDepartments() {
    GRIGLIA PRODOTTI condivisa (Shop + Home)
    Markup: .pgrid > a.pgrid-card
    ═══════════════════════════════════════════ */
-/* Sorgente immagine di anteprima + se è un packshot flat (media/products/…) */
+/* Sorgente immagine di anteprima + se è un packshot flat (foto colore da Shopify) */
 function productImgSrc(p) {
   const c = p.colors && p.colors[0];
   if (c && c.images && c.images.length) return { src: c.images[0], flat: true };
@@ -449,6 +468,7 @@ function lineKey(item) {
 }
 
 function addToCart(item) {
+  cartNotice = '';
   const key = lineKey(item);
   const existing = cart.find(i => i.key === key);
   if (existing) existing.qty += (item.qty || 1);
@@ -467,6 +487,30 @@ function setQty(key, qty) {
 function removeFromCart(key) {
   cart = cart.filter(i => i.key !== key);
   syncCart();
+}
+
+/* Allinea il carrello salvato al catalogo attuale: righe di prodotti
+   tolti da Shopify, varianti sparite o esaurite → rimosse (con avviso);
+   id variante e prezzo aggiornati. Gira all'avvio (copia del catalogo)
+   e di nuovo quando arrivano i dati dal vivo. */
+let cartNotice = '';
+function reconcileCart() {
+  const sh = window.TATO_shopify;
+  if (!sh || !sh.ready || !cart.length) return;
+  let removed = 0, changed = false;
+  cart = cart.filter(it => {
+    const hit = it.slug ? sh._hit(it.slug, it.color, it.size) : null;
+    if (!hit || !hit.available) { removed++; return false; }
+    if (hit.id !== it.shopifyVariantId) { it.shopifyVariantId = hit.id; changed = true; }
+    if (hit.price != null && hit.price !== it.price) { it.price = hit.price; changed = true; }
+    return true;
+  });
+  if (removed) {
+    cartNotice = removed === 1
+      ? 'An item in your bag is no longer available and has been removed.'
+      : `${removed} items in your bag are no longer available and have been removed.`;
+  }
+  if (removed || changed) syncCart();
 }
 
 function cartCount() {
@@ -493,8 +537,10 @@ function renderCart() {
   const footer = document.getElementById('cart-footer');
   if (!body || !footer) return;
 
+  const notice = cartNotice ? `<p class="cart-notice" role="status">${cartNotice}</p>` : '';
+
   if (cart.length === 0) {
-    body.innerHTML =
+    body.innerHTML = notice +
       '<p class="cart-empty">Your bag is empty.</p>' +
       '<button class="cart-continue" id="cart-continue" type="button">Continue shopping</button>';
     footer.classList.add('hidden');
@@ -506,7 +552,7 @@ function renderCart() {
   const total = cart.reduce((sum, i) => sum + (i.price || 0) * i.qty, 0);
   const cur = cart[0] && cart[0].currency ? cart[0].currency : 'EUR';
 
-  body.innerHTML = cart.map(item => `
+  body.innerHTML = notice + cart.map(item => `
     <div class="cart-item-row" data-key="${item.key}">
       ${item.image
         ? `<span class="cart-item-thumb${item.imageFlat ? ' is-flat' : ''}">${pictureHTML(item.image, { alt: item.name, sizes: '56px' })}</span>`
@@ -921,6 +967,9 @@ btnShop?.addEventListener('click', openCart);
 document.getElementById('cart-close')?.addEventListener('click', closeCart);
 document.getElementById('cart-overlay')?.addEventListener('click', closeCart);
 
+reconcileCart();
+document.addEventListener('tato:shopify-ready', reconcileCart);
+
 /* ─── Checkout Shopify ───────────────────── */
 (function initCheckout() {
   const btn  = document.getElementById('cart-checkout');
@@ -1113,7 +1162,7 @@ let pdpState     = { slug: null, colorIdx: 0, size: null };
 
 /* Prefetch Shopify (no-op se manca il token) */
 if (window.TATO_shopify) {
-  window.TATO_shopify.init(PRODUCTS.map(p => p.slug));
+  window.TATO_shopify.init();
 }
 
 function money(price, currency) {
@@ -1162,20 +1211,6 @@ function renderShopPills() {
   /* porta la pill attiva al centro della riga (solo scroll orizzontale) */
   const act = nav.querySelector('.is-active');
   if (act) nav.scrollLeft = act.offsetLeft - (nav.clientWidth - act.offsetWidth) / 2;
-}
-
-function productThumb(p) {
-  const c = p.colors[0];
-  if (c && c.images && c.images.length) {
-    return `<img class="product-card-img" src="${c.images[0]}" alt="${p.name}" loading="lazy">`;
-  }
-  const look = window.TATO_lookImages
-    ? window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 1 })[0]
-    : null;
-  if (look) {
-    return `<img class="product-card-img" src="${look}" alt="${p.name}" loading="lazy">`;
-  }
-  return '<span class="ph-block"></span>';
 }
 
 /* ─── SHOP: griglia prodotti ─────────────── */
@@ -1579,13 +1614,39 @@ function renderPDP(slug) {
   };
 })();
 
-/* Ridisegna la PDP quando arrivano i dati Shopify (prezzo/disponibilità reali) */
-document.addEventListener('tato:shopify-ready', () => {
+/* PDP di un prodotto che non c'è più: messaggio + qualche suggerimento */
+function renderPDPMissing() {
+  if (!pdpEl) return;
+  pdpState = { slug: null, colorIdx: 0, size: null };
+  const picks = shuffle(PRODUCTS.slice()).slice(0, 4);
+  pdpEl.innerHTML = `
+    <div class="pdp-missing">
+      <button class="pdp-back" id="pdp-back">← Shop</button>
+      <p class="pdp-missing-title">This piece is no longer available.</p>
+      ${picks.length ? `<p class="pdp-missing-sub">You may also like</p>
+      <div class="pgrid pdp-missing-grid">${picks.map(p => pgridCardHTML(p)).join('')}</div>` : ''}
+    </div>`;
+  document.getElementById('pdp-back')?.addEventListener('click', () => { location.hash = '#shop'; });
+}
+
+/* Dati Shopify arrivati (copia o dal vivo): ridisegna quello che è a
+   schermo. Col catalogo dal vivo possono esserci prodotti nuovi/tolti →
+   anche menu, pill e un eventuale link prodotto rimasto in attesa. */
+document.addEventListener('tato:shopify-ready', (e) => {
+  const live = e.detail && e.detail.live;
   const prod = document.getElementById('product');
-  if (prod && prod.classList.contains('active') && pdpState.slug) {
-    renderPDP(pdpState.slug);
+  const onProduct = location.hash.startsWith('#product/');
+  if (live) renderNavMenu();
+  const shown = prod && prod.classList.contains('active') && pdpState.slug;
+  if (onProduct && shown) {
+    // ridisegno sul posto (niente reset dello scroll); se il prodotto
+    // è appena stato tolto, passa alla vista "non disponibile"
+    if (!renderPDP(pdpState.slug)) handleShopRoute();
+  } else if (onProduct && live) {
+    handleShopRoute();
+  } else if (document.getElementById('shop')?.classList.contains('active')) {
+    renderShop();
   }
-  if (document.getElementById('shop')?.classList.contains('active')) renderShopGrid();
 });
 
 /* ═══════════════════════════════════════════
@@ -1733,6 +1794,14 @@ function handleShopRoute() {
         });
         setProductJsonLd(p);
       }
+    } else if (!(window.TATO_shopify && window.TATO_shopify.state === 'loading')) {
+      // prodotto tolto da Shopify (o link sbagliato). Se il catalogo dal vivo
+      // sta ancora arrivando si aspetta: lo riprova il listener shopify-ready.
+      renderPDPMissing();
+      showSection('product');
+      document.getElementById('product')?.classList.add('active');
+      setProductJsonLd(null);
+      setMeta({ title: 'No longer available', description: 'This piece is no longer available.', canonicalHash: 'shop' });
     }
     return;
   }

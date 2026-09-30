@@ -2,7 +2,7 @@
    TATO — pipeline immagini  (fase 02)
    ─────────────────────────────────────────
    Legge gli originali GIÀ nel repo:
-     media/looks/**  media/home/**  media/products/**
+     media/looks/**  media/home/**   (foto prodotto: CDN Shopify)
    e genera accanto a ciascuno i derivati:
      <nome>-900.avif   <nome>-1440.avif
    L'originale (jpg/png) resta com'è: fa da <img> di fallback.
@@ -20,7 +20,7 @@ import { readdir, mkdir, access, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const DIRS = ['media/looks', 'media/home', 'media/products'];
+const DIRS = ['media/looks', 'media/home'];
 const FORCE = process.argv.includes('--force');
 
 const WIDTHS = [900, 1440];

@@ -2,33 +2,27 @@
    TATO — Shopify (source of truth per il commerce)
    ─────────────────────────────────────────
    Storefront API GraphQL, fetch dirette (nessun SDK).
-   Shopify è la fonte autorevole per: prezzo, compare-at,
-   disponibilità, sold-out, id variante. I campi editoriali
-   (composizione, cura, fit, look) restano in products.js.
+   Config (dominio, token) in catalog-core.js.
 
-   SETUP
-   1. Shopify → app custom con Storefront API → copia lo
-      Storefront access token (è pubblico by design).
-   2. Incollalo in `storefrontToken`.
-   3. Rendi i prodotti disponibili sul canale headless.
-
-   Senza token / offline il sito funziona lo stesso in
-   modalità degradata: prezzi dal catalogo locale, checkout
-   disabilitato con messaggio.
+   CICLO
+   1. Al caricamento: indici varianti dalla copia del
+      catalogo (catalog-snapshot.js) → la UI ha subito
+      prezzi, taglie, sold-out e id variante.
+   2. init(): scarica il catalogo dal vivo (timeout 6s,
+      un nuovo tentativo). Se riesce, sostituisce prodotti
+      e varianti → evento `tato:shopify-ready`.
+      Se fallisce resta la copia: si naviga e si compra
+      lo stesso (il checkout richiede comunque Shopify).
    ═══════════════════════════════════════════ */
-
-window.TATO_SHOPIFY = {
-  domain: 'pshgtp-ak.myshopify.com',
-  storefrontToken: '387e563b969e48b03ea0be98c1851e2f',
-  apiVersion: '2024-10',
-};
 
 window.TATO_shopify = {
   ready: false,
-  state: 'idle',                 // idle | loading | ready | error
+  state: 'idle',                 // idle | snapshot | loading | ready | error
+  live: false,                   // true = dati scaricati in questa visita
   error: null,
   variants: {},                  // { handle: { "Color||Size": { id, available, price, compareAt, currency } } }
   products: {},                  // { handle: { title, available, minPrice, currency, images:[], soldOut } }
+  TIMEOUT_MS: 6000,
 
   _key(color, size) { return (color || '') + '||' + (size || 'One Size'); },
 
@@ -38,103 +32,101 @@ window.TATO_shopify = {
   },
 
   async _gql(query, variables) {
-    const res = await fetch(this._endpoint(), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': window.TATO_SHOPIFY.storefrontToken,
-      },
-      body: JSON.stringify(variables ? { query, variables } : { query }),
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    let timer = null;
+    // doppia garanzia: abort della richiesta + promise che scade comunque
+    const expire = new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        if (ctrl) ctrl.abort();
+        reject(new Error('Shopify timeout'));
+      }, this.TIMEOUT_MS);
     });
-    if (!res.ok) throw new Error('Storefront HTTP ' + res.status);
-    return res.json();
+    try {
+      const res = await Promise.race([expire, fetch(this._endpoint(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': window.TATO_SHOPIFY.storefrontToken,
+        },
+        body: JSON.stringify(variables ? { query, variables } : { query }),
+        signal: ctrl ? ctrl.signal : undefined,
+      })]);
+      if (!res.ok) throw new Error('Storefront HTTP ' + res.status);
+      return await Promise.race([expire, res.json()]);
+    } catch (e) {
+      if (e && e.name === 'AbortError') throw new Error('Shopify timeout');
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
   },
 
-  /* Prefetch: una sola richiesta, product(handle:) aliasati p0, p1, … */
-  async init(handles) {
-    const cfg = window.TATO_SHOPIFY;
-    if (!cfg.storefrontToken || !handles || !handles.length) {
-      this.state = 'idle';
-      this._announce();
-      return;
-    }
-    this.state = 'loading';
-    this._announce();
-    try {
-      const aliases = handles
-        .map((h, i) => `p${i}: product(handle: ${JSON.stringify(h)}) { ...V }`)
-        .join('\n');
-      const query = `query {
-        ${aliases}
-      }
-      fragment V on Product {
-        title
-        availableForSale
-        priceRange { minVariantPrice { amount currencyCode } }
-        images(first: 12) { nodes { url altText } }
-        variants(first: 100) {
-          nodes {
-            id
-            availableForSale
-            selectedOptions { name value }
-            price { amount currencyCode }
-            compareAtPrice { amount currencyCode }
-            image { url altText }
-          }
-        }
-      }`;
-      const json = await this._gql(query);
+  /* Sostituisce catalogo e indici con i nodi Shopify dati.
+     TATO_PRODUCTS resta lo stesso array (script.js ne tiene
+     un riferimento): si svuota e si riempie. */
+  _apply(nodes) {
+    const core = window.TATO_catalogCore;
+    const idx = core.buildVariantIndex(nodes);
+    this.variants = idx.variants;
+    this.products = idx.products;
+    const list = window.TATO_PRODUCTS || (window.TATO_PRODUCTS = []);
+    list.splice(0, list.length, ...core.buildCatalog(nodes, window.TATO_LOOKS));
+  },
+
+  /* Dalla copia inclusa nel sito — sincrono, al caricamento */
+  _seed() {
+    const snap = window.TATO_CATALOG_SNAPSHOT;
+    if (!snap || !snap.nodes || !snap.nodes.length) return;
+    const idx = window.TATO_catalogCore.buildVariantIndex(snap.nodes);
+    this.variants = idx.variants;
+    this.products = idx.products;
+    this.ready = true;
+    this.state = 'snapshot';
+  },
+
+  async _fetchAll() {
+    const query = window.TATO_catalogCore.CATALOG_QUERY;
+    let nodes = [], after = null;
+    do {
+      const json = await this._gql(query, { after });
       if (json.errors && json.errors.length) {
         throw new Error(json.errors.map(e => e.message).join('; '));
       }
-      const data = json.data || {};
-      let matched = 0;
-      handles.forEach((h, i) => {
-        const p = data['p' + i];
-        if (!p) return;
-        matched++;
-        const vmap = {};
-        const nodes = (p.variants && p.variants.nodes) || [];
-        nodes.forEach(v => {
-          const opt = {};
-          (v.selectedOptions || []).forEach(o => { opt[o.name] = o.value; });
-          const color = opt.Color || opt.Colour || '';
-          const size  = opt.Size  || 'One Size';
-          vmap[this._key(color, size)] = {
-            id: v.id,
-            available: v.availableForSale,
-            price: v.price ? Number(v.price.amount) : null,
-            compareAt: v.compareAtPrice ? Number(v.compareAtPrice.amount) : null,
-            currency: (v.price && v.price.currencyCode) || 'EUR',
-            image: v.image ? v.image.url : null,
-          };
-        });
-        this.variants[h] = vmap;
-        const min = p.priceRange && p.priceRange.minVariantPrice;
-        this.products[h] = {
-          title: p.title || '',
-          available: !!p.availableForSale,
-          soldOut: nodes.length > 0 && nodes.every(v => !v.availableForSale),
-          minPrice: min ? Number(min.amount) : null,
-          currency: (min && min.currencyCode) || 'EUR',
-          images: ((p.images && p.images.nodes) || []).map(n => n.url),
-        };
-      });
-      this.ready = matched > 0;
-      this.state = this.ready ? 'ready' : 'error';
-      if (!this.ready) this.error = 'Nessun prodotto trovato su Shopify';
-    } catch (e) {
-      console.warn('[TATO] Shopify init fallita:', e);
-      this.ready = false;
-      this.state = 'error';
-      this.error = e.message || String(e);
+      const page = json.data && json.data.products;
+      if (!page) throw new Error('Risposta Shopify senza prodotti');
+      nodes = nodes.concat(page.nodes);
+      after = page.pageInfo.hasNextPage ? page.pageInfo.endCursor : null;
+    } while (after);
+    return nodes;
+  },
+
+  /* Aggiornamento dal vivo (un solo tentativo in più) */
+  async init() {
+    if (!window.TATO_SHOPIFY || !window.TATO_SHOPIFY.storefrontToken) { this._announce(); return; }
+    const prev = this.state;
+    this.state = 'loading';
+    let nodes = null;
+    for (let attempt = 1; attempt <= 2 && !nodes; attempt++) {
+      try { nodes = await this._fetchAll(); }
+      catch (e) { this.error = e.message || String(e); }
+    }
+    if (nodes) {
+      this._apply(nodes);
+      this.ready = true;
+      this.live = true;
+      this.error = null;
+      this.state = 'ready';
+    } else {
+      console.warn('[TATO] Shopify non raggiungibile, uso la copia del catalogo:', this.error);
+      // i dati già in mano (copia o scaricati prima) restano validi
+      this.state = this.ready ? (prev === 'loading' ? 'snapshot' : prev) : 'error';
     }
     this._announce();
   },
 
   _announce() {
     document.dispatchEvent(new CustomEvent('tato:shopify-ready', {
-      detail: { ready: this.ready, state: this.state, error: this.error },
+      detail: { ready: this.ready, state: this.state, live: this.live, error: this.error },
     }));
   },
 
@@ -213,3 +205,5 @@ window.TATO_shopify = {
       : null;
   },
 };
+
+window.TATO_shopify._seed();
