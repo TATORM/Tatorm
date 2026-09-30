@@ -87,8 +87,18 @@
 }
 @media (max-width: 768px) {
   .home-depts { gap: 0; margin-top: 0; }   /* foto attaccate tra loro e all'hero */
-  .home-depts .home-dept { height: auto; aspect-ratio: 3 / 4; }
-  .home-depts .home-dept img { object-position: center center; }
+  .home-depts .home-dept { height: auto; aspect-ratio: 2 / 3; }
+  /* la testa (--hx, --hy nella foto) cade al 16% dall'alto e al centro
+     del riquadro; --zoom ingrandisce per coprire e pareggiare le teste */
+  .home-depts .home-dept img {
+    top: 16%;
+    left: 50%;
+    width: auto;
+    max-width: none;
+    height: calc(var(--zoom, 1) * 100%);
+    object-fit: fill;
+    transform: translate(calc(var(--hx, 0.5) * -100%), calc(var(--hy, 0.16) * -100%));
+  }
   .home-depts .home-dept-caption { left: 12px; bottom: 14px; }
   .home-depts .home-dept-title { font-size: var(--fs-m); letter-spacing: var(--ls-3); }
 }

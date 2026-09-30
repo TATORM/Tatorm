@@ -185,14 +185,21 @@ export function renderHomeHero() {
 export function renderHomeDepartments() {
   const wrap = document.createElement('div');
   wrap.className = 'home-depts';
+  /* head = centro della testa nella foto originale (frazioni 0–1) e zoom
+     sul mobile: così nei riquadri verticali le due teste cadono alla
+     stessa altezza e hanno grandezza simile (vedi .home-dept img in home.css).
+     Cambiando foto vanno rimisurati. */
   const depts = [
-    { slug: 'men',   label: 'Men',   img: 'media/home/hero/05.jpg' },
-    { slug: 'women', label: 'Women', img: 'media/home/hero/06.jpg' },
+    { slug: 'men',   label: 'Men',   img: 'media/home/hero/05.jpg', head: [0.523, 0.164], zoom: 1.02 },
+    { slug: 'women', label: 'Women', img: 'media/home/hero/06.jpg', head: [0.514, 0.278], zoom: 1.18 },
   ];
   depts.forEach(d => {
     const a = document.createElement('a');
     a.className = 'home-dept';
-    a.href = `#shop/${d.slug}`;
+    a.href = `/shop/${d.slug}/`;
+    a.style.setProperty('--hx', d.head[0]);
+    a.style.setProperty('--hy', d.head[1]);
+    a.style.setProperty('--zoom', d.zoom);
     a.appendChild(pictureEl(d.img, {
       alt: `TATO — ${d.label}`,
       sizes: '50vw',
