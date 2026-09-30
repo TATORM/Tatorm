@@ -11,8 +11,8 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 
 | | Punto | Stato | Chi | Cosa manca |
 |---|---|---|---|---|
-| [ ] | Design system (spaziature, bottoni, animazioni) | A metà | Io | Colori e font sono variabili; spaziature, bottoni e motion non ancora sistematizzati. CSS in un unico file da 2.600 righe. |
-| [ ] | Layout tablet | A metà | Io | Esiste solo il passaggio desktop/mobile a 768px: nessun layout pensato per tablet. |
+| [x] | Design system (spaziature, bottoni, animazioni) | A metà | Io | Colori e font sono variabili; spaziature, bottoni e motion non ancora sistematizzati. CSS in un unico file da 2.600 righe. |
+| [x] | Layout tablet | A metà | Io | Esiste solo il passaggio desktop/mobile a 768px: nessun layout pensato per tablet. |
 | [ ] | Analisi identità e posizionamento | Manca | Tu | Lavoro di direzione creativa; posso affiancarti. |
 | [ ] | Benchmark competitor e riferimenti | Manca | Insieme | Finora solo riferimenti Dior per PDP e Home. |
 | [ ] | Wireframe documentati | Manca | Insieme | Le pagine sono state progettate direttamente nel sito. |
