@@ -1,0 +1,364 @@
+/* mobile.css — Adattamenti mobile ≤ 768px (in fondo: devono vincere sulle regole sopra) */
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — Mobile ≤ 768px
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Size guide + info in negativo su mobile */
+  .sizeguide { background: #111; color: #fff; border-color: rgba(255,255,255,0.14); }
+  .sizeguide-close { color: #fff; }
+  .sizeguide th, .sizeguide td { border-bottom-color: rgba(255,255,255,0.16); }
+  .sizeguide thead th { color: rgba(255,255,255,0.6); }
+  .sizeguide-how { color: rgba(255,255,255,0.5); }
+  .info-doc p { color: #fff; }
+  .info-flag { color: #e0a95c; background: rgba(224,169,92,0.12); border-color: rgba(224,169,92,0.5); }
+  .cart-qty-btn { border-color: rgba(17,17,17,0.25); }
+
+  :root { --image-width: 100vw; }
+
+  /* Tutto in negativo su mobile */
+  body {
+    background: #000;
+    color: #fff;
+  }
+
+  #splash-bg { background: #000; }
+  #btn-theme { display: none; }
+
+  /* Logo centrato in alto — mix-blend-mode inverte rispetto allo sfondo */
+  .site-logo,
+  .site-logo.logo--left {
+    left: 50%;
+    top: 20px;
+    transform: translateX(-50%);
+    width: 58px;
+    transition: none;
+    mix-blend-mode: difference;
+    filter: invert(1);
+  }
+
+  /* Nav mobile: MENU a sinistra */
+  .site-nav {
+    top: 18px; left: 16px; right: auto;
+    transform: none; text-align: left;
+    mix-blend-mode: difference;
+  }
+  .nav-toggle { color: #fff; }
+  .nav-links { text-align: left; }
+  .nav-links a,
+  .nav-links > li > a,
+  .nav-group-toggle,
+  .nav-sub a { color: #fff; text-align: left; }
+  .nav-links a:hover { color: #fff; }
+
+  /* Icone mobile: visibili in alto a destra, nascondi solo toggle B/W */
+  .top-icons {
+    display: flex;
+    top: 14px; right: 16px;
+    gap: 14px;
+    mix-blend-mode: difference;
+  }
+  #btn-theme { display: none; }
+  .icon-btn { color: #fff; }
+  /* bianco pieno + opacità 1: col difference un grigio all'80% spariva sui packshot chiari */
+  #btn-monogram img { filter: brightness(0) invert(1); }
+  .top-icons .icon-btn { opacity: 1; }
+
+  /* Scroll a blocchi — su iOS funziona meglio con overflow scroll su body.
+     `proximity` (non `mandatory`): l'hero e i look si agganciano quando ci si
+     avvicina, ma NON impediscono di fermarsi in mezzo alla pagina (griglia
+     prodotti, footer, PDP, pagine info restano navigabili normalmente). */
+  html, body { height: 100dvh; overflow: hidden; }
+  body { overflow-y: scroll; scroll-snap-type: y proximity; scroll-behavior: auto; }
+
+  /* Home: parte dall'alto senza padding */
+  #home { padding: 0; height: auto; }
+  #about { padding: 0; height: 100dvh; scroll-snap-align: start; }
+  .about-wrap { padding: 0 28px; }
+  #collection { padding-left: 0; padding-top: 0; height: auto; }
+
+  /* Home: hero fullscreen, poi la pagina scorre libera (nessuno snap:
+     sotto l'hero ci sono griglia prodotti + footer da raggiungere). */
+  .home-image-block {
+    width: 100vw;
+    height: 100dvh;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .home-image-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+  /* Foto di look intercalate: a tutta larghezza, altezza naturale */
+  /* stesso stacco (44px) del row-gap della griglia, così le foto non
+     si incollano ai pallini colore della card sopra */
+  .home-look { width: 100vw; margin: 44px 0; }
+  .home-look-pair { width: 100vw; margin: 44px 0; gap: 12px; padding: 0 12px; }
+
+  /* Hero: leggera sfumatura scura sul fondo, così quando scorre sotto
+     l'header (mix-blend difference) MENU/icone restano leggibili anche
+     sui toni medi (pavimenti, fondali chiari). */
+  .home-hero { position: relative; }
+  .home-hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 22%;
+    background: linear-gradient(to top, rgba(0,0,0,0.45), rgba(0,0,0,0));
+    pointer-events: none;
+  }
+  #home .home-feed { padding-bottom: 40px; }
+
+  /* Collection: i caroselli hanno già position:relative + width:var(--image-width)
+     (= 100vw su mobile) dalle regole base. Qui solo l'altezza dvh e lo snap. */
+  .look-carousel {
+    height: 100dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  /* In Collection ogni swipe si ferma su un look intero (altrove proximity) */
+  body.collection-mode { scroll-snap-type: y mandatory; }
+  .carousel-slide img {
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  /* About in negativo */
+  .about-wrap { padding: 80px 28px; max-width: 100%; }
+  .about-label { color: rgba(255,255,255,0.5); }
+  .about-body { color: #fff; }
+  .about-contact-title { color: rgba(255,255,255,0.5); }
+  .about-contact-label { color: rgba(255,255,255,0.5); }
+  .about-contact a { color: #fff; }
+
+  /* Breadcrumb in basso a sinistra — mix-blend-mode */
+  .collection-breadcrumb {
+    left: 16px;
+    right: auto;
+    bottom: 20px;
+    text-align: left;
+    color: #fff;
+    width: auto;
+    mix-blend-mode: difference;
+    pointer-events: none;
+  }
+  .collection-breadcrumb a { color: #fff; pointer-events: auto; }
+  .collection-breadcrumb a:hover { opacity: 0.5; }
+
+  /* Gradiente sul fondo di ogni carousel */
+  .look-carousel::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 45%;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.72));
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Counter in basso a destra — mix-blend-mode */
+  .look-carousel .image-counter {
+    position: absolute;
+    left: auto;
+    right: 16px;
+    bottom: 20px;
+    top: auto;
+    transform: none;
+    font-size: var(--fs-s);
+    color: #fff;
+    z-index: 2;
+    mix-blend-mode: difference;
+  }
+
+  /* Pannello look: fisso in basso a sinistra, testo bianco */
+  /* Pannello look — mix-blend-mode */
+  .fixed-look-info {
+    position: fixed !important;
+    bottom: 56px !important;
+    left: 16px !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 48vw !important;
+    text-align: left !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+    z-index: 10;
+    transition: opacity var(--dur-2) ease !important;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+  }
+  .fixed-look-info .panel-details-link {
+    pointer-events: auto;
+  }
+
+  .fixed-look-info .panel-look-number {
+    font-size: var(--fs-s);
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .fixed-look-info .panel-look-items { gap: 8px; }
+  .fixed-look-info .panel-item-name {
+    font-size: var(--fs-xs);
+    margin-bottom: 1px;
+    color: #fff;
+  }
+  .fixed-look-info .panel-item-info {
+    font-size: var(--fs-xs);
+    line-height: 1.5;
+    color: #fff;
+  }
+  .fixed-look-info .panel-item-shop {
+    font-size: var(--fs-xs);
+    margin-top: 3px;
+    color: #fff;
+    border-bottom-color: #fff;
+  }
+  .fixed-look-info .panel-item-archive {
+    font-size: var(--fs-2xs);
+    margin-top: 3px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .fixed-look-info .panel-details-link {
+    font-size: var(--fs-xs);
+    margin-top: 10px;
+    color: #fff;
+    border-bottom-color: #fff;
+  }
+  .fixed-look-info .panel-footer-line {
+    font-size: var(--fs-xs);
+    color: #fff;
+  }
+
+  .cart-drawer { width: 100vw; border-left: none; }
+
+  /* Il pannello look è pointer-events:none; riabilita solo il link "Shop" */
+  .fixed-look-info .panel-item-shop { pointer-events: auto; }
+
+  /* Pannello mobile scrollabile se molti item */
+  .fixed-look-info {
+    /* il pannello è pointer-events:none → non scrollabile: deve starci tutto */
+    max-height: calc(100dvh - 140px) !important;
+    overflow-y: auto !important;
+  }
+
+  /* ─── SHOP / PRODUCT / INFO mobile — documenti a scroll normale ─── */
+  html body #shop {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 80px 0 80px;      /* niente margini laterali: le foto riempiono */
+    scroll-snap-align: none;
+  }
+  html body #info {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 80px 16px 80px;
+    scroll-snap-align: none;
+  }
+  html body #product {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 80px 0 24px;
+    scroll-snap-align: none;
+  }
+  .shop-head { margin: 0 16px 36px; }
+  #shop { background: #000; }
+  #product { background: #000; }
+  #info { background: #000; }
+  .info-wrap { padding: 24px 4px 60px; }
+  .shop-title { color: #fff; }
+  .shop-grid,
+  .pgrid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 2px;
+    row-gap: 44px;
+  }
+  .ph-block,
+  body.dark-mode .ph-block { background: #1c1c1c; }
+  .pgrid-media { background: #1c1c1c; }
+  /* packshot flat su mobile: meno aria interna, riempie di più */
+  .pgrid-media.is-flat img { padding: 3% 5%; }
+  .product-card-name,
+  .pgrid-name,
+  .pgrid-price { color: #fff; }
+  .pgrid-name { padding: 0 10px; line-height: 1.3; }
+  .product-card-meta,
+  .product-card-price { color: rgba(255,255,255,0.6); }
+  .pgrid-swatch { border-color: rgba(255,255,255,0.35); }
+
+  /* ─── PDP mobile ──────────────────────────── */
+  .pdp-main {
+    /* minmax(0,…): con 1fr la colonna si allargava al min-content della
+       fila di tab (nowrap) → PDP larga ~520px, bottoni tagliati a dx */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .pdp-gallery { grid-template-columns: 1fr 1fr; }
+  .pdp-info { position: static; top: auto; padding: 0 16px; }
+  .pdp-back { color: rgba(255,255,255,0.55); }
+  .pdp-back:hover { color: #fff; }
+  .pdp-name, .pdp-color-name, .pdp-size-single { color: #fff; }
+  .pdp-material { color: rgba(255,255,255,0.6); }
+  .pdp-ref { color: rgba(255,255,255,0.4); }
+  .pdp-row-label, .pdp-size-hint, .pdp-pay-marks,
+  .pdp-delivery-note, .pdp-phone-note { color: rgba(255,255,255,0.5); }
+  .pdp-select-wrap { border-bottom-color: #fff; }
+  .pdp-select-wrap::after { border-color: #fff; }
+  .pdp-size-select { color: #fff; }
+  .pdp-size-select option { color: #000; }   /* il menu nativo resta chiaro */
+  .pdp-add-btn { background: #fff; color: #000; }
+  .pdp-add-price s { color: rgba(0,0,0,0.45); }
+  .pdp-express-btn { color: #fff; border-color: rgba(255,255,255,0.3); }
+  .pdp-express-btn:hover { border-color: #fff; }
+  .pdp-tabs { border-bottom-color: rgba(255,255,255,0.2); }
+  .pdp-tab { color: rgba(255,255,255,0.55); }
+  .pdp-tab:hover, .pdp-tab.active { color: #fff; }
+  .pdp-tab.active { border-bottom-color: #fff; }
+  .pdp-tab-panel p, .pdp-details { color: rgba(255,255,255,0.65); }
+  .pdp-tab-panel a, .pdp-inline-link { color: #fff; border-bottom-color: rgba(255,255,255,0.35); }
+  .pdp-complete-title { color: #fff; }
+  .pdp-complete { padding: 0; }
+  .pdp-complete-row { grid-template-columns: 1fr; gap: 0; }
+  .pdp-complete-items {
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 0;                /* foto a filo, riempiono il nero */
+    column-gap: 2px;
+    row-gap: 28px;
+  }
+  .pdp-complete-items .pgrid-card { max-width: none; }
+
+  /* ─── Footer mobile (solo layout — i colori scuri sono già di base) ─── */
+  /* Niente snap sul footer: in Home era l'unico snap point, e al load
+     (feed ancora vuoto → footer vicino) Chrome ci si agganciava e poi
+     ci restava attaccato mentre il feed cresceva → pagina aperta in fondo. */
+  .site-footer { scroll-snap-align: none; }
+  .site-footer__inner { padding: 56px 20px 32px; }
+  .footer-news { margin-bottom: 44px; }
+  .footer-cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 24px;
+    padding: 40px 0;
+  }
+  .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 18px;
+  }
+  .footer-region { grid-column: auto; grid-row: auto; justify-self: center; }
+}
+
+/* iPhone/iPad fanno zoom sulla pagina quando si tocca un campo con testo
+   sotto i 16px: campi email e selettore taglia a 16px sui dispositivi touch. */
+@media (max-width: 1100px) and (hover: none) {
+  .mailchimp-custom-input,
+  .footer-news__input,
+  .pdp-size-select { font-size: 16px; }
+}

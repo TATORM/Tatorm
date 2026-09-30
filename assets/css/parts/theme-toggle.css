@@ -1,0 +1,38 @@
+/* theme-toggle.css — Interruttore chiaro/scuro */
+
+/* ─── Toggle switch dark/light ───────────── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity var(--dur-1) ease;
+}
+.theme-toggle:hover { opacity: 0.4; }
+.toggle-track {
+  width: 32px;
+  height: 18px;
+  border-radius: 9px;
+  background: transparent;
+  border: 1px solid var(--black);
+  position: relative;
+  transition: background var(--dur-2) ease, border-color var(--dur-2) ease;
+}
+body.dark-mode .toggle-track {
+  background: var(--black);
+}
+.toggle-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--black);
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  transition: left var(--dur-2) ease, background var(--dur-2) ease;
+}
+body.dark-mode .toggle-thumb {
+  left: calc(100% - 14px);
+  background: var(--white);
+}

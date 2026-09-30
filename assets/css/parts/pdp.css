@@ -1,0 +1,393 @@
+/* pdp.css — Pagina prodotto */
+
+/* ═══════════════════════════════════════════
+   PDP — scheda prodotto
+   ═══════════════════════════════════════════ */
+#product { padding: 96px 0 0; }
+#pdp { padding-bottom: 0; }
+/* niente vuoto tra "Complete the look" e il footer: la sezione si chiude
+   sulla foto (elemento più alto della riga) e il footer arriva subito. */
+.pdp-complete { margin-bottom: 0; }
+.pdp-complete-look { line-height: 0; }
+
+.pdp-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42%;
+  gap: 0 5vw;
+  align-items: start;
+}
+/* compat: vecchio contenitore .pdp (se resta in DOM da versioni cache) */
+.pdp > .pdp-gallery { }
+
+.pdp-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.pdp-gallery > .ph-block:first-child,
+.pdp-gallery > picture:first-child .pdp-gallery-img,
+.pdp-gallery .pdp-gallery-img:first-child { grid-column: 1 / -1; aspect-ratio: 4 / 5; }
+.pdp-gallery-img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+/* Packshot flat: intero, su bianco (vedi nota in .pgrid-media.is-flat) */
+.pdp-gallery.is-flat .pdp-gallery-img {
+  object-fit: contain;
+  object-position: center;
+  background: #fff;
+  padding: 6% 9%;
+}
+
+.pdp-info {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 4vw 0 4vw;
+}
+.pdp-back {
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--gray);
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 26px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+  align-self: flex-start;
+  transition: color var(--dur-1) ease;
+}
+.pdp-back:hover { color: var(--black); }
+
+/* Prodotto non più disponibile */
+.pdp-missing { padding: 0 0 40px; }
+.pdp-missing .pdp-back { margin: 0 3vw; }
+.pdp-missing-title {
+  margin: 80px auto 12px;
+  text-align: center;
+  font-size: var(--fs-l);
+  letter-spacing: var(--ls-2);
+  text-transform: uppercase;
+}
+.pdp-missing-sub {
+  margin: 0 auto 36px;
+  text-align: center;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-5);
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.pdp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.pdp-name {
+  font-size: var(--fs-3xl);
+  letter-spacing: var(--ls-2);
+  text-transform: uppercase;
+  color: var(--black);
+  margin: 0;
+  line-height: 1.2;
+}
+.pdp-subhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 8px 0 26px;
+}
+.pdp-material {
+  font-size: var(--fs-m);
+  letter-spacing: var(--ls-1);
+  color: var(--gray);
+}
+.pdp-ref {
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-2);
+  color: var(--gray-light);
+  white-space: nowrap;
+}
+body.dark-mode .pdp-ref { color: var(--gray); }
+.pdp-row-label {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+.pdp-colors {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.pdp-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--gray-light);
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: transform var(--dur-1) ease;
+}
+.pdp-color:hover { transform: scale(1.12); }
+.pdp-color.selected { box-shadow: 0 0 0 1px var(--white), 0 0 0 2px var(--black); }
+.pdp-color-name {
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-2);
+  color: var(--black);
+  margin-bottom: 24px;
+}
+.pdp-size-single {
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-2);
+  color: var(--black);
+  margin: 0 0 24px;
+}
+/* Taglia — riga label + link guida, poi tendina nativa */
+.pdp-size-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pdp-select-wrap {
+  position: relative;
+  border-bottom: 1px solid var(--black);
+  margin-bottom: 8px;
+}
+.pdp-select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 4px; top: 50%;
+  width: 7px; height: 7px;
+  border: solid var(--black);
+  border-width: 0 1px 1px 0;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+.pdp-size-select {
+  -webkit-appearance: none; appearance: none;
+  width: 100%;
+  padding: 12px 24px 12px 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: var(--fs-l);
+  letter-spacing: var(--ls-2);
+  color: var(--black);
+  cursor: pointer;
+  border-radius: 0;
+}
+.pdp-size-select:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+
+.pdp-size-hint {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-1);
+  color: var(--gray);
+  min-height: 14px;
+  margin: 8px 0 20px;
+}
+.pdp-size-hint.error { color: #b23; }
+
+/* Aggiungi al carrello — pulsante scuro, testo a sx + prezzo a dx dentro */
+.pdp-add-btn {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 18px;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: opacity var(--dur-1) ease;
+}
+.pdp-add-btn:hover { opacity: 0.82; }
+.pdp-add-btn:disabled { opacity: 0.45; cursor: default; }
+.pdp-add-price { letter-spacing: var(--ls-1); }
+.pdp-add-price s { color: rgba(255,255,255,0.5); margin-right: 4px; }
+
+/* Pagamento veloce — pulsante chiaro con contorno */
+.pdp-express-btn {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 18px;
+  background: none;
+  color: var(--black);
+  border: 1px solid var(--gray-light);
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-bottom: 22px;
+  transition: border-color var(--dur-1) ease;
+}
+.pdp-express-btn:hover { border-color: var(--black); }
+.pdp-express-btn:disabled { opacity: 0.4; cursor: default; }
+.pdp-pay-marks {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-2);
+  color: var(--gray);
+}
+
+.pdp-delivery-note,
+.pdp-phone-note {
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-1);
+  color: var(--gray);
+  line-height: 1.7;
+}
+.pdp-phone-note { margin-bottom: 26px; }
+
+/* Tab (sostituiscono gli accordion) */
+.pdp-tabs {
+  display: flex;
+  gap: 22px;
+  border-bottom: 1px solid var(--gray-light);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.pdp-tabs::-webkit-scrollbar { display: none; }
+.pdp-tab {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  margin-bottom: -1px;
+  padding: 0 0 12px;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--gray);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--dur-1) ease;
+}
+.pdp-tab:hover { color: var(--black); }
+.pdp-tab.active { color: var(--black); border-bottom-color: var(--black); }
+.pdp-tab-panels { padding-top: 18px; }
+.pdp-tab-panel { display: none; }
+.pdp-tab-panel.active { display: block; }
+.pdp-tab-panel p {
+  font-size: var(--fs-m);
+  line-height: 1.9;
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+.pdp-tab-panel a {
+  color: var(--gray);
+  border-bottom: 1px solid var(--gray-light);
+  transition: color var(--dur-1) ease, border-color var(--dur-1) ease;
+}
+.pdp-tab-panel a:hover { color: var(--black); border-color: var(--black); }
+/* Descrizione: una voce per riga, come l'elenco su Shopify */
+.pdp-details {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  font-size: var(--fs-m);
+  line-height: 1.7;
+  color: var(--gray);
+}
+.pdp-seenin { margin-top: 6px; }
+.pdp-inline-link {
+  background: none; border: 0; padding: 0;
+  font-family: var(--font); font-weight: 500;
+  font-size: var(--fs-m);
+  color: var(--gray);
+  border-bottom: 1px solid var(--gray-light);
+  cursor: pointer;
+}
+.pdp-inline-link:hover { color: var(--black); border-color: var(--black); }
+
+/* Completa il look — foto del look a sinistra, capi consigliati a destra */
+.pdp-complete {
+  margin-top: 80px;
+}
+.pdp-complete-title {
+  text-align: center;
+  font-size: var(--fs-xl);
+  letter-spacing: var(--ls-5);
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 36px;
+}
+.pdp-complete-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2px;
+  align-items: start;
+}
+.pdp-complete-look img {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
+}
+.pdp-complete-items {
+  grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+  column-gap: 2px;
+  row-gap: 40px;
+  align-self: start;          /* card allineate in alto con la foto */
+  padding: 0 4vw;
+}
+.pdp-complete-items .pgrid-card { max-width: 340px; margin: 0 auto; }
+
+.pdp-accordion { border-top: 1px solid var(--gray-light); }
+.pdp-acc-item { border-bottom: 1px solid var(--gray-light); }
+.pdp-acc-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--black);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+}
+.pdp-acc-head .pdp-acc-sign { color: var(--gray); font-size: var(--fs-l); }
+.pdp-acc-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--dur-2) ease, padding var(--dur-2) ease;
+  font-size: var(--fs-s);
+  line-height: 1.8;
+  color: var(--gray);
+}
+.pdp-acc-item.open .pdp-acc-body { max-height: 240px; padding-bottom: 14px; }
+.pdp-lookrefs { margin-top: 4px; }
+.pdp-lookrefs a {
+  color: var(--gray);
+  border-bottom: 1px solid var(--gray-light);
+  transition: color var(--dur-1) ease, border-color var(--dur-1) ease;
+}
+.pdp-lookrefs a:hover { color: var(--black); border-color: var(--black); }

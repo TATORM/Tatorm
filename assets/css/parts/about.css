@@ -1,0 +1,74 @@
+/* about.css — About / contatti */
+
+/* ═══════════════════════════════════════════
+   ABOUT
+   ═══════════════════════════════════════════ */
+#about.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.about-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  padding: 80px 40px;
+}
+
+.about-label {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-6);
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--gray);
+  margin-bottom: 48px;
+}
+
+.about-body {
+  font-size: var(--fs-xl);
+  line-height: 2;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--black);
+}
+
+.about-contact {
+  margin-top: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.about-contact-title {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-6);
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 6px;
+}
+
+.about-contact-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.about-contact-label {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.about-contact a {
+  font-size: var(--fs-l);
+  letter-spacing: var(--ls-1);
+  color: var(--black);
+  transition: color var(--dur-1);
+}
+.about-contact a:hover { color: var(--gray); }

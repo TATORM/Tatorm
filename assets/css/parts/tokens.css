@@ -1,0 +1,85 @@
+/* tokens.css — Font, variabili di design, dark mode */
+
+/* ═══════════════════════════════════════════
+   TATO — style.css
+   ═══════════════════════════════════════════ */
+
+/* Neue Haas Grotesk — self-hosted, licenza web acquistata.
+   Solo i 3 pesi usati nel sito (300/500/600); font-display:swap
+   evita il blocco render, il fallback di --font copre il resto. */
+@font-face {
+  font-family: "Neue Haas Grotesk Display";
+  src: url("/assets/fonts/NeueHaasDisplay-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Neue Haas Grotesk Display";
+  src: url("/assets/fonts/NeueHaasDisplay-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Neue Haas Grotesk Display";
+  src: url("/assets/fonts/NeueHaasDisplay-Bold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --black:      #0a0a0a;
+  --gray:       #888888;
+  --gray-light: #d8d8d8;
+  --white:      #ffffff;
+
+  --font: "Neue Haas Grotesk Display", "Neue Haas Grotesk Text",
+          "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Larghezza immagine unificata — home, look, about */
+  --image-width: clamp(560px, 36vw, 700px);
+
+  /* Dimensioni logo durante animazione */
+  --logo-w-splash: 130px;
+  --logo-w-final:  130px;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);           /* movimenti di layout (logo) */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);  /* entrate/uscite (header, pannelli) */
+
+  /* ── Scala tipografica (base html 20px) ──────────
+     8 passi: usare SOLO questi valori per font-size. */
+  --fs-2xs: 0.46rem;   /*  9.2px  etichette minime (sold out, pill, pagamenti) */
+  --fs-xs:  0.5rem;    /* 10px    etichette, meta, footer */
+  --fs-s:   0.56rem;   /* 11.2px  testo secondario, pannelli, breadcrumb */
+  --fs-m:   0.62rem;   /* 12.4px  testo corrente (PDP, descrizioni) */
+  --fs-l:   0.7rem;    /* 14px    titoli di sezione piccoli */
+  --fs-xl:  0.8rem;    /* 16px    testi in evidenza (about, totale) */
+  --fs-2xl: 0.9rem;    /* 18px    titoli (pagine info, reparti Home) */
+  --fs-3xl: 1.15rem;   /* 23px    nome prodotto */
+
+  /* ── Spaziatura lettere (6 passi) ─────────────── */
+  --ls-1: 0.04em;      /* testo corrente */
+  --ls-2: 0.08em;
+  --ls-3: 0.12em;
+  --ls-4: 0.16em;      /* maiuscoletto / etichette */
+  --ls-5: 0.2em;
+  --ls-6: 0.3em;       /* wordmark */
+
+  /* ── Durate delle animazioni (4 passi) ────────── */
+  --dur-1: 0.2s;       /* hover, piccoli feedback */
+  --dur-2: 0.3s;       /* dissolvenze */
+  --dur-3: 0.4s;       /* pannelli, menu, header */
+  --dur-4: 0.8s;       /* movimenti ampi (logo) */
+}
+
+/* ─── Dark mode ─────────────────────────── */
+body.dark-mode {
+  --black:      #f0f0f0;
+  --white:      #0a0a0a;
+  --gray-light: #2a2a2a;
+}
+body.dark-mode .site-logo img { filter: invert(1); }
+body.dark-mode #btn-monogram img { filter: invert(1); }
+body.dark-mode #splash-bg { background: #0a0a0a; }

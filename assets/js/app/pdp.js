@@ -309,7 +309,7 @@ export function renderPDP(slug) {
 export function renderPDPMissing() {
   if (!pdpEl) return;
   state.pdp = { slug: null, colorIdx: 0, size: null };
-  const picks = shuffle(PRODUCTS.slice()).slice(0, 4);
+  const picks = PRODUCTS.slice(0, 4);   // i 4 arrivi più recenti (ordine Shopify)
   pdpEl.innerHTML = `
     <div class="pdp-missing">
       <button class="pdp-back" id="pdp-back">← Shop</button>

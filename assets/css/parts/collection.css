@@ -1,0 +1,234 @@
+/* collection.css — Collection: caroselli e pannello look */
+
+/* ═══════════════════════════════════════════
+   COLLECTION
+   ─────────────────────────────────────────
+   .visual-column → solo immagini, in colonna.
+   Il testo look è nel pannello fisso aside.
+   ═══════════════════════════════════════════ */
+#collection {
+  padding-left: 0;
+  padding-top: 0;
+}
+
+/* Colonna centrale — i caroselli sono in flusso normale, uno per
+   schermata. Niente altezza forzata da JS: l'altezza totale è la
+   somma dei .look-carousel (21 × 100dvh). */
+.visual-column {
+  width: 100%;
+  position: relative;
+}
+
+/* ─── Carosello look ──────────────────────── */
+.look-carousel {
+  position: relative;          /* era absolute + top da JS */
+  width: var(--image-width);
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;              /* centrato, al posto di left:50% + translateX */
+}
+
+.carousel-track {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-slides {
+  position: relative;
+  height: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-3) ease;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Counter fuori dalla foto, a destra, 1/3 dal basso */
+.look-carousel .image-counter {
+  position: absolute;
+  left: calc(100% + 24px);
+  top: auto;
+  bottom: 12%;
+  transform: none;
+  writing-mode: horizontal-tb;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: var(--fs-m);
+  letter-spacing: var(--ls-2);
+  color: var(--black);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Nessuno spazio tra i due caroselli */
+.look-carousel + .look-carousel {
+  margin-top: 0;
+  border-top: none;
+}
+
+
+/* ═══════════════════════════════════════════
+   PANNELLO LOOK FISSO — aside.fixed-look-info
+   ─────────────────────────────────────────
+   Unico elemento. Esiste una volta sola.
+   Specchiato rispetto al logo:
+     logo:  left 3vw,  top 50%, transform translateY(-50%)
+     testo: right 3vw, top 50%, transform translateY(-50%)
+
+   Non scrolla. Non si muove.
+   JS aggiorna solo l'innerHTML.
+   ═══════════════════════════════════════════ */
+.fixed-look-info {
+  position: fixed;
+  right: 3vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 220px;
+  max-height: 72vh;
+  overflow-y: auto;
+  text-align: right;
+  z-index: 40;
+
+  /* Nascosto di default; visibile solo su collection */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-2) ease;
+}
+
+.fixed-look-info.panel-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Micro-fade durante cambio contenuto */
+.fixed-look-info.panel-updating {
+  opacity: 0;
+}
+
+/* Stili interni del pannello (generati da JS) — scala tipografica
+   allineata alla PDP (0.62rem testo, 0.54–0.58rem etichette) */
+.panel-look-number {
+  font-size: var(--fs-m);
+  letter-spacing: var(--ls-4);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  margin-bottom: 18px;
+}
+
+.panel-look-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-item { }
+
+.panel-item-name {
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-3);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.panel-item-info {
+  font-size: var(--fs-s);
+  color: var(--gray);
+  line-height: 1.7;
+}
+
+/* "Shop the look" — link alla PDP del capo a catalogo */
+.panel-item-shop {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-2);
+  color: var(--black);
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 2px;
+  transition: border-color var(--dur-1) ease, opacity var(--dur-1) ease;
+}
+.panel-item-shop:hover { border-color: var(--black); opacity: 0.7; }
+
+/* capo da lookbook, non in vendita */
+.panel-item-archive {
+  margin-top: 5px;
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-2);
+  color: var(--gray);
+}
+
+.panel-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 20px;
+  transition: max-height var(--dur-3) ease, opacity var(--dur-2) ease, margin-top var(--dur-2) ease;
+}
+
+.panel-footer--hidden {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.panel-footer--open {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 20px;
+}
+
+.panel-footer-line {
+  font-size: var(--fs-l);
+  color: var(--gray);
+  line-height: 1.7;
+}
+
+.panel-footer-line a {
+  color: var(--gray);
+  transition: color var(--dur-1);
+}
+.panel-footer-line a:hover { color: var(--black); }
+
+.panel-details-link {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: var(--fs-l);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--gray);
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 2px;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+  transition: color var(--dur-1) ease, border-color var(--dur-1) ease;
+}
+.panel-details-link:hover {
+  color: var(--black);
+  border-color: var(--black);
+}

@@ -1,0 +1,29 @@
+/* breadcrumb.css — Breadcrumb fisso */
+
+/* ═══════════════════════════════════════════
+   BREADCRUMB COLLECTION
+   ═══════════════════════════════════════════ */
+.collection-breadcrumb {
+  position: fixed;
+  right: 3vw;
+  width: 200px;
+  bottom: 26px;
+  z-index: 50;
+  font-size: var(--fs-s);       /* come il testo del pannello look / PDP */
+  letter-spacing: var(--ls-3);
+  text-align: right;
+  color: var(--black);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-2) ease;
+}
+.collection-breadcrumb.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.collection-breadcrumb a {
+  color: var(--black);
+  text-decoration: none;
+  transition: opacity var(--dur-1) ease;
+}
+.collection-breadcrumb a:hover { opacity: 0.4; }

@@ -1,0 +1,91 @@
+/* grid.css — Card prodotto (Shop, Home, suggerimenti) */
+
+/* ═══════════════════════════════════════════
+   GRIGLIA PRODOTTI — stile editoriale (rif. Dior)
+   4 colonne a tutta larghezza, colonne quasi
+   attaccate, righe distanziate, didascalie centrate.
+   Riusata da Shop e Home.
+   ═══════════════════════════════════════════ */
+.pgrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 2px;
+  row-gap: 84px;
+  width: 100%;
+}
+.pgrid-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: var(--fs-l);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--gray);
+  padding: 60px 0;
+}
+.pgrid-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--black);
+}
+.pgrid-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--gray-light);
+}
+.pgrid-media img,
+.pgrid-media .ph-block {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: opacity var(--dur-2) ease;
+}
+/* Packshot = flat tecnico su fondo bianco: si mostra intero, con aria attorno.
+   (quando arriveranno le foto vere, togliere il ramo .is-flat) */
+.pgrid-media.is-flat { background: #fff; }
+.pgrid-media.is-flat img {
+  object-fit: contain;
+  object-position: center;
+  padding: 7% 11%;
+}
+.pgrid-card:hover .pgrid-media img { opacity: 0.8; }
+.pgrid-name {
+  text-align: center;
+  margin-top: 16px;
+  font-size: var(--fs-l);
+  letter-spacing: var(--ls-2);
+  text-transform: uppercase;
+  color: var(--black);
+}
+.pgrid-swatches {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.pgrid-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+.pgrid-swatch.is-active {
+  box-shadow: 0 0 0 1px var(--white), 0 0 0 2px var(--black);
+}
+.pgrid-price {
+  text-align: center;
+  margin-top: 5px;
+  font-size: var(--fs-m);
+  letter-spacing: var(--ls-1);
+  color: var(--black);
+}
+.pgrid-card.is-soldout .pgrid-name { color: var(--gray); }
+
+/* Griglia nella Home: a tutta larghezza. Lo stacco dal footer è su .home-feed. */
+.home-pgrid { margin: 8px 0; }

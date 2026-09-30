@@ -1,0 +1,138 @@
+/* shop.css — Shop: header in modalità shop, pill, griglia */
+
+/* ═══════════════════════════════════════════
+   PLACEHOLDER FOTO — blocco grigio
+   In attesa dei packshot prodotto.
+   ═══════════════════════════════════════════ */
+.ph-block {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: var(--gray-light);
+  display: block;
+}
+body.dark-mode .ph-block { background: #1e1e1e; }
+
+
+/* ═══════════════════════════════════════════
+   SHOP MODE — logo + nav come header in alto
+   (evita che il logo fisso centrato copra la griglia)
+   ═══════════════════════════════════════════ */
+body.shop-mode .site-logo,
+body.shop-mode .site-logo.logo--left {
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 74px;
+  transition: none;
+}
+/* Shop / prodotto: su mobile niente MENU (ci sono le pill categorie);
+   su desktop il MENU resta, ancorato in alto a dx sotto le icone
+   (stessa posizione di Home scrollata). */
+@media (max-width: 768px) {
+  body.shop-mode .site-nav { display: none; }
+}
+@media (min-width: 769px) {
+  body.shop-mode .site-nav {
+    top: 58px;
+    transform: translateY(0);
+    transition: none;
+  }
+}
+
+/* Il breadcrumb fisso non serve in shop-mode: c'è il MENU in header */
+body.shop-mode .collection-breadcrumb { display: none !important; }
+
+
+/* ═══════════════════════════════════════════
+   SHOP — griglia prodotti
+   ═══════════════════════════════════════════ */
+#shop {
+  padding: 90px 0 120px;
+}
+
+.shop-head {
+  margin: 24px auto 44px;
+  text-align: center;
+}
+.shop-title {
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-5);
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+/* Pill categorie — desktop: riga centrata a capo; mobile: riga scorrevole */
+.shop-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 900px;
+  margin: 26px auto 0;
+  padding: 0 24px;
+}
+.shop-pill {
+  padding: 7px 14px;
+  border: 1px solid var(--gray-light);
+  border-radius: 999px;
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-3);
+  text-transform: uppercase;
+  color: var(--black);
+  white-space: nowrap;
+  transition: border-color var(--dur-1) ease, background var(--dur-1) ease, color var(--dur-1) ease;
+}
+.shop-pill:hover { border-color: var(--black); }
+.shop-pill.is-active { background: var(--black); color: var(--white); border-color: var(--black); }
+.shop-pill.is-scope { border-color: var(--black); }
+@media (max-width: 768px) {
+  .shop-pills {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    max-width: none;
+    gap: 8px;
+    margin: 22px -16px 0;     /* a filo schermo: .shop-head ha margin 0 16px */
+    padding: 0 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shop-pills::-webkit-scrollbar { display: none; }
+  .shop-pill {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    font-size: var(--fs-xs);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    letter-spacing: var(--ls-3);
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .shop-pill.is-active { background: #fff; color: #000; border-color: #fff; }
+  .shop-pill.is-scope { border-color: #fff; }   /* reparto attivo dentro una categoria */
+
+  /* Header che si nasconde scendendo (Shop / prodotto): logo e icone
+     salgono insieme della stessa quota con dissolvenza, curva "decelerate"
+     in uscita/entrata come le app native. */
+  body.shop-mode .site-logo,
+  body.shop-mode .site-logo.logo--left,
+  body.shop-mode .top-icons {
+    transition:
+      transform var(--dur-3) var(--ease-out),
+      opacity var(--dur-2) ease;
+    will-change: transform, opacity;
+  }
+  body.shop-mode.header-hidden .site-logo,
+  body.shop-mode.header-hidden .site-logo.logo--left {
+    transform: translate3d(-50%, -72px, 0);
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.shop-mode.header-hidden .top-icons {
+    transform: translate3d(0, -72px, 0);
+    opacity: 0;
+    pointer-events: none;
+  }
+}

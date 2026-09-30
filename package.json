@@ -12,7 +12,9 @@
     "images": "node scripts/images.mjs",
     "test": "npm run build && npm run test:unit && npm run test:e2e",
     "test:unit": "node --test tests/unit/*.test.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:visual": "npm run build && playwright test -c playwright.visual.config.mjs",
+    "test:visual:update": "npm run build && playwright test -c playwright.visual.config.mjs --update-snapshots"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

@@ -1,0 +1,149 @@
+/* home.css — Pagine e Home */
+
+/* ═══════════════════════════════════════════
+   PAGINE
+   ═══════════════════════════════════════════ */
+.page { display: none; opacity: 0; transition: opacity var(--dur-3) ease; }
+.page.active { display: block; opacity: 1; }
+
+
+/* ═══════════════════════════════════════════
+   HOME — scroll editoriale
+   ─────────────────────────────────────────
+   Le foto usano --image-width.
+   Colonna centrale inizia dopo il logo (margin-left).
+   ═══════════════════════════════════════════ */
+#home {
+  padding: 0;
+}
+#home .home-feed {
+  padding-bottom: 100px;   /* stacco dal footer */
+  margin-bottom: 0;
+}
+
+.home-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Foto di look intercalate tra i blocchi di prodotti */
+.home-look {
+  width: var(--image-width);
+  margin: 44px 0;
+}
+.home-look img { width: 100%; height: auto; display: block; }
+
+/* Ogni tanto due foto di look una accanto all'altra, distanziate */
+.home-look-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 64px);
+  width: min(1060px, 82vw);
+  margin: 44px 0;
+}
+.home-look-pair .home-look { width: 100%; margin: 0; }
+
+/* Prima foto: hero fullscreen — altezza = viewport (in CSS, non JS) */
+.home-hero {
+  width: var(--image-width);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  margin: 0;
+  position: relative;
+}
+/* Desktop: l'hero esce dalla colonna centrale ed è a tutto schermo
+   (larghezza + altezza), come il resto del feed sotto resta invece
+   nella colonna editoriale. Mobile invariato (--image-width è già
+   100vw lì, vedi media query ≤768px). */
+@media (min-width: 769px) {
+  /* specificità doppia (.home-hero.home-image-block) per battere
+     .home-image-block { width: var(--image-width) } più sotto nel file */
+  .home-hero.home-image-block {
+    width: 100vw;
+    height: calc(100vh + 100px);
+    height: calc(100dvh + 100px);
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+}
+.home-hero img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Women/Men subito sotto l'hero — due foto full-bleed affiancate,
+   come il blocco Uomo/Donna della home Dior. Su mobile restano
+   affiancate 50/50 ma a tile verticale 3:4 invece che a tutta altezza. */
+.home-depts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100vw;
+}
+@media (max-width: 768px) {
+  .home-depts { gap: 2px; margin-top: 2px; }
+  .home-depts .home-dept { height: auto; aspect-ratio: 3 / 4; }
+  .home-depts .home-dept img { object-position: center center; }
+  .home-depts .home-dept-caption { left: 12px; bottom: 14px; }
+  .home-depts .home-dept-title { font-size: var(--fs-m); letter-spacing: var(--ls-3); }
+}
+@media (min-width: 769px) {
+  .home-depts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+}
+.home-dept {
+  position: relative;
+  display: block;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+.home-dept img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.home-dept::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+.home-dept-caption {
+  position: absolute;
+  left: 6%;
+  bottom: 9%;
+  color: #fff;
+}
+.home-dept-title {
+  font-size: var(--fs-2xl);
+  letter-spacing: var(--ls-1);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Foto successive */
+.home-image-block {
+  width: var(--image-width);
+  margin: 0;
+}
+.home-image-block img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
