@@ -29,6 +29,7 @@ Il sito legge i prodotti da Shopify. Nel codice non si scrive nessun prodotto.
 
    Per forzare una categoria: tag `category:outerwear` (o shirts, knitwear, pants, skirts, accessories).
 7. **Tag reparto**: `women` e/o `men`. Nessuno dei due = compare in entrambi.
+   Tag facoltativi `new` / `exclusive` → etichetta "New" / "Exclusive" su card e pagina prodotto.
 8. **Lavaggio**: campo "Care" (metafield) in fondo alla pagina prodotto.
 9. **Stato: Attivo** + canale di vendita dello Storefront (headless) attivo.
 

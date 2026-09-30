@@ -40,9 +40,9 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 |---|---|---|---|---|
 | [ ] | Fotografie di alta qualità | A metà | Tu | Solo packshot tecnici, nessuna foto indossata. |
 | [ ] | Stati hover | A metà | Io | Solo una leggera dissolvenza. |
-| [ ] | Cambio immagine all'hover | Manca | Tu (foto) · Io | Serve almeno una seconda foto per prodotto. |
+| [x] | Cambio immagine all'hover | Manca | Tu (foto) · Io | Serve almeno una seconda foto per prodotto. |
 | [ ] | Filtri e ordinamento | Manca | Io | — |
-| [ ] | Etichette New / Exclusive | Manca | Io | Sold out c'è già. |
+| [x] | Etichette New / Exclusive | Manca | Io | Sold out c'è già. |
 | [ ] | Immagini editoriali nella griglia dello Shop | Manca | Io | Oggi solo in Home. |
 
 ## 05. Product Page
