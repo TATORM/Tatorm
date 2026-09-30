@@ -1,32 +1,40 @@
 /* ═══════════════════════════════════════════
-   TATO — build di produzione
+   TATO — build di produzione → _site/
    ─────────────────────────────────────────
-   1. esbuild bundla+minifica il JS  → assets/dist/app-[hash].js
-   2. esbuild bundla+minifica il CSS → assets/dist/app-[hash].css
-   3. riscrive i tag <link>/<script> in index.html tra i marker:
+   Produce in _site/ SOLO i file pubblici del sito
+   (niente docs/, scripts/, archive/, sorgenti JS/CSS,
+   package.json…). È la cartella che va online.
+
+   1. esbuild bundla+minifica il JS  → _site/assets/dist/app-[hash].js
+   2. esbuild bundla+minifica il CSS → _site/assets/dist/app-[hash].css
+   3. copia index.html in _site/ riscrivendo i tag tra i marker
         <!-- build:css --> … <!-- /build:css -->
         <!-- build:js -->  … <!-- /build:js -->
+   4. copia gli asset pubblici elencati in PUBLIC
 
    USO
-     npm run build          — genera dist/ e riscrive index.html IN PLACE
-     npm run build -- --check — genera dist/ ma NON tocca index.html
-
-   In locale usa `npm run dev` (serve i sorgenti così come sono).
-   `npm run build` è pensato per la GitHub Action, che lavora su un
-   checkout usa-e-getta: l'index.html riscritto viene deployato, mai
-   ri-committato. Se lo lanci in locale e vuoi tornare indietro:
-     git checkout -- index.html
+     npm run build     — genera _site/ (l'index.html del progetto non viene toccato)
+     npm run preview   — serve _site/ su http://127.0.0.1:8001
+   In locale per lavorare: `python3 -m http.server 8777` (sorgenti).
    ═══════════════════════════════════════════ */
 
 import { build } from 'esbuild';
-import { readFile, writeFile, rm, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, rm, mkdir, cp, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const DIST_REL = 'assets/dist';
-const DIST_ABS = path.join(ROOT, DIST_REL);
+const OUT_REL = '_site';
+const OUT_ABS = path.join(ROOT, OUT_REL);
+const DIST_REL = OUT_REL + '/assets/dist';
 const HTML = path.join(ROOT, 'index.html');
-const CHECK_ONLY = process.argv.includes('--check');
+
+/* Tutto ciò che va online oltre a index.html e al bundle.
+   Un file nuovo che deve essere pubblico va aggiunto qui. */
+const PUBLIC = [
+  '404.html', 'robots.txt', 'sitemap.xml', 'CNAME',
+  'assets/fonts', 'assets/icons',
+  'media/brand', 'media/home', 'media/looks',
+];
 
 const COMMON = {
   absWorkingDir: ROOT,
@@ -39,8 +47,8 @@ const COMMON = {
 };
 
 async function run() {
-  await rm(DIST_ABS, { recursive: true, force: true });
-  await mkdir(DIST_ABS, { recursive: true });
+  await rm(OUT_ABS, { recursive: true, force: true });
+  await mkdir(path.join(ROOT, DIST_REL), { recursive: true });
 
   const js = await build({
     ...COMMON,
@@ -70,18 +78,22 @@ async function run() {
   console.log(`  JS   ${jsFile}  ${jsKB} KB`);
   console.log(`  CSS  ${cssFile}  ${cssKB} KB`);
 
-  if (CHECK_ONLY) {
-    console.log('  --check: index.html non modificato.');
-    return;
-  }
-
   let html = await readFile(HTML, 'utf8');
   html = replaceBlock(html, 'build:css',
-    `  <link rel="stylesheet" href="${cssFile}" />`);
+    `  <link rel="stylesheet" href="${href(cssFile)}" />`);
   html = replaceBlock(html, 'build:js',
-    `  <script type="module" src="${jsFile}"></script>`);
-  await writeFile(HTML, html);
-  console.log('  index.html riscritto (tag dist tra i marker).');
+    `  <script type="module" src="${href(jsFile)}"></script>`);
+  await writeFile(path.join(OUT_ABS, 'index.html'), html);
+
+  for (const rel of PUBLIC) {
+    const src = path.join(ROOT, rel);
+    try { await stat(src); } catch { throw new Error(`File pubblico mancante: ${rel}`); }
+    await cp(src, path.join(OUT_ABS, rel), {
+      recursive: true,
+      filter: (f) => !path.basename(f).startsWith('.'),   // niente .DS_Store
+    });
+  }
+  console.log(`  _site/ pronto (${PUBLIC.length + 1} voci pubbliche + bundle).`);
 }
 
 /* metafile.outputs: chiavi tipo "assets/dist/app-XXXXXXXX.js"
@@ -92,6 +104,11 @@ function pickOutput(result, ext) {
   );
   if (!hit) throw new Error(`Nessun output ${ext} da esbuild`);
   return hit.split(path.sep).join('/');
+}
+
+/* "_site/assets/dist/app-X.js" → "assets/dist/app-X.js" (URL relativo al sito) */
+function href(file) {
+  return file.slice(OUT_REL.length + 1);
 }
 
 function kb(result, file) {

@@ -38,14 +38,11 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      # node_modules non va su Pages (sharp è pesante); i sorgenti sì,
-      # sono innocui e leggeri. Un output dedicato arriverà più avanti.
-      - run: rm -rf node_modules
-
       - uses: actions/configure-pages@v5
+      # online va SOLO _site/ (vedi scripts/build.mjs → PUBLIC)
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
   deploy:
     needs: build

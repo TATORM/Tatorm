@@ -12,6 +12,7 @@ archive/unused-photos/
 node_modules/
 
 # Generati dal build (li produce la GitHub Action)
+_site/
 assets/dist/
 
 # Originali immagini ad alta risoluzione (input di scripts/images.mjs)

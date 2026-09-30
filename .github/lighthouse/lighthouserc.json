@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": ".",
+      "staticDistDir": "./_site",
       "url": [
         "http://localhost:PORT/index.html",
         "http://localhost:PORT/index.html#shop"

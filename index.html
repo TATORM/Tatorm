@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Content-Security-Policy: il browser carica/esegue solo da queste origini.
+       Nuovo servizio esterno (analytics, video, font…) → va aggiunto qui. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.shopify.com; font-src 'self'; connect-src 'self' https://pshgtp-ak.myshopify.com; form-action 'self' https://tatorm.us18.list-manage.com; frame-src https://tatorm.us18.list-manage.com; object-src 'none'; base-uri 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <!-- SEO base -->
   <title>TATO — Independent Fashion. Designed in Rome, Made in Italy.</title>
@@ -55,7 +59,7 @@
   <link rel="preload" href="assets/fonts/NeueHaasDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin />
 
   <!-- build:css -->
-  <link rel="stylesheet" href="assets/css/style.css?v=1790772323" />
+  <link rel="stylesheet" href="assets/css/style.css?v=1790773907" />
   <!-- /build:css -->
 </head>
 <body>
@@ -589,11 +593,11 @@
   <div id="cart-overlay" class="cart-overlay"></div>
 
   <!-- build:js -->
-  <script src="assets/js/catalog-core.js?v=1790772323"></script>
-  <script src="assets/js/catalog-snapshot.js?v=1790772323"></script>
-  <script src="assets/js/products.js?v=1790772323"></script>
-  <script src="assets/js/shopify.js?v=1790772323"></script>
-  <script src="assets/js/script.js?v=1790772323"></script>
+  <script src="assets/js/catalog-core.js?v=1790773907"></script>
+  <script src="assets/js/catalog-snapshot.js?v=1790773907"></script>
+  <script src="assets/js/products.js?v=1790773907"></script>
+  <script src="assets/js/shopify.js?v=1790773907"></script>
+  <script src="assets/js/script.js?v=1790773907"></script>
   <!-- /build:js -->
 </body>
 </html>

@@ -152,9 +152,17 @@ function cdnSrcset(src) {
   return CDN_WIDTHS.map(w => `${cdnUrl(src, w)} ${w}w`).join(', ');
 }
 
+/* Testo esterno (Shopify, carrello salvato) → sicuro dentro HTML e attributi */
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, ch => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
+  ));
+}
+
 function pictureHTML(src, opts) {
   opts = opts || {};
-  const alt   = opts.alt || '';
+  const alt   = esc(opts.alt || '');
+  src = esc(src);
   const cls   = opts.cls ? ` class="${opts.cls}"` : '';
   const sizes = opts.sizes || '100vw';
   const eager = !!opts.eager;
@@ -333,7 +341,7 @@ function pgridCardHTML(p, colorIdx) {
         ${media}
         ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}
       </span>
-      <span class="pgrid-name">${p.name}</span>
+      <span class="pgrid-name">${esc(p.name)}</span>
       <span class="pgrid-price">${money(price, cur)}</span>
       ${colorInfo}
     </a>`;
@@ -553,13 +561,13 @@ function renderCart() {
   const cur = cart[0] && cart[0].currency ? cart[0].currency : 'EUR';
 
   body.innerHTML = notice + cart.map(item => `
-    <div class="cart-item-row" data-key="${item.key}">
+    <div class="cart-item-row" data-key="${esc(item.key)}">
       ${item.image
         ? `<span class="cart-item-thumb${item.imageFlat ? ' is-flat' : ''}">${pictureHTML(item.image, { alt: item.name, sizes: '56px' })}</span>`
         : '<span class="cart-item-thumb ph-block"></span>'}
       <div class="cart-item-info">
-        <p class="cart-item-name">${item.name}</p>
-        <p class="cart-item-meta">${item.color ? item.color + ' · ' : ''}${item.size || ''}</p>
+        <p class="cart-item-name">${esc(item.name)}</p>
+        <p class="cart-item-meta">${item.color ? esc(item.color) + ' · ' : ''}${esc(item.size || '')}</p>
         <div class="cart-qty" role="group" aria-label="Quantity">
           <button class="cart-qty-btn" data-act="dec" aria-label="Decrease quantity">−</button>
           <span class="cart-qty-val" aria-live="polite">${item.qty}</span>
@@ -568,7 +576,7 @@ function renderCart() {
       </div>
       <div class="cart-item-right">
         <p class="cart-item-price">${money((item.price || 0) * item.qty, item.currency || cur)}</p>
-        <button class="cart-remove-btn" data-act="rm" aria-label="Remove ${item.name}">×</button>
+        <button class="cart-remove-btn" data-act="rm" aria-label="Remove ${esc(item.name)}">×</button>
       </div>
     </div>
   `).join('');
@@ -1101,9 +1109,9 @@ function renderLookPanel(lookKey) {
         : `<p class="panel-item-archive">Archive piece</p>`;
       return `
         <div class="panel-item">
-          <p class="panel-item-name">${item.name}</p>
-          <p class="panel-item-info">${item.composition}</p>
-          <p class="panel-item-info">Color: ${item.color}</p>
+          <p class="panel-item-name">${esc(item.name)}</p>
+          <p class="panel-item-info">${esc(item.composition)}</p>
+          <p class="panel-item-info">Color: ${esc(item.color)}</p>
           ${action}
         </div>
       `;
@@ -1273,12 +1281,12 @@ function renderPDP(slug) {
 
   const swatches = p.colors.map((c, i) => {
     const cSold = availColors && !availColors[c.name];
-    return `<button class="pdp-color${i === pdpState.colorIdx ? ' selected' : ''}${cSold ? ' is-soldout' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${c.name}${cSold ? ' — sold out' : ''}"></button>`;
+    return `<button class="pdp-color${i === pdpState.colorIdx ? ' selected' : ''}${cSold ? ' is-soldout' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${esc(c.name)}${cSold ? ' — sold out' : ''}"></button>`;
   }).join('');
 
   const sizes = color.sizes.map(s => {
     const avail = shReady ? sh.variantAvailable(slug, color.name, s.label) : (s.available !== false);
-    return `<button class="pdp-size${s.label === pdpState.size ? ' selected' : ''}" data-size="${s.label}"${avail ? '' : ' disabled aria-disabled="true"'}>${s.label}</button>`;
+    return `<button class="pdp-size${s.label === pdpState.size ? ' selected' : ''}" data-size="${esc(s.label)}"${avail ? '' : ' disabled aria-disabled="true"'}>${esc(s.label)}</button>`;
   }).join('');
   const singleSize = color.sizes.length === 1 && /one size/i.test(color.sizes[0].label);
 
@@ -1299,7 +1307,7 @@ function renderPDP(slug) {
   const sizeOptions = ['<option value="">Select a size</option>'].concat(
     color.sizes.map(s => {
       const avail = shReady ? sh.variantAvailable(slug, color.name, s.label) : (s.available !== false);
-      return `<option value="${s.label}"${s.label === pdpState.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${s.label}${avail ? '' : ' — Sold out'}</option>`;
+      return `<option value="${esc(s.label)}"${s.label === pdpState.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${esc(s.label)}${avail ? '' : ' — Sold out'}</option>`;
     })
   ).join('');
 
@@ -1355,17 +1363,17 @@ function renderPDP(slug) {
         <button class="pdp-back" id="pdp-back">← Shop</button>
 
         <div class="pdp-head">
-          <h1 class="pdp-name">${p.name}</h1>
+          <h1 class="pdp-name">${esc(p.name)}</h1>
         </div>
         <div class="pdp-subhead">
-          <p class="pdp-material">${p.composition}</p>
+          <p class="pdp-material">${esc(p.composition)}</p>
           ${ref ? `<p class="pdp-ref">Ref. ${ref}</p>` : ''}
         </div>
         ${soldOut ? '<p class="pdp-soldout-tag">Sold out</p>' : ''}
 
         <p class="pdp-row-label">Colour</p>
         <div class="pdp-colors">${swatches}</div>
-        <p class="pdp-color-name">${color.name}</p>
+        <p class="pdp-color-name">${esc(color.name)}</p>
 
         ${singleSize ? `
         <p class="pdp-row-label">Size</p>
@@ -1396,7 +1404,7 @@ function renderPDP(slug) {
         </div>
         <div class="pdp-tab-panels">
           <div class="pdp-tab-panel active" data-panel="desc">
-            <p>${p.description}</p>
+            <p>${esc(p.description)}</p>
             ${lookN ? `<p class="pdp-seenin">Seen in ${(p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ')}</p>` : ''}
           </div>
           <div class="pdp-tab-panel" data-panel="fit">
@@ -1405,7 +1413,7 @@ function renderPDP(slug) {
             <p><button class="pdp-inline-link" id="pdp-sizeguide-2" type="button">Open size guide</button></p>
           </div>
           <div class="pdp-tab-panel" data-panel="care">
-            <p>${p.composition}<br>${p.care}</p>
+            <p>${esc(p.composition)}<br>${esc(p.care)}</p>
           </div>
           <div class="pdp-tab-panel" data-panel="ship">
             <p><a href="#shipping" data-section="shipping">Shipping information</a><br>

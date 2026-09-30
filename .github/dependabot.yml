@@ -1,0 +1,16 @@
+# Aggiornamenti di sicurezza automatici: Dependabot apre una PR quando
+# esce una versione nuova (o una correzione di sicurezza) di esbuild,
+# sharp o delle GitHub Actions usate nei workflow.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      toolchain:
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

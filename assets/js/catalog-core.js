@@ -26,7 +26,9 @@
   'use strict';
 
   /* Connessione Storefront. Il token Storefront è pubblico per
-     design (solo lettura catalogo + creazione carrello). */
+     design (solo lettura catalogo + creazione carrello).
+     Se cambia `domain`, aggiornare anche connect-src nella
+     Content-Security-Policy di index.html. */
   root.TATO_SHOPIFY = {
     domain: 'pshgtp-ak.myshopify.com',
     storefrontToken: '387e563b969e48b03ea0be98c1851e2f',
@@ -125,8 +127,10 @@
     return { composition, description: rest.map(t => /[.!?]$/.test(t) ? t : t + '.').join(' ') };
   }
 
+  const HEX_RE = /^#[0-9a-f]{3,8}$/i;   // finisce in style="…": solo codici colore validi
+
   function hexOf(name, swatch) {
-    if (swatch) return { hex: swatch, known: true };
+    if (swatch && HEX_RE.test(swatch)) return { hex: swatch, known: true };
     const h = COLOR_HEX[lc(name)];
     return { hex: h || FALLBACK_HEX, known: !!h };
   }
@@ -203,7 +207,8 @@
   }
 
   function buildCatalog(nodes, looks, warn) {
-    const products = (nodes || []).filter(n => n && n.handle).map(n => toProduct(n, warn));
+    // l'handle finisce negli URL (#product/<handle>): solo [a-z0-9-], come impone Shopify
+    const products = (nodes || []).filter(n => n && /^[a-z0-9-]+$/.test(n.handle || '')).map(n => toProduct(n, warn));
     attachLooks(products, looks);
     return products;
   }
