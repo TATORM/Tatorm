@@ -31,6 +31,18 @@
   Guida + checklist per l'utente: `docs/shopify-prodotti.md`.
   Aperto lato Shopify: tag `women` sulla Long Skirt, foto per colore Smock,
   metafield `custom.care` (con accesso Storefront).
+- **Sicurezza** (`117ec9a`): build → `_site/` con i soli file pubblici (lista
+  `PUBLIC` in `scripts/build.mjs`; index.html del progetto non più riscritto),
+  CSP + Referrer-Policy in index.html (se cambia il dominio Shopify → connect-src),
+  `esc()` su tutti i testi esterni in script.js, handle/hex validati in
+  catalog-core, Dependabot. Storia git senza segreti, remote pulito.
+- **Test** (`e81f282`): `npm test` = build + `tests/unit` (node:test, catalogo)
+  + `tests/e2e` (Playwright su `_site/`, desktop + Pixel 7, Shopify simulato in
+  `fixtures.mjs`; fallisce su errori JS/console/CSP). CI: `test.yml` a ogni push,
+  `deploy.yml` testa prima di pubblicare. Bug trovato: reconcileCart ora solo
+  con dati dal vivo (`sh.live`). esbuild 0.28, sharp 0.35.
+- Tipografia Collection desktop allineata alla PDP (pannello 0.54–0.62rem,
+  breadcrumb 0.56rem).
 - Piano sicurezza/struttura concordato (30/09): 1 ✅ catalogo Shopify →
   2 sicurezza (deploy solo dist/, escape innerHTML, CSP, token .git/config,
   main protetto, scope token Storefront) → 3 test Playwright in CI →
