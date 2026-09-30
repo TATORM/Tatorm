@@ -43,7 +43,8 @@ function emit() {
 /* Naviga a una rotta (nuova voce di cronologia) */
 export function go(route) {
   const path = routeToPath(route);
-  if (location.pathname !== path || location.hash) history.pushState(null, '', path + location.search);
+  // i parametri (filtri dello shop…) appartengono alla pagina che si lascia
+  if (location.pathname !== path || location.hash || location.search) history.pushState(null, '', path);
   emit();
 }
 

@@ -1,0 +1,70 @@
+/* filters.css — Barra "Filter & sort" dello shop e pannello filtri
+   (il pannello riusa .cart-drawer / .cart-overlay, vedi cart.css) */
+
+.shop-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 3vw 28px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gray-light);
+}
+.shop-count,
+.shop-filter-btn {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+}
+.shop-count { color: var(--gray); }
+.shop-filter-btn {
+  color: var(--black);
+  transition: opacity var(--dur-1) ease;
+}
+.shop-filter-btn:hover { opacity: 0.5; }
+
+/* Pannello */
+.filter-drawer .cart-drawer-body { gap: 26px; }
+.filter-group { border: 0; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.filter-group legend {
+  width: 100%;
+  margin-bottom: 12px;
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-2);
+  color: #111;
+  transition: border-color var(--dur-1) ease, background var(--dur-1) ease, color var(--dur-1) ease;
+}
+.filter-chip:hover { border-color: #111; }
+.filter-chip.is-on { background: #111; border-color: #111; color: #f3f3ef; }
+.filter-swatch {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(17, 17, 17, 0.2);
+  flex-shrink: 0;
+}
+.filter-footer { display: flex; flex-direction: column; gap: 12px; }
+.filter-clear {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  align-self: center;
+}
+.filter-clear[hidden] { display: none; }
+
+@media (max-width: 768px) {
+  .shop-toolbar { margin: 0 16px 24px; }
+}

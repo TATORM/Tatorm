@@ -59,3 +59,28 @@ base('Etichetta New da tag Shopify + seconda immagine all\'hover (desktop)', asy
   await card.click();
   await expect(page.locator('.pdp-badge')).toHaveText('New');
 });
+
+test('Filtri e ordinamento: taglia, prezzo, URL condivisibile, azzera', async ({ page, shopify }) => {
+  await page.goto('/shop/');
+  await shopifyReady(page);
+  const total = await page.locator('#shop-grid .pgrid-card').count();
+  await page.locator('#shop-filter-btn').click();
+  await page.locator('.filter-chip[data-group="sort"][data-value="price-asc"]').click();
+  await page.locator('.filter-chip[data-group="price"][data-value="200-500"]').click();
+  await page.locator('#filter-apply').click();
+  await expect(page).toHaveURL(/\/shop\/\?price=200-500&sort=price-asc$/);
+  const prices = (await page.locator('#shop-grid .pgrid-price').allTextContents()).map(t => Number(t.replace(/\D/g, '')));
+  expect(prices.length).toBeGreaterThan(0);
+  expect(prices.every(p => p >= 200 && p < 500)).toBe(true);
+  expect([...prices].sort((a, b) => a - b)).toEqual(prices);
+  await expect(page.locator('#shop-filter-btn')).toHaveText('Filter & sort (1)');
+  // lo stesso URL aperto da zero dà lo stesso risultato
+  await page.reload();
+  await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(prices.length);
+  // azzera
+  await page.locator('#shop-filter-btn').click();
+  await page.locator('#filter-clear').click();
+  await page.locator('#filter-apply').click();
+  await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(total);
+  await expect(page).toHaveURL(/\/shop\/$/);
+});
