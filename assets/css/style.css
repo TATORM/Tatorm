@@ -852,8 +852,8 @@ ul { list-style: none; }
   width: 200px;
   bottom: 26px;
   z-index: 50;
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  font-size: 0.56rem;       /* come il testo del pannello look / PDP */
+  letter-spacing: 0.1em;
   text-align: right;
   color: var(--black);
   opacity: 0;
