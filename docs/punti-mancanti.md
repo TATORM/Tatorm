@@ -31,7 +31,7 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 |---|---|---|---|---|
 | [ ] | Ricerca | Manca | Io | — |
 | [x] | Filtri per taglia, colore, disponibilità, prezzo | Manca | Io | Oggi solo reparto e categoria. |
-| [ ] | Wishlist | Manca | Io | — |
+| [x] | Wishlist | Manca | Io | — |
 | [ ] | Account cliente | Manca | Insieme | Shopify lo ha già: va collegato al sito. |
 
 ## 04. Product Listing Page
@@ -107,7 +107,7 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 |---|---|---|---|---|
 | [ ] | Storico ordini, tracking, indirizzi, dati personali | Manca | Insieme | Nativi in Shopify: collegare dal sito. |
 | [ ] | Resi self-service | Manca | Insieme | App Shopify per i resi. |
-| [ ] | Wishlist nell'account | Manca | Io | — |
+| [x] | Wishlist nell'account | Manca | Io | — |
 | [ ] | Accesso anticipato ai drop | Manca | Insieme | — |
 
 ## 11. Spedizioni e logistica
