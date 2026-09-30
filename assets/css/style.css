@@ -1254,9 +1254,19 @@ body.shop-mode .site-logo.logo--left {
   width: 74px;
   transition: none;
 }
-/* Su shop / prodotto il MENU è tolto dallo stack in alto: navigazione via
-   logo TATO (→ home) e link "← Shop". Resta solo su Home / Collection. */
-body.shop-mode .site-nav { display: none; }
+/* Shop / prodotto: su mobile niente MENU (ci sono le pill categorie);
+   su desktop il MENU resta, ancorato in alto a dx sotto le icone
+   (stessa posizione di Home scrollata). */
+@media (max-width: 768px) {
+  body.shop-mode .site-nav { display: none; }
+}
+@media (min-width: 769px) {
+  body.shop-mode .site-nav {
+    top: 58px;
+    transform: translateY(0);
+    transition: none;
+  }
+}
 
 /* Il breadcrumb fisso non serve in shop-mode: c'è il MENU in header */
 body.shop-mode .collection-breadcrumb { display: none !important; }
@@ -1280,11 +1290,35 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   color: var(--black);
 }
 
-/* Pill categorie — solo mobile (su desktop c'è il MENU in Home) */
-.shop-pills { display: none; }
+/* Pill categorie — desktop: riga centrata a capo; mobile: riga scorrevole */
+.shop-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 900px;
+  margin: 26px auto 0;
+  padding: 0 24px;
+}
+.shop-pill {
+  padding: 7px 14px;
+  border: 1px solid var(--gray-light);
+  border-radius: 999px;
+  font-size: 0.46rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--black);
+  white-space: nowrap;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.shop-pill:hover { border-color: var(--black); }
+.shop-pill.is-active { background: var(--black); color: var(--white); border-color: var(--black); }
+.shop-pill.is-scope { border-color: var(--black); }
 @media (max-width: 768px) {
   .shop-pills {
-    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    max-width: none;
     gap: 8px;
     margin: 22px -16px 0;     /* a filo schermo: .shop-head ha margin 0 16px */
     padding: 0 16px;
@@ -1296,6 +1330,7 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   .shop-pill {
     flex-shrink: 0;
     padding: 8px 14px;
+    font-size: 0.5rem;
     border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 999px;
     font-size: 0.5rem;
