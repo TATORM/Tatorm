@@ -29,7 +29,7 @@ export default defineConfig({
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
   ],
   webServer: {
-    command: `npx esbuild --servedir=_site --serve=127.0.0.1:${PORT}`,
+    command: `DIR=_site PORT=${PORT} node scripts/serve.mjs`,
     url: `http://127.0.0.1:${PORT}/`,
     reuseExistingServer: !process.env.CI,
   },
