@@ -786,6 +786,7 @@ function showSection(id) {
 
   // Modalità header per shop / product
   document.body.classList.toggle('shop-mode', id === 'shop' || id === 'product');
+  document.body.classList.toggle('collection-mode', id === 'collection');
 
   // Sincronizza l'hash con la sezione (replaceState = niente loop di hashchange)
   if (id === 'home') {

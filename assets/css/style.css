@@ -2322,7 +2322,10 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .look-carousel {
     height: 100dvh;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
+  /* In Collection ogni swipe si ferma su un look intero (altrove proximity) */
+  body.collection-mode { scroll-snap-type: y mandatory; }
   .carousel-slide img {
     object-fit: cover;
     object-position: center center;
@@ -2355,8 +2358,8 @@ body.dark-mode .pdp-ref { color: var(--gray); }
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    height: 240px;
-    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.6));
+    height: 45%;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.72));
     pointer-events: none;
     z-index: 1;
   }
@@ -2391,10 +2394,9 @@ body.dark-mode .pdp-ref { color: var(--gray); }
     background: none !important;
     z-index: 10;
     transition: opacity 0.3s ease !important;
-    mix-blend-mode: difference;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
     pointer-events: none;
   }
-
   .fixed-look-info .panel-details-link {
     pointer-events: auto;
   }
@@ -2444,7 +2446,8 @@ body.dark-mode .pdp-ref { color: var(--gray); }
 
   /* Pannello mobile scrollabile se molti item */
   .fixed-look-info {
-    max-height: 52vh !important;
+    /* il pannello è pointer-events:none → non scrollabile: deve starci tutto */
+    max-height: calc(100dvh - 140px) !important;
     overflow-y: auto !important;
   }
 
