@@ -147,3 +147,7 @@
   height: auto;
   display: block;
 }
+/* l'hero riempie sempre la sua figura (la regola sopra, height:auto, a
+   parità di specificità vinceva: su finestre strette e alte — tablet in
+   verticale — la foto si fermava a metà schermo) */
+.home-hero.home-image-block img { height: 100%; }

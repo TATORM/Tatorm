@@ -3,7 +3,7 @@
    ─────────────────────────────────────────
    Il CSS è diviso per componente in parts/. L'ORDINE degli import
    conta: è l'ordine della cascata (le regole dopo vincono a parità
-   di specificità) e mobile.css resta per ultimo.
+   di specificità); mobile.css e tablet.css restano per ultimi.
    Le variabili di design (colori, tempi, tipografia) sono in tokens.css.
    In produzione esbuild unisce tutto in un solo file.
    ═══════════════════════════════════════════ */
@@ -23,3 +23,4 @@
 @import './parts/footer.css';
 @import './parts/commerce.css';
 @import './parts/mobile.css';
+@import './parts/tablet.css';

@@ -1,0 +1,67 @@
+/* tablet.css — Tablet 769–1180px (iPad in verticale e orizzontale)
+   ─────────────────────────────────────────
+   Impostazione "desktop adattato": fondo bianco come il desktop,
+   header sempre in alto (logo al centro, icone + MENU a destra).
+   ≤1024px (tablet in verticale): una colonna dove serve.
+   Importato per ultimo: sovrascrive le regole desktop (min-width:769px). */
+
+@media (min-width: 769px) and (max-width: 1180px) {
+
+  /* ── Header in alto su tutte le pagine ────────────────────
+     Il logo parte centrato (splash) e con .logo--left sale in alto
+     al centro invece di andare a sinistra. Specificità alta per
+     battere le regole desktop di header-scrolled. */
+  html body .site-logo.logo--left,
+  html body.header-scrolled:not(.shop-mode) .site-logo.logo--left,
+  html body.shop-mode .site-logo {
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 74px;
+  }
+  html body .site-nav,
+  html body.header-scrolled:not(.shop-mode) .site-nav {
+    top: 58px;
+    transform: none;
+  }
+
+  /* Menu aperto: pannello bianco leggibile anche sopra le foto
+     (il mix-blend dell'header rende il testo illeggibile sulle immagini) */
+  .site-nav:has(.nav-links.open) {
+    mix-blend-mode: normal;
+    background: var(--white);
+    padding: 14px 18px 18px;
+    margin: -14px -18px 0 0;
+  }
+  .site-nav:has(.nav-links.open) .nav-toggle,
+  .site-nav:has(.nav-links.open) .nav-links > li > a,
+  .site-nav:has(.nav-links.open) .nav-group-toggle,
+  .site-nav:has(.nav-links.open) .nav-sub a { color: var(--black); }
+
+  /* ── Pagina prodotto: 50 / 50 ───────────────────────────── */
+  .pdp-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 3vw; }
+  .pdp-info { padding: 0 4vw 0 0; }
+  /* schede su più righe invece di tagliarsi */
+  .pdp-tabs { flex-wrap: wrap; row-gap: 10px; overflow-x: visible; }
+}
+
+/* ── Tablet in verticale ─────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  /* Griglia prodotti a 3 colonne, righe meno distanti */
+  .pgrid { grid-template-columns: repeat(3, 1fr); row-gap: 56px; }
+
+  /* Home: Men / Women in riquadri 3:4 (a tutta altezza sarebbero troppo stretti) */
+  .home-depts .home-dept { height: auto; aspect-ratio: 3 / 4; }
+
+  /* Pagina prodotto: foto sopra, informazioni sotto a tutta larghezza */
+  .pdp-main { grid-template-columns: minmax(0, 1fr); }
+  .pdp-info { position: static; padding: 40px 6vw 0; }
+  /* prima foto non più alta di ~3/4 schermo: nome e prezzo restano vicini */
+  .pdp-gallery > picture:first-child .pdp-gallery-img,
+  .pdp-gallery .pdp-gallery-img:first-child { max-height: 72vh; width: 100%; }
+
+  /* Collection: foto a sinistra, pannello dei capi a destra senza sovrapporsi */
+  .look-carousel { width: calc(100vw - 300px); margin: 0 0 0 4vw; }
+  .fixed-look-info { width: 240px; right: 3vw; }
+}

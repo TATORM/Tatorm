@@ -30,3 +30,4 @@ docs/*.pdf
 test-results/
 playwright-report/
 tests/visual/__screenshots__/
+.tmp/
