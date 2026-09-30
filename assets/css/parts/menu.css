@@ -2,9 +2,8 @@
    ─────────────────────────────────────────
    Uguale su tutte le pagine e dispositivi. Nessun pannello: le voci
    scendono sotto la scritta MENU (testo bianco + mix-blend difference
-   come logo e icone, quindi nero sul chiaro e chiaro sullo scuro).
-   Mentre il menu è aperto la pagina sfuma (body.menu-open): le voci
-   non si confondono con i contenuti; un click fuori lo chiude. */
+   come logo e icone, quindi nero sul chiaro e chiaro sullo scuro),
+   direttamente sopra la pagina. Un click fuori lo chiude. */
 
 .site-nav {
   position: fixed;
@@ -75,16 +74,6 @@
 }
 .nav-sub a:hover,
 .nav-sub a[aria-current="page"] { opacity: 1; }
-
-/* Pagina sfumata sotto il menu aperto */
-.page,
-.site-footer,
-.fixed-look-info,
-.collection-breadcrumb { transition: opacity var(--dur-3) ease; }
-body.menu-open .page,
-body.menu-open .site-footer,
-body.menu-open .fixed-look-info,
-body.menu-open .collection-breadcrumb { opacity: 0.06 !important; pointer-events: none; }
 
 @media (max-width: 768px) {
   .site-nav { top: 18px; left: 16px; }   /* stesse misure di testo del desktop */
