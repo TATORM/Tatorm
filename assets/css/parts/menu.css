@@ -1,61 +1,42 @@
-/* menu.css — MENU in alto a sinistra + pannello da sinistra
+/* menu.css — MENU in alto a sinistra, voci che appaiono sotto
    ─────────────────────────────────────────
-   Uguale su tutte le pagine e dispositivi. Il bottone MENU sta nel
-   header (mix-blend come logo e icone); la lista vive nel pannello,
-   bianco, a tutta altezza, sopra un velo scuro: non si sovrappone
-   mai ai contenuti della pagina. */
+   Uguale su tutte le pagine e dispositivi. Nessun pannello: le voci
+   scendono sotto la scritta MENU (testo bianco + mix-blend difference
+   come logo e icone, quindi nero sul chiaro e chiaro sullo scuro).
+   Mentre il menu è aperto la pagina sfuma (body.menu-open): le voci
+   non si confondono con i contenuti; un click fuori lo chiude. */
 
 .site-nav {
   position: fixed;
   top: 26px;
   left: 3vw;
   z-index: 50;
+  text-align: left;
 }
 .nav-toggle {
   font-size: var(--fs-xs);
   letter-spacing: var(--ls-5);
   line-height: 20px;             /* allineato alla riga delle icone */
+  color: #fff;
   transition: opacity var(--dur-1) ease;
 }
 .nav-toggle:hover { opacity: 0.4; }
 
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 84;
-  background: rgba(0, 0, 0, 0.18);
+.nav-links {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 0;
+  overflow: hidden;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--dur-2) ease;
+  transition: max-height var(--dur-3) ease, opacity var(--dur-3) ease;
 }
-.menu-overlay.open { opacity: 1; pointer-events: auto; }
-
-.menu-drawer {
-  position: fixed;
-  top: 0; left: 0;
-  width: min(400px, 88vw);
-  height: 100dvh;
-  z-index: 85;
-  background: var(--white);
-  color: var(--black);
-  box-shadow: 4px 0 32px rgba(0, 0, 0, 0.08);
-  padding: 22px 3vw 40px;
-  overflow-y: auto;
-  transform: translateX(-100%);
-  visibility: hidden;
-  transition: transform var(--dur-3) cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear var(--dur-3);
-}
-.menu-drawer.open {
-  transform: translateX(0);
-  visibility: visible;
-  transition: transform var(--dur-3) cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
-}
-.menu-drawer-head { height: 28px; display: flex; align-items: center; margin-bottom: 44px; }
-.menu-close::before, .menu-close::after { background: var(--black); }
-
-/* Lista */
-.nav-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+.nav-links.open { max-height: 80vh; overflow-y: auto; opacity: 1; }
 .nav-links li { list-style: none; }
+
 .nav-links > li > a,
 .nav-group-toggle {
   display: block;
@@ -63,39 +44,48 @@
   text-align: left;
   font-family: var(--font);
   font-weight: 500;
-  font-size: var(--fs-m);
+  font-size: var(--fs-xs);
   letter-spacing: var(--ls-4);
   text-transform: uppercase;
   line-height: 1.2;
-  color: var(--black);
+  color: #fff;
   transition: opacity var(--dur-1) ease;
 }
 .nav-links > li > a:hover,
 .nav-group-toggle:hover { opacity: 0.5; }
-.nav-group-toggle { display: flex; align-items: center; gap: 10px; width: 100%; }
+.nav-group-toggle { display: flex; align-items: center; gap: 8px; }
 .nav-group-toggle::after { content: '+'; font-weight: 300; }
 .nav-group.open > .nav-group-toggle::after { content: '\2212'; }
 
 .nav-sub {
   list-style: none;
-  margin: 0; padding: 0 0 0 2px;
+  margin: 0; padding: 0;
   max-height: 0; overflow: hidden;
   transition: max-height var(--dur-3) ease, margin var(--dur-3) ease;
 }
-.nav-group.open > .nav-sub { max-height: 520px; margin-top: 16px; }
-.nav-sub li + li { margin-top: 12px; }
+.nav-group.open > .nav-sub { max-height: 460px; margin-top: 10px; }
+.nav-sub li + li { margin-top: 8px; }
 .nav-sub a {
   display: block;
-  font-size: var(--fs-s);
+  font-size: var(--fs-2xs);
   letter-spacing: var(--ls-3);
-  color: var(--black);
-  opacity: 0.6;
+  color: #fff;
+  opacity: 0.65;
   transition: opacity var(--dur-1) ease;
 }
 .nav-sub a:hover,
 .nav-sub a[aria-current="page"] { opacity: 1; }
-.nav-spacer { height: 10px; }
+
+/* Pagina sfumata sotto il menu aperto */
+.page,
+.site-footer,
+.fixed-look-info,
+.collection-breadcrumb { transition: opacity var(--dur-3) ease; }
+body.menu-open .page,
+body.menu-open .site-footer,
+body.menu-open .fixed-look-info,
+body.menu-open .collection-breadcrumb { opacity: 0.06 !important; pointer-events: none; }
 
 @media (max-width: 768px) {
-  .menu-drawer { padding: 16px 20px 40px; }
+  .site-nav { top: 18px; left: 16px; }   /* stesse misure di testo del desktop */
 }

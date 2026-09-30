@@ -10,14 +10,11 @@ import { currentRoute, go, setUrl } from './url.js';
 /* ═══════════════════════════════════════════
    NAVIGAZIONE SEZIONI
    ═══════════════════════════════════════════ */
-/* ─── Menu principale (pannello da sinistra) ─────────────
+/* ─── Menu principale (voci sotto MENU, pagina sfumata) ──
    Shop ▸ (All · New arrivals · categorie · Accessories)
    · Collection · About
    Solo le voci con prodotti: New arrivals = tag Shopify `new`.
    Women/Men non sono voci di menu: sono un filtro dello shop. */
-const menuDrawer  = document.getElementById('menu-drawer');
-const menuOverlay = document.getElementById('menu-overlay');
-
 export function shopMenuItems() {
   const products = window.TATO_PRODUCTS || [];
   const cats = (window.TATO_CATEGORIES || []).filter(c => products.some(p => p.category === c.slug));
@@ -49,23 +46,20 @@ export function renderNavMenu() {
 }
 
 export function openNav() {
-  menuDrawer.classList.add('open');
-  menuOverlay.classList.add('open');
-  menuDrawer.setAttribute('aria-hidden', 'false');
+  navLinks.classList.add('open');
+  document.body.classList.add('menu-open');
   navToggle.setAttribute('aria-expanded', 'true');
   // voce della pagina corrente evidenziata
   navLinks.querySelectorAll('a').forEach(a => {
     if (new URL(a.href).pathname === location.pathname) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  document.getElementById('menu-close')?.focus();
 }
 
 export function closeNav() {
-  if (!menuDrawer.classList.contains('open')) return;
-  menuDrawer.classList.remove('open');
-  menuOverlay.classList.remove('open');
-  menuDrawer.setAttribute('aria-hidden', 'true');
+  if (!navLinks.classList.contains('open')) return;
+  navLinks.classList.remove('open');
+  document.body.classList.remove('menu-open');
   navToggle.setAttribute('aria-expanded', 'false');
 }
 
@@ -166,10 +160,12 @@ renderNavMenu();
 
 /* ─── Toggle menu ────────────────────────── */
 navToggle.addEventListener('click', () => {
-  if (menuDrawer.classList.contains('open')) closeNav();
+  if (navLinks.classList.contains('open')) closeNav();
   else openNav();
 });
-document.getElementById('menu-close')?.addEventListener('click', () => { closeNav(); navToggle.focus(); });
-menuOverlay?.addEventListener('click', closeNav);
+// click fuori dal menu (sulla pagina sfumata) → chiude
+document.addEventListener('click', e => {
+  if (!e.target.closest('.site-nav')) closeNav();
+});
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
 }

@@ -108,18 +108,20 @@ test('Wishlist: salva da card e PDP, contatore, pagina /wishlist/, rimuovi', asy
   await expect(page.locator('#wish-badge')).toHaveText('1');
 });
 
-test('Menu: pannello da sinistra, voci Shop, chiusura e navigazione', async ({ page, shopify }) => {
+test('Menu: voci sotto MENU, pagina sfumata, chiusura e navigazione', async ({ page, shopify }) => {
   await page.goto('/about/');
   await page.locator('#nav-toggle').click();
-  const drawer = page.locator('#menu-drawer');
-  await expect(drawer).toHaveClass(/open/);
+  const links = page.locator('#nav-links');
+  await expect(links).toHaveClass(/open/);
+  await expect(page.locator('body')).toHaveClass(/menu-open/);
   await expect(page.locator('#nav-toggle')).toHaveAttribute('aria-expanded', 'true');
   await page.keyboard.press('Escape');
-  await expect(drawer).not.toHaveClass(/open/);
+  await expect(links).not.toHaveClass(/open/);
   await page.locator('#nav-toggle').click();
-  await drawer.getByRole('link', { name: 'Outerwear' }).click();
+  await links.getByRole('link', { name: 'Outerwear' }).click();
   await expect(page).toHaveURL(/\/shop\/outerwear\/$/);
-  await expect(drawer).not.toHaveClass(/open/);
+  await expect(links).not.toHaveClass(/open/);
+  await expect(page.locator('body')).not.toHaveClass(/menu-open/);
   await expect(page.locator('#shop-title')).toHaveText('Outerwear');
 });
 
