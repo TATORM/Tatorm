@@ -1,7 +1,7 @@
 import { test, expect, shopifyReady, CHECKOUT_URL, NODES } from './fixtures.mjs';
 
 async function addTobiBlack2(page) {
-  await page.goto('/#product/tobi-pants');
+  await page.goto('/product/tobi-pants/');
   await shopifyReady(page);
   await page.locator('#pdp-size-select').selectOption('2');
   await page.locator('#pdp-add').click();
@@ -25,7 +25,7 @@ test('Aggiungi al carrello, quantità, totale, persistenza', async ({ page, shop
 });
 
 test('Taglia non scelta: messaggio e niente carrello', async ({ page, shopify }) => {
-  await page.goto('/#product/tobi-pants');
+  await page.goto('/product/tobi-pants/');
   await shopifyReady(page);
   await page.locator('#pdp-add').click();
   await expect(page.locator('#pdp-size-hint')).toHaveText('Select a size');
@@ -49,7 +49,7 @@ test('Carrello con un prodotto tolto: riga rimossa con avviso', async ({ page, s
     localStorage.setItem('tato-cart-v1', JSON.stringify([{ key: 'old|Black|2', slug: 'old-coat', name: 'OLD COAT',
       color: 'Black', size: '2', price: 500, currency: 'EUR', qty: 1, shopifyVariantId: 'gid://shopify/ProductVariant/1' }]));
   });
-  await page.goto('/#shop');
+  await page.goto('/shop/');
   await shopifyReady(page);
   await expect(page.locator('#cart-badge')).toHaveText('0');
   await page.evaluate(() => document.getElementById('btn-shop').click());

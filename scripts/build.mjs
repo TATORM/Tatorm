@@ -11,6 +11,8 @@
         <!-- build:css --> … <!-- /build:css -->
         <!-- build:js -->  … <!-- /build:js -->
    4. copia gli asset pubblici elencati in PUBLIC
+   5. genera una pagina per ogni URL vero (/product/…/, /shop/…/)
+      e sitemap.xml (scripts/prerender.mjs)
 
    USO
      npm run build     — genera _site/ (l'index.html del progetto non viene toccato)
@@ -21,6 +23,7 @@
 import { build } from 'esbuild';
 import { readFile, writeFile, rm, mkdir, cp, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { prerender } from './prerender.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT_REL = '_site';
@@ -31,7 +34,7 @@ const HTML = path.join(ROOT, 'index.html');
 /* Tutto ciò che va online oltre a index.html e al bundle.
    Un file nuovo che deve essere pubblico va aggiunto qui. */
 const PUBLIC = [
-  '404.html', 'robots.txt', 'sitemap.xml', 'CNAME',
+  '404.html', '404.js', 'robots.txt', 'CNAME',
   'assets/fonts', 'assets/icons',
   'media/brand', 'media/home', 'media/looks',
 ];
@@ -93,6 +96,8 @@ async function run() {
       filter: (f) => !path.basename(f).startsWith('.'),   // niente .DS_Store
     });
   }
+  const pr = await prerender({ root: ROOT, out: OUT_ABS });
+  console.log(`  ${pr.pages} pagine generate (${pr.products} prodotti) + sitemap.xml`);
   console.log(`  _site/ pronto (${PUBLIC.length + 1} voci pubbliche + bundle).`);
 }
 

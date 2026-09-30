@@ -5,6 +5,7 @@ import { handleShopRoute } from './router.js';
 import { renderShop } from './shop.js';
 import { state } from './state.js';
 import { isDesktopViewport } from './utils.js';
+import { currentRoute, go, setUrl } from './url.js';
 
 /* ═══════════════════════════════════════════
    NAVIGAZIONE SEZIONI
@@ -17,16 +18,16 @@ export function navDeptSub(dept) {
   const cats = window.TATO_categoriesFor
     ? window.TATO_categoriesFor(dept)
     : (window.TATO_CATEGORIES || []);
-  const items = [`<li><a href="#" data-nav="shop/${dept}">View All</a></li>`].concat(
+  const items = [`<li><a href="/shop/${dept}/">View All</a></li>`].concat(
     cats.map(c =>
-      `<li><a href="#" data-nav="shop/${dept}/${c.slug}">${c.label}</a></li>`)
+      `<li><a href="/shop/${dept}/${c.slug}/">${c.label}</a></li>`)
   );
   return `<ul class="nav-sub">${items.join('')}</ul>`;
 }
 
 export function renderNavMenu() {
   navLinks.innerHTML = `
-    <li><a href="#" data-nav="shop">New Arrivals</a></li>
+    <li><a href="/shop/">New Arrivals</a></li>
     <li class="nav-group">
       <button type="button" class="nav-group-toggle" data-group="women">Women</button>
       ${navDeptSub('women')}
@@ -35,28 +36,13 @@ export function renderNavMenu() {
       <button type="button" class="nav-group-toggle" data-group="men">Men</button>
       ${navDeptSub('men')}
     </li>
-    <li><a href="#" data-nav="shop/accessories">Accessories</a></li>
+    <li><a href="/shop/accessories/">Accessories</a></li>
     <li class="nav-spacer" aria-hidden="true"></li>
-    <li><a href="#" data-section="collection">Collection</a></li>
-    <li><a href="#" data-section="about">About</a></li>
+    <li><a href="/collection/">Collection</a></li>
+    <li><a href="/about/">About</a></li>
   `;
-
-  navLinks.querySelectorAll('[data-nav]').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      closeNav();
-      const target = '#' + a.dataset.nav;
-      if (location.hash === target) handleShopRoute();
-      else location.hash = target;
-    });
-  });
-  navLinks.querySelectorAll('[data-section]').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      closeNav();
-      navToSection(a.dataset.section);
-    });
-  });
+  /* i link veri li gestisce url.js (navigazione senza ricaricare);
+     il menu si chiude in showSection() */
   navLinks.querySelectorAll('.nav-group-toggle').forEach(btn => {
     btn.setAttribute('aria-expanded', 'false');
     btn.addEventListener('click', () => {
@@ -132,10 +118,10 @@ export function showSection(id) {
     siteNav.style.opacity       = '';
     siteNav.style.pointerEvents = '';
     if (id === 'shop') {
-      if (!location.hash.startsWith('#shop')) {
+      if (!currentRoute().startsWith('shop')) {
         state.shopScope = 'new';
         state.shopCategory = 'all';
-        history.replaceState(null, '', '#shop');
+        setUrl('shop');
       }
       renderShop();
     }
@@ -153,29 +139,16 @@ export function showSection(id) {
   document.body.classList.toggle('shop-mode', id === 'shop' || id === 'product');
   document.body.classList.toggle('collection-mode', id === 'collection');
 
-  // Sincronizza l'hash con la sezione (replaceState = niente loop di hashchange)
-  if (id === 'home') {
-    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-  } else if (id === 'collection' || id === 'about') {
-    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
-  }
+  // Allinea l'indirizzo alla sezione (replaceState: niente nuova cronologia)
+  if (id === 'home') setUrl('');
+  else if (id === 'collection' || id === 'about') setUrl(id);
 
   closeNav();
 }
 
-/* Naviga a una sezione creando una voce di cronologia (tasto Indietro).
-   collection/about passano per l'hash; home lo pulisce; shop/product
-   restano gestiti dalle proprie rotte. */
+/* Naviga a una sezione creando una voce di cronologia (tasto Indietro) */
 export function navToSection(id) {
-  if (id === 'collection' || id === 'about') {
-    if (location.hash === '#' + id) showSection(id);
-    else location.hash = '#' + id;
-  } else if (id === 'home') {
-    if (location.hash) history.pushState(null, '', location.pathname + location.search);
-    showSection('home');
-  } else {
-    showSection(id);
-  }
+  go(id === 'home' ? '' : id);
 }
 
 export function initNav() {
@@ -190,7 +163,7 @@ document.querySelectorAll('[data-section]').forEach(link => {
 // Click sul logo → home
 logo.addEventListener('click', e => {
   e.preventDefault();
-  showSection('home');
+  go('');
 });
 
 // Stato iniziale nav

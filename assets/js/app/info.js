@@ -55,7 +55,7 @@ export function showInfo(route) {
   const el = document.getElementById('info-body');
   if (!data || !el) return;
   el.innerHTML = `<article class="info-doc">${data.body}
-    <p class="info-back"><a href="#shop">← Back to shop</a></p></article>`;
+    <p class="info-back"><a href="/shop/">← Back to shop</a></p></article>`;
   showSection('info');
   document.getElementById('info')?.classList.add('active');
   setMeta({ title: data.title, description: `${data.title} — TATO.` });

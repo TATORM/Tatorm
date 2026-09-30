@@ -8,7 +8,7 @@
     "dev": "node scripts/serve.mjs",
     "catalog": "node scripts/fetch-catalog.mjs",
     "build": "node scripts/fetch-catalog.mjs && node scripts/build.mjs",
-    "preview": "esbuild --servedir=_site --serve=127.0.0.1:8001",
+    "preview": "DIR=_site PORT=8001 node scripts/serve.mjs",
     "images": "node scripts/images.mjs",
     "test": "npm run build && npm run test:unit && npm run test:e2e",
     "test:unit": "node --test tests/unit/*.test.mjs",

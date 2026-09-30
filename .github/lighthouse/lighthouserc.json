@@ -3,8 +3,9 @@
     "collect": {
       "staticDistDir": "./_site",
       "url": [
-        "http://localhost:PORT/index.html",
-        "http://localhost:PORT/index.html#shop"
+        "http://localhost:PORT/",
+        "http://localhost:PORT/shop/",
+        "http://localhost:PORT/product/tobi-pants/"
       ],
       "numberOfRuns": 3
     },

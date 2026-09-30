@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tutti i percorsi relativi (assets/, media/) partono dalla radice del sito,
+       anche sulle pagine /product/…/ e /shop/…/ generate dal build -->
+  <base href="/" />
   <!-- Content-Security-Policy: il browser carica/esegue solo da queste origini.
        Nuovo servizio esterno (analytics, video, font…) → va aggiunto qui. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.shopify.com; font-src 'self'; connect-src 'self' https://pshgtp-ak.myshopify.com; form-action 'self' https://tatorm.us18.list-manage.com; frame-src https://tatorm.us18.list-manage.com; object-src 'none'; base-uri 'self'; upgrade-insecure-requests" />
@@ -74,7 +77,7 @@
   -->
   <div id="splash-bg"></div>
 
-  <a href="#" id="logo" class="site-logo" aria-label="TATO — home">
+  <a href="/" id="logo" class="site-logo" aria-label="TATO — home">
     <img src="media/brand/logotype.png" alt="TATO" />
   </a>
 
@@ -468,35 +471,35 @@
         <div class="footer-col">
           <p class="footer-col__title">Shop</p>
           <ul>
-            <li><a href="#shop">New Arrivals</a></li>
-            <li><a href="#shop/women">Women</a></li>
-            <li><a href="#shop/men">Men</a></li>
-            <li><a href="#shop/accessories">Accessories</a></li>
+            <li><a href="/shop/">New Arrivals</a></li>
+            <li><a href="/shop/women/">Women</a></li>
+            <li><a href="/shop/men/">Men</a></li>
+            <li><a href="/shop/accessories/">Accessories</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <p class="footer-col__title">Customer Care</p>
           <ul>
-            <li><a href="#" data-section="about">Contact</a></li>
-            <li><a href="#shipping">Shipping</a></li>
-            <li><a href="#returns">Returns &amp; Refunds</a></li>
-            <li><a href="#faq">FAQ</a></li>
+            <li><a href="/about/">Contact</a></li>
+            <li><a href="/shipping/">Shipping</a></li>
+            <li><a href="/returns/">Returns &amp; Refunds</a></li>
+            <li><a href="/faq/">FAQ</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <p class="footer-col__title">TATO</p>
           <ul>
-            <li><a href="#" data-section="about">About</a></li>
-            <li><a href="#" data-section="collection">Collection</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="/collection/">Collection</a></li>
             <li><a href="mailto:press@tatorm.com">Press</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <p class="footer-col__title">Legal</p>
           <ul>
-            <li><a href="#privacy">Privacy Policy</a></li>
-            <li><a href="#cookies">Cookie Policy</a></li>
-            <li><a href="#terms">Terms of Sale</a></li>
+            <li><a href="/privacy/">Privacy Policy</a></li>
+            <li><a href="/cookies/">Cookie Policy</a></li>
+            <li><a href="/terms/">Terms of Sale</a></li>
           </ul>
         </div>
       </nav>
@@ -506,7 +509,7 @@
           <span>Follow</span>
           <a href="#" data-social="instagram">Instagram</a>
         </div>
-        <a class="footer-wordmark" href="#" data-section="home" aria-label="TATO — home">
+        <a class="footer-wordmark" href="/" data-section="home" aria-label="TATO — home">
           <img src="media/brand/logotype.png" alt="TATO" />
         </a>
         <p class="footer-meta">Designed in Rome — Made in Italy &nbsp;·&nbsp; © <span id="footer-year">2026</span> TATO</p>
@@ -531,10 +534,10 @@
 
   <!-- Breadcrumb globale -->
   <nav class="collection-breadcrumb" id="site-breadcrumb">
-    <a href="#" data-section="home">HOME</a> /
-    <a href="#" data-section="shop">SHOP</a> /
-    <a href="#" data-section="collection">COLLECTION</a> /
-    <a href="#" data-section="about">CONTACTS</a>
+    <a href="/" data-section="home">HOME</a> /
+    <a href="/shop/" data-section="shop">SHOP</a> /
+    <a href="/collection/" data-section="collection">COLLECTION</a> /
+    <a href="/about/" data-section="about">CONTACTS</a>
   </nav>
 
   <!-- Newsletter popup -->

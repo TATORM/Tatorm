@@ -44,14 +44,14 @@ export function renderShopPills() {
   const inScope = p => p.category !== 'accessories' &&
     (!g || (p.genders || ['women', 'men']).includes(g));
   const cats = CATEGORIES.filter(c => PRODUCTS.some(p => inScope(p) && p.category === c.slug));
-  const base = g ? `#shop/${g}` : '#shop';
+  const base = g ? `/shop/${g}` : '/shop';
   const pills = [
-    { href: '#shop',       label: 'All',   on: state.shopScope === 'new' && state.shopCategory === 'all' },
-    { href: '#shop/women', label: 'Women', on: state.shopScope === 'women' && state.shopCategory === 'all', scope: g === 'women' },
-    { href: '#shop/men',   label: 'Men',   on: state.shopScope === 'men' && state.shopCategory === 'all',   scope: g === 'men' },
-    ...cats.map(c => ({ href: `${base}/${c.slug}`, label: c.label,
+    { href: '/shop/',       label: 'All',   on: state.shopScope === 'new' && state.shopCategory === 'all' },
+    { href: '/shop/women/', label: 'Women', on: state.shopScope === 'women' && state.shopCategory === 'all', scope: g === 'women' },
+    { href: '/shop/men/',   label: 'Men',   on: state.shopScope === 'men' && state.shopCategory === 'all',   scope: g === 'men' },
+    ...cats.map(c => ({ href: `${base}/${c.slug}/`, label: c.label,
       on: state.shopScope !== 'accessories' && state.shopCategory === c.slug })),
-    { href: '#shop/accessories', label: 'Accessories', on: state.shopScope === 'accessories' },
+    { href: '/shop/accessories/', label: 'Accessories', on: state.shopScope === 'accessories' },
   ];
   nav.innerHTML = pills.map(x =>
     `<a class="shop-pill${x.on ? ' is-active' : x.scope ? ' is-scope' : ''}" href="${x.href}"${x.on ? ' aria-current="page"' : ''}>${x.label}</a>`

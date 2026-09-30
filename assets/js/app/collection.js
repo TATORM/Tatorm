@@ -24,7 +24,7 @@ export function renderLookPanel(lookKey) {
   setTimeout(() => {
     const itemsHTML = data.items.map(item => {
       const action = item.slug
-        ? `<a class="panel-item-shop" href="#product/${item.slug}">${money(item.price, item.currency)} — Shop</a>`
+        ? `<a class="panel-item-shop" href="/product/${item.slug}/">${money(item.price, item.currency)} — Shop</a>`
         : `<p class="panel-item-archive">Archive piece</p>`;
       return `
         <div class="panel-item">

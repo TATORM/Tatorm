@@ -5,18 +5,19 @@ import { renderNavMenu, showSection } from './nav.js';
 import { renderPDP, renderPDPMissing } from './pdp.js';
 import { CATEGORIES, renderShop } from './shop.js';
 import { state } from './state.js';
+import { ROUTE_EVENT, currentRoute, isAppRoute } from './url.js';
 
-/* ─── Routing hash ───────────────────────── */
+/* ─── Routing (percorsi veri, vedi url.js) ─ */
 export function handleShopRoute() {
-  const hash = location.hash.replace(/^#/, '');
+  const hash = currentRoute();
   const parts = hash.split('/');
   const route = parts[0];
   const a = parts[1] || '';
   const b = parts[2] || '';
 
   if (!hash)               { setProductJsonLd(null); setMeta({}); showSection('home');       return; }
-  if (route === 'collection') { setProductJsonLd(null); setMeta({ title: 'Collection', description: 'The TATO collection — 21 looks. Designed in Rome, made in Italy.', canonicalHash: 'collection' }); showSection('collection'); return; }
-  if (route === 'about')      { setProductJsonLd(null); setMeta({ title: 'Contacts', description: 'Get in touch with TATO — general, press and sales enquiries.', canonicalHash: 'about' }); showSection('about'); return; }
+  if (route === 'collection') { setProductJsonLd(null); setMeta({ title: 'Collection', description: 'The TATO collection — 21 looks. Designed in Rome, made in Italy.', canonicalPath: 'collection' }); showSection('collection'); return; }
+  if (route === 'about')      { setProductJsonLd(null); setMeta({ title: 'Contacts', description: 'Get in touch with TATO — general, press and sales enquiries.', canonicalPath: 'about' }); showSection('about'); return; }
   if (INFO_ROUTES.includes(route)) { setProductJsonLd(null); showInfo(route); return; }
 
   if (route === 'product' && a) {
@@ -30,7 +31,7 @@ export function handleShopRoute() {
         setMeta({
           title: p.name,
           description: `${p.name} — ${p.composition}. ${p.description}`.slice(0, 300),
-          canonicalHash: 'product/' + a,
+          canonicalPath: 'product/' + a,
           ogImage: (pd && pd.images && pd.images[0]) || (window.TATO_lookImages ? window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 1 })[0] : null),
         });
         setProductJsonLd(p);
@@ -42,7 +43,7 @@ export function handleShopRoute() {
       showSection('product');
       document.getElementById('product')?.classList.add('active');
       setProductJsonLd(null);
-      setMeta({ title: 'No longer available', description: 'This piece is no longer available.', canonicalHash: 'shop' });
+      setMeta({ title: 'No longer available', description: 'This piece is no longer available.', canonicalPath: 'shop' });
     }
     return;
   }
@@ -70,7 +71,7 @@ export function handleShopRoute() {
     setMeta({
       title: label,
       description: `Shop ${label} — TATO. Independent fashion, designed in Rome, made in Italy.`,
-      canonicalHash: hash,
+      canonicalPath: hash,
     });
   }
 }
@@ -82,7 +83,7 @@ export function initRouter() {
 document.addEventListener('tato:shopify-ready', (e) => {
   const live = e.detail && e.detail.live;
   const prod = document.getElementById('product');
-  const onProduct = location.hash.startsWith('#product/');
+  const onProduct = currentRoute().startsWith('product/');
   if (live) renderNavMenu();
   const shown = prod && prod.classList.contains('active') && state.pdp.slug;
   if (onProduct && shown) {
@@ -96,15 +97,13 @@ document.addEventListener('tato:shopify-ready', (e) => {
   }
 });
 
-window.addEventListener('hashchange', handleShopRoute);
+window.addEventListener(ROUTE_EVENT, handleShopRoute);
 
 /* Deep-link all'apertura */
 (function initShopRoute() {
   renderShop();
-  const h = location.hash.replace(/^#/, '');
-  const first = h.split('/')[0];
-  if (h === 'shop' || h.startsWith('shop/') || h.startsWith('product/') ||
-      h === 'collection' || h === 'about' || INFO_ROUTES.includes(first)) {
+  const h = currentRoute();
+  if (h && isAppRoute(h)) {
     window.addEventListener('load', handleShopRoute, { once: true });
   }
 })();

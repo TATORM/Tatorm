@@ -3,7 +3,7 @@
    crawler che NON eseguono JS vedono solo i meta di index.html.
    Questo aggiorna title/canonical per browser e crawler JS-capaci. */
 export const BASE_URL = 'https://www.tatorm.com/';
-export function setMeta({ title, description, canonicalHash, ogImage }) {
+export function setMeta({ title, description, canonicalPath, ogImage }) {
   document.title = title ? `${title} — TATO` : 'TATO — Independent Fashion. Designed in Rome, Made in Italy.';
   const set = (sel, attr, val) => { const n = document.head.querySelector(sel); if (n && val) n.setAttribute(attr, val); };
   if (description) {
@@ -13,7 +13,7 @@ export function setMeta({ title, description, canonicalHash, ogImage }) {
   }
   set('meta[property="og:title"]', 'content', document.title);
   set('meta[name="twitter:title"]', 'content', document.title);
-  const url = BASE_URL + (canonicalHash ? '#' + canonicalHash : '');
+  const url = BASE_URL + (canonicalPath ? canonicalPath.replace(/^\/+|\/+$/g, '') + '/' : '');
   set('link[rel="canonical"]', 'href', url);
   set('meta[property="og:url"]', 'content', url);
   if (ogImage) {
@@ -44,7 +44,7 @@ export function setProductJsonLd(p) {
     image: imgs,
     offers: {
       '@type': 'Offer', priceCurrency: cur, price: String(price),
-      availability: avail, url: BASE_URL + '#product/' + p.slug,
+      availability: avail, url: BASE_URL + 'product/' + p.slug + '/',
     },
   };
   const s = document.createElement('script');

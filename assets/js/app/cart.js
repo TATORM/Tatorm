@@ -1,5 +1,6 @@
 import { btnShop } from './dom.js';
 import { esc, money, pictureHTML } from './utils.js';
+import { go } from './url.js';
 
 /* ─── Carrello ───────────────────────────────
    Righe unite per variante (slug|colore|taglia) con quantità.
@@ -103,7 +104,7 @@ export function renderCart() {
       '<button class="cart-continue" id="cart-continue" type="button">Continue shopping</button>';
     footer.classList.add('hidden');
     document.getElementById('cart-continue')
-      ?.addEventListener('click', () => { closeCart(); location.hash = '#shop'; });
+      ?.addEventListener('click', () => { closeCart(); go('shop'); });
     return;
   }
 

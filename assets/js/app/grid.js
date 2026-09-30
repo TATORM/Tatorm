@@ -41,7 +41,7 @@ export function pgridCardHTML(p, colorIdx) {
       ).join('')}</span>`
     : '';
   return `
-    <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="#product/${p.slug}" data-slug="${p.slug}">
+    <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="/product/${p.slug}/" data-slug="${p.slug}">
       <span class="pgrid-media${img.flat ? ' is-flat' : ''}">
         ${media}
         ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}

@@ -8,17 +8,17 @@ base('Shopify irraggiungibile: lo shop funziona con la copia del catalogo', asyn
   await mockShopify(page, { down: true });
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  await page.goto('/#shop');
+  await page.goto('/shop/');
   await page.waitForFunction(() => window.TATO_shopify && window.TATO_shopify.state === 'snapshot', null, { timeout: 20_000 });
   await expect(page.locator('#shop-grid .pgrid-card').first()).toBeVisible();
-  await page.goto('/#product/2-button-shirt');
+  await page.goto('/product/2-button-shirt/');
   await expect(page.locator('.pdp-name')).toHaveText('2 BUTTON SHIRT');
   expect(errors).toEqual([]);
 });
 
 base('Shopify lento: la pagina non resta appesa', async ({ page }) => {
   await page.route('https://pshgtp-ak.myshopify.com/api/**', () => { /* mai risposta */ });
-  await page.goto('/#shop');
+  await page.goto('/shop/');
   await expect(page.locator('#shop-grid .pgrid-card').first()).toBeVisible();   // subito, dalla copia
   await page.waitForFunction(() => window.TATO_shopify.state !== 'loading', null, { timeout: 20_000 });
 });

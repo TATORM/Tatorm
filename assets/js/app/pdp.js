@@ -5,6 +5,7 @@ import { showSection } from './nav.js';
 import { PRODUCTS } from './shop.js';
 import { state } from './state.js';
 import { esc, money, pictureHTML, shuffle } from './utils.js';
+import { go } from './url.js';
 
 /* ─── PDP: scheda prodotto ─────────────────
    Shopify (window.TATO_shopify) è fonte autorevole per prezzo,
@@ -174,8 +175,8 @@ export function renderPDP(slug) {
             <p>${esc(p.composition)}<br>${esc(p.care)}</p>
           </div>
           <div class="pdp-tab-panel" data-panel="ship">
-            <p><a href="#shipping" data-section="shipping">Shipping information</a><br>
-            <a href="#returns" data-section="returns">Returns &amp; refunds</a></p>
+            <p><a href="/shipping/">Shipping information</a><br>
+            <a href="/returns/">Returns &amp; refunds</a></p>
           </div>
         </div>
       </div>
@@ -188,9 +189,6 @@ export function renderPDP(slug) {
   pdpEl.querySelector('#pdp-sizeguide')?.addEventListener('click', openGuide);
   pdpEl.querySelector('#pdp-sizeguide-2')?.addEventListener('click', openGuide);
 
-  pdpEl.querySelectorAll('[data-section]').forEach(a => {
-    a.addEventListener('click', e => { e.preventDefault(); location.hash = '#' + a.dataset.section; });
-  });
 
   pdpEl.querySelectorAll('.pdp-color').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -224,7 +222,7 @@ export function renderPDP(slug) {
     });
   });
 
-  document.getElementById('pdp-back')?.addEventListener('click', () => { location.hash = '#shop'; });
+  document.getElementById('pdp-back')?.addEventListener('click', () => { go('shop'); });
 
   pdpEl.querySelectorAll('[data-look-ref]').forEach(a => {
     a.addEventListener('click', e => {
@@ -319,7 +317,7 @@ export function renderPDPMissing() {
       ${picks.length ? `<p class="pdp-missing-sub">You may also like</p>
       <div class="pgrid pdp-missing-grid">${picks.map(p => pgridCardHTML(p)).join('')}</div>` : ''}
     </div>`;
-  document.getElementById('pdp-back')?.addEventListener('click', () => { location.hash = '#shop'; });
+  document.getElementById('pdp-back')?.addEventListener('click', () => { go('shop'); });
 }
 
 export function initSizeGuide() {

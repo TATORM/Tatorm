@@ -1,4 +1,5 @@
 import { logo, splashBg } from './dom.js';
+import { ROUTE_EVENT } from './url.js';
 
 export function initIntro() {
 /* ═══════════════════════════════════════════
@@ -79,7 +80,7 @@ window.addEventListener('load', () => {
     });
   }
   /* cambiando pagina l'header torna sempre visibile */
-  window.addEventListener('hashchange', () => { acc = 0; lastY = 0; setHidden(false); });
+  window.addEventListener(ROUTE_EVENT, () => { acc = 0; lastY = 0; setHidden(false); });
   window.addEventListener('scroll', onScroll, { passive: true });
   document.body.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

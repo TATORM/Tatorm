@@ -18,8 +18,10 @@
      meta        title/description/OG + JSON-LD
      router      rotte hash (#shop, #product/…)
      theme       dark/light
+     url         indirizzi veri (/product/…), link interni, vecchi #…
    Qui si avviano nello stesso ordine di prima.
    ═══════════════════════════════════════════ */
+import { initUrl } from './app/url.js';
 import { initHome } from './app/home.js';
 import { initIntro } from './app/intro.js';
 import { initNav } from './app/nav.js';
@@ -32,6 +34,8 @@ import { initTheme } from './app/theme.js';
 
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
+
+initUrl();      // prima di tutto: converte i vecchi link #… nel percorso vero
 
 initHome();
 initIntro();

@@ -50,6 +50,16 @@
   activeLook). index.html carica `main.js` come `type="module"`.
   Dev: `npm run dev` (scripts/serve.mjs, porta 8777, Cache-Control no-store —
   con python http.server i moduli restano in cache).
+- **URL veri** (punto 5): History API al posto di #hash (`app/url.js`: `go()`,
+  `setUrl()`, `currentRoute()`, click sui link interni intercettati, evento
+  `tato:route`, vecchi `#product/…` convertiti). `<base href="/">` in index.html.
+  Build: `scripts/prerender.mjs` scrive `_site/<rotta>/index.html` per prodotti,
+  shop/reparti/categorie, collection, about, info (noindex) con title,
+  description, canonical, OG (immagine CDN 1200px), `product:price`, JSON-LD
+  Product; genera `sitemap.xml` (quella statica eliminata). Prodotto aggiunto
+  dopo il build → `404.html` + `/404.js` → `/#product/x` → url.js. Dev server
+  (`scripts/serve.mjs`) serve index.html per le rotte; `DIR=_site` imita
+  l'hosting (usato da `npm run preview` e dai test). Test: `tests/e2e/urls.spec.mjs`.
 - Piano sicurezza/struttura concordato (30/09): 1 ✅ catalogo Shopify →
   2 sicurezza (deploy solo dist/, escape innerHTML, CSP, token .git/config,
   main protetto, scope token Storefront) → 3 test Playwright in CI →
