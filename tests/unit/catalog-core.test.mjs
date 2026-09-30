@@ -41,6 +41,7 @@ test('prodotto base: nome, prezzo, composizione, descrizione, lavaggio', () => {
   assert.equal(p.category, 'outerwear');
   assert.equal(p.composition, '100% Nylon');
   assert.equal(p.description, 'Ribbed collar. Designed in Rome, Made in Italy.');
+  assert.deepEqual(p.details, ['Ribbed collar', 'Designed in Rome, Made in Italy']);
   assert.equal(p.care, 'Dry clean only');
   assert.deepEqual(p.genders, ['women', 'men']);
 });

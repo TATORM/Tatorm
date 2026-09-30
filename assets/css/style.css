@@ -1767,6 +1767,15 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 .pdp-tab-panel a:hover { color: var(--black); border-color: var(--black); }
+/* Descrizione: una voce per riga, come l'elenco su Shopify */
+.pdp-details {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  font-size: 0.62rem;
+  line-height: 1.7;
+  color: var(--gray);
+}
 .pdp-seenin { margin-top: 6px; }
 .pdp-inline-link {
   background: none; border: 0; padding: 0;
@@ -2554,7 +2563,7 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   .pdp-tab { color: rgba(255,255,255,0.55); }
   .pdp-tab:hover, .pdp-tab.active { color: #fff; }
   .pdp-tab.active { border-bottom-color: #fff; }
-  .pdp-tab-panel p { color: rgba(255,255,255,0.65); }
+  .pdp-tab-panel p, .pdp-details { color: rgba(255,255,255,0.65); }
   .pdp-tab-panel a, .pdp-inline-link { color: #fff; border-bottom-color: rgba(255,255,255,0.35); }
   .pdp-complete-title { color: #fff; }
   .pdp-complete { padding: 0; }

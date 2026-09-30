@@ -120,11 +120,18 @@
     const text = s => s.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
     const items = [];
     String(html || '').replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_, x) => { const t = text(x); if (t) items.push(t); });
-    if (!items.length) return { composition: '', description: text(String(html || '')) };
+    if (!items.length) {
+      const t = text(String(html || ''));
+      return { composition: '', description: t, details: t ? [t] : [] };
+    }
     const ci = items.findIndex(t => /\d+\s*%/.test(t));
     const composition = ci >= 0 ? items[ci] : '';
     const rest = items.filter((_, i) => i !== ci);
-    return { composition, description: rest.map(t => /[.!?]$/.test(t) ? t : t + '.').join(' ') };
+    return {
+      composition,
+      description: rest.map(t => /[.!?]$/.test(t) ? t : t + '.').join(' '),   // testo unico (meta, SEO)
+      details: rest,                                                         // una riga per voce (PDP)
+    };
   }
 
   const HEX_RE = /^#[0-9a-f]{3,8}$/i;   // finisce in style="…": solo codici colore validi
@@ -185,6 +192,7 @@
       composition: desc.composition,
       care: (node.care && node.care.value) || '',
       description: desc.description,
+      details: desc.details,
       colors,
       genders: gen.list,
       lookRefs: [],

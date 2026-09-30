@@ -1405,7 +1405,8 @@ function renderPDP(slug) {
         </div>
         <div class="pdp-tab-panels">
           <div class="pdp-tab-panel active" data-panel="desc">
-            <p>${esc(p.description)}</p>
+            <ul class="pdp-details">${(p.details && p.details.length ? p.details : [p.description])
+              .map(t => `<li>${esc(t)}</li>`).join('')}</ul>
             ${lookN ? `<p class="pdp-seenin">Seen in ${(p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ')}</p>` : ''}
           </div>
           <div class="pdp-tab-panel" data-panel="fit">
