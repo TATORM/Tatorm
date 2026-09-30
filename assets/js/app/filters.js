@@ -3,7 +3,7 @@
    ─────────────────────────────────────────
    Pannello laterale (stile carrello) aperto da "Filter & sort".
    Stato nell'indirizzo, così una vista filtrata si condivide:
-     ?size=1,2  &color=Black,Navy  &stock=1  &price=200-500  &sort=price-asc
+     ?dept=women  &size=1,2  &color=Black,Navy  &stock=1  &price=200-500  &sort=price-asc
    Le opzioni mostrate sono quelle presenti nella vista corrente
    (reparto/categoria), prima dei filtri.
    ═══════════════════════════════════════════ */
@@ -25,6 +25,7 @@ const list = v => (v ? v.split(',').map(decodeURIComponent).filter(Boolean) : []
 export function readFilters() {
   const q = new URLSearchParams(location.search);
   return {
+    dept: ['women', 'men'].includes(q.get('dept')) ? q.get('dept') : '',
     size: list(q.get('size')),
     color: list(q.get('color')),
     stock: q.get('stock') === '1',
@@ -39,18 +40,19 @@ function writeFilters(f) {
   const old = new URLSearchParams(location.search);
   const q = new URLSearchParams();
   const set = (k, v) => { if (v) q.set(k, v); };
+  set('dept', f.dept);
   set('size', f.size.join(','));
   set('color', f.color.join(','));
   set('stock', f.stock ? '1' : '');
   set('price', f.price);
   set('sort', f.sort);
-  old.forEach((v, k) => { if (!['size', 'color', 'stock', 'price', 'sort'].includes(k)) q.append(k, v); });
+  old.forEach((v, k) => { if (!['dept', 'size', 'color', 'stock', 'price', 'sort'].includes(k)) q.append(k, v); });
   const qs = q.toString().replace(/%2C/g, ',');
   history.replaceState(null, '', location.pathname + (qs ? '?' + qs : ''));
 }
 
 export function activeCount(f) {
-  return f.size.length + f.color.length + (f.stock ? 1 : 0) + (f.price ? 1 : 0);
+  return (f.dept ? 1 : 0) + f.size.length + f.color.length + (f.stock ? 1 : 0) + (f.price ? 1 : 0);
 }
 
 /* ── dati Shopify (se pronti) ─────────────── */
@@ -67,6 +69,7 @@ function available(p, color, size) {
 /* Un prodotto passa se esiste un suo colore (tra quelli scelti) con una
    taglia (tra quelle scelte), disponibile se "In stock" è attivo. */
 function matches(p, f) {
+  if (f.dept && !(p.genders || ['women', 'men']).includes(f.dept)) return false;
   const colors = f.color.length ? p.colors.filter(c => f.color.includes(c.name)) : p.colors;
   if (!colors.length) return false;
   const okVariant = colors.some(c => c.sizes.some(s =>
@@ -96,7 +99,8 @@ function optionsFor(products) {
   }));
   sizes.sort((a, b) => (isNaN(a) ? 1 : 0) - (isNaN(b) ? 1 : 0) || Number(a) - Number(b) || a.localeCompare(b));
   const bands = PRICE_BANDS.filter(b => products.some(p => { const pr = priceOf(p); return pr >= b.min && pr < b.max; }));
-  return { sizes, colors: [...colors].map(([name, hex]) => ({ name, hex })), bands };
+  const depts = products.some(p => p.category !== 'accessories');
+  return { sizes, colors: [...colors].map(([name, hex]) => ({ name, hex })), bands, depts };
 }
 
 /* ── pannello ─────────────────────────────── */
@@ -112,6 +116,9 @@ function render() {
     <fieldset class="filter-group"><legend>Sort by</legend>
       ${SORTS.map(s => chip('sort', s.id, s.label, f.sort === s.id)).join('')}
     </fieldset>
+    ${o.depts ? `<fieldset class="filter-group"><legend>Department</legend>
+      ${chip('dept', 'women', 'Women', f.dept === 'women')}${chip('dept', 'men', 'Men', f.dept === 'men')}
+    </fieldset>` : ''}
     ${o.sizes.length > 1 ? `<fieldset class="filter-group"><legend>Size</legend>
       ${o.sizes.map(s => chip('size', s, esc(s), f.size.includes(s))).join('')}
     </fieldset>` : ''}
@@ -137,6 +144,7 @@ function toggle(group, value) {
     if (i >= 0) arr.splice(i, 1); else arr.push(value);
   } else if (group === 'stock') f.stock = !f.stock;
   else if (group === 'price') f.price = f.price === value ? '' : value;
+  else if (group === 'dept') f.dept = f.dept === value ? '' : value;
   else if (group === 'sort') f.sort = value;
   writeFilters(f);
   render();

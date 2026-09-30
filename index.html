@@ -111,9 +111,16 @@
   </div>
 
   <!-- Navigazione -->
-  <nav class="site-nav">
-    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">MENU</button>
-    <ul class="nav-links" id="nav-links"></ul>
+  <div class="site-nav">
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-drawer">MENU</button>
+  </div>
+  <!-- Menu: pannello da sinistra, uguale su desktop, tablet e mobile -->
+  <div class="menu-overlay" id="menu-overlay"></div>
+  <nav class="menu-drawer" id="menu-drawer" aria-label="Main menu" aria-hidden="true">
+    <div class="menu-drawer-head">
+      <button class="cart-close menu-close" id="menu-close" type="button" aria-label="Close menu"></button>
+    </div>
+    <ul class="nav-links" id="nav-links"><!-- popolato da app/nav.js --></ul>
   </nav>
 
   <!-- ══════════════════════════════════════════

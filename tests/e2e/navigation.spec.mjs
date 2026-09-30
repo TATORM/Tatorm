@@ -19,7 +19,7 @@ test('Collection: pannello del look con link Shop ai capi in vendita', async ({ 
 });
 
 test('Rotte dirette e tasto indietro', async ({ page, shopify }) => {
-  await page.goto('/shop/women/');
+  await page.goto('/shop/?dept=women');
   await expect(page.locator('#shop-title')).toHaveText('Women');
   await page.goto('/product/2-button-shirt/');
   await expect(page.locator('.pdp-name')).toHaveText('2 BUTTON SHIRT');

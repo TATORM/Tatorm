@@ -19,25 +19,6 @@
     transform: translateX(-50%);
     width: 74px;
   }
-  html body .site-nav,
-  html body.header-scrolled:not(.shop-mode) .site-nav {
-    top: 58px;
-    transform: none;
-  }
-
-  /* Menu aperto: pannello bianco leggibile anche sopra le foto
-     (il mix-blend dell'header rende il testo illeggibile sulle immagini) */
-  .site-nav:has(.nav-links.open) {
-    mix-blend-mode: normal;
-    background: var(--white);
-    padding: 14px 18px 18px;
-    margin: -14px -18px 0 0;
-  }
-  .site-nav:has(.nav-links.open) .nav-toggle,
-  .site-nav:has(.nav-links.open) .nav-links > li > a,
-  .site-nav:has(.nav-links.open) .nav-group-toggle,
-  .site-nav:has(.nav-links.open) .nav-sub a { color: var(--black); }
-
   /* ── Pagina prodotto: 50 / 50 ───────────────────────────── */
   .pdp-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 3vw; }
   .pdp-info { padding: 0 4vw 0 0; }

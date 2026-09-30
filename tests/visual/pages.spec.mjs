@@ -30,7 +30,7 @@ const PAGES = [
   { name: 'home', url: '/' },
   { name: 'home-griglia', url: '/', scrollTo: '#home-feed .home-pgrid' },
   { name: 'shop', url: '/shop/' },
-  { name: 'shop-women-pants', url: '/shop/women/pants/' },
+  { name: 'shop-women-pants', url: '/shop/pants/?dept=women' },
   { name: 'prodotto', url: '/product/tobi-pants/' },
   { name: 'prodotto-dettagli', url: '/product/tobi-pants/', scrollTo: '.pdp-tabs' },
   { name: 'prodotto-complete-look', url: '/product/tobi-pants/', scrollTo: '.pdp-complete' },
@@ -60,7 +60,6 @@ test('menu-aperto', async ({ page }) => {
   await page.goto('/');
   await settle(page);
   await page.locator('#nav-toggle').click();
-  await page.locator('.nav-group-toggle').first().click();
   await page.waitForTimeout(600);
   await expect(page).toHaveScreenshot('menu-aperto.png');
 });

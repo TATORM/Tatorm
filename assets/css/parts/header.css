@@ -27,8 +27,7 @@
    Finale: left 3vw → vicino al bordo sinistro
 
    Posizione finale specchiata con .fixed-look-info:
-   logo:  left 3vw, top 50%
-   testo: right 3vw, top 50%
+   logo:  in alto al centro (dopo lo splash)
    ═══════════════════════════════════════════ */
 .site-logo {
   position: fixed;
@@ -52,27 +51,19 @@
   display: block;
 }
 
-/* Stato finale: vicino al bordo sinistro, centrato verticalmente */
+/* Stato finale (dopo lo splash), uguale su tutte le pagine:
+   logo in alto al centro, MENU in alto a sinistra, icone a destra.
+   (Il nome .logo--left è storico: prima il logo finiva a sinistra.) */
 .site-logo.logo--left {
-  left: 3vw;
-  width: var(--logo-w-final);
-  /* transform: translateY(-50%) — non cambia (salvo scroll, vedi sotto) */
-  transition: left var(--dur-4) var(--ease), width var(--dur-4) var(--ease), top var(--dur-3) ease, transform var(--dur-3) ease;
+  top: 24px;
+  left: 50%;
+  width: 74px;
+  transform: translateX(-50%);
+  transition: left var(--dur-4) var(--ease), width var(--dur-4) var(--ease),
+              top var(--dur-4) var(--ease), transform var(--dur-4) var(--ease);
 }
 
 .site-logo.logo--left:hover { opacity: 0.5; transition: opacity var(--dur-1) ease; }
-
-/* Scendendo con lo scroll, il logo lascia il centro verticale e si
-   ancora in alto a sx (stessa quota di .top-icons a dx) per liberare
-   il centro schermo. Non su shop-mode: lì il logo è già in alto.
-   Solo desktop: su mobile logo/MENU stanno già fissi in alto e questa
-   regola ne rompeva la centratura (translateY sovrascriveva translateX). */
-@media (min-width: 769px) {
-  body.header-scrolled:not(.shop-mode) .site-logo.logo--left {
-    top: 26px;
-    transform: translateY(0);
-  }
-}
 
 
 /* ═══════════════════════════════════════════
@@ -96,88 +87,7 @@
 .icon-btn:hover { opacity: 0.3; }
 .icon-btn img, .icon-btn svg { width: 100%; height: 100%; object-fit: contain; }
 
-.site-nav {
-  position: fixed;
-  right: 26px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 50;
-  text-align: right;
-  transition: top var(--dur-3) ease, transform var(--dur-3) ease;
-}
-/* Scendendo con lo scroll, il MENU lascia il centro verticale e si
-   ancora in alto a dx, sotto la riga di .top-icons — mirror del logo. */
-@media (min-width: 769px) {
-  body.header-scrolled:not(.shop-mode) .site-nav {
-    top: 58px;
-    transform: translateY(0);
-  }
-}
-.nav-toggle {
-  font-size: var(--fs-xs); letter-spacing: var(--ls-5);
-  transition: opacity var(--dur-1) ease;
-}
-.nav-toggle:hover { opacity: 0.4; }
-
-.nav-links {
-  margin-top: 20px;
-  list-style: none; padding: 0;
-  display: flex; flex-direction: column;
-  gap: 8px;
-  max-height: 0; overflow: hidden; opacity: 0;
-  transition: max-height var(--dur-3) ease, opacity var(--dur-3) ease;
-}
-.nav-links.open { max-height: 78vh; overflow-y: auto; opacity: 1; }
-.nav-links li { list-style: none; }
-
-/* Voci di primo livello + toggle Women/Men */
-.nav-links > li > a,
-.nav-group-toggle {
-  display: block;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  text-align: right;
-  background: none;
-  border: 0;
-  font-family: var(--font);
-  font-weight: 500;
-  /* stessa dimensione del bottone MENU (.nav-toggle) */
-  font-size: var(--fs-xs);
-  letter-spacing: var(--ls-3);
-  line-height: 1;
-  color: var(--gray);
-  cursor: pointer;
-  transition: color var(--dur-1) ease;
-}
-.nav-links > li > a:hover,
-.nav-group-toggle:hover { color: var(--black); }
-.nav-group.open > .nav-group-toggle {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-/* Sottomenu categorie */
-.nav-sub {
-  list-style: none;
-  margin: 0; padding: 0;
-  max-height: 0; overflow: hidden;
-  transition: max-height var(--dur-3) ease;
-}
-.nav-group.open > .nav-sub { max-height: 460px; margin-top: 8px; }
-.nav-sub a {
-  display: block;
-  text-align: right;
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-4);
-  text-transform: uppercase;
-  line-height: 1;
-  padding: 5px 0;
-  color: var(--black);
-  opacity: 0.6;
-  transition: opacity var(--dur-1) ease;
-}
-.nav-sub a:hover { opacity: 1; }
+/* MENU (e il pannello che apre) → vedi menu.css */
 
 /* Desktop: logo + HUD in negativo via mix-blend-mode, stessa tecnica già
    usata su mobile (vedi media query ≤768px) — si autoadattano al contrasto
@@ -194,14 +104,7 @@
     filter: invert(1);
   }
   .icon-btn,
-  .nav-toggle,
-  .nav-links > li > a,
-  .nav-group-toggle,
-  .nav-sub a {
-    color: #fff;
-  }
-  .nav-links > li > a:hover,
-  .nav-group-toggle:hover {
+  .nav-toggle {
     color: #fff;
   }
   /* Il toggle dark/light usa var(--black), quasi nero: contro uno sfondo
@@ -211,5 +114,3 @@
   .toggle-thumb { background: #fff; }
 }
 
-/* Riga vuota tra Accessories e Collection */
-.nav-spacer { height: 1.7em; }

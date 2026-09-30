@@ -41,10 +41,12 @@ function emit() {
 }
 
 /* Naviga a una rotta (nuova voce di cronologia) */
-export function go(route) {
+export function go(route, search = '') {
   const path = routeToPath(route);
-  // i parametri (filtri dello shop…) appartengono alla pagina che si lascia
-  if (location.pathname !== path || location.hash || location.search) history.pushState(null, '', path);
+  // i parametri della pagina che si lascia (filtri…) non si trascinano;
+  // si tengono solo quelli del link (es. /shop/?dept=women)
+  const target = path + (search && search !== '?' ? search : '');
+  if (location.pathname + location.search !== target || location.hash) history.pushState(null, '', target);
   emit();
 }
 
@@ -61,17 +63,18 @@ function onClick(e) {
   if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
   const href = a.getAttribute('href');
   if (href === '#' || href === '') { e.preventDefault(); return; }   // link "finti" gestiti da JS
-  let route = null;
+  let route = null, search = '';
   if (href.startsWith('#')) {
     route = trim(href.slice(1));                                   // vecchio formato #shop/…
   } else {
     const url = new URL(a.href, location.href);
     if (url.origin !== location.origin) return;
     route = trim(url.pathname);
+    search = url.search;
   }
   if (!isAppRoute(route)) return;
   e.preventDefault();
-  go(route);
+  go(route, search);
 }
 
 export function initUrl() {

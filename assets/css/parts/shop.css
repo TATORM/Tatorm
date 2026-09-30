@@ -25,20 +25,6 @@ body.shop-mode .site-logo.logo--left {
   width: 74px;
   transition: none;
 }
-/* Shop / prodotto: su mobile niente MENU (ci sono le pill categorie);
-   su desktop il MENU resta, ancorato in alto a dx sotto le icone
-   (stessa posizione di Home scrollata). */
-@media (max-width: 768px) {
-  body.shop-mode .site-nav { display: none; }
-}
-@media (min-width: 769px) {
-  body.shop-mode .site-nav {
-    top: 58px;
-    transform: translateY(0);
-    transition: none;
-  }
-}
-
 /* Il breadcrumb fisso non serve in shop-mode: c'è il MENU in header */
 body.shop-mode .collection-breadcrumb { display: none !important; }
 
@@ -111,6 +97,7 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
      in uscita/entrata come le app native. */
   body.shop-mode .site-logo,
   body.shop-mode .site-logo.logo--left,
+  body.shop-mode .site-nav,
   body.shop-mode .top-icons {
     transition:
       transform var(--dur-3) var(--ease-out),
@@ -123,6 +110,7 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
     opacity: 0;
     pointer-events: none;
   }
+  body.shop-mode.header-hidden .site-nav,
   body.shop-mode.header-hidden .top-icons {
     transform: translate3d(0, -72px, 0);
     opacity: 0;

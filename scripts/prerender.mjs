@@ -89,10 +89,6 @@ function productPage(p, node, fetchedAt) {
   };
 }
 
-function shopLabel(scope, cat, labels) {
-  const s = scope === 'women' ? 'Women' : scope === 'men' ? 'Men' : scope === 'accessories' ? 'Accessories' : 'New Arrivals';
-  return cat ? `${s} / ${labels[cat] || cat}` : s;
-}
 
 export async function prerender({ root, out }) {
   const html = await readFile(path.join(out, 'index.html'), 'utf8');
@@ -100,26 +96,21 @@ export async function prerender({ root, out }) {
   const products = W.TATO_PRODUCTS;
   const nodes = (W.TATO_CATALOG_SNAPSHOT && W.TATO_CATALOG_SNAPSHOT.nodes) || [];
   const fetchedAt = ((W.TATO_CATALOG_SNAPSHOT && W.TATO_CATALOG_SNAPSHOT.fetchedAt) || new Date().toISOString()).slice(0, 10);
-  const labels = W.TATO_ALL_CATEGORY_LABELS;
   const pages = [];   // { route, meta }
 
-  const shop = (route, scope, cat) => {
-    const label = shopLabel(scope, cat, labels);
+  const shop = (route, label) => {
     pages.push({ route, meta: {
       title: `${label} — TATO`,
       description: `Shop ${label} — TATO. Independent fashion, designed in Rome, made in Italy.`,
       url: `${BASE}${route}/`,
     } });
   };
-  shop('shop', 'new', null);
-  shop('shop/accessories', 'accessories', null);
-  for (const g of ['women', 'men']) {
-    shop(`shop/${g}`, g, null);
-    for (const c of W.TATO_categoriesFor(g)) shop(`shop/${g}/${c.slug}`, g, c.slug);
-  }
+  shop('shop', 'All');
+  if (products.some(p => (p.badges || []).includes('New'))) shop('shop/new', 'New Arrivals');
   for (const c of W.TATO_CATEGORIES) {
-    if (products.some(p => p.category === c.slug)) shop(`shop/${c.slug}`, 'new', c.slug);
+    if (products.some(p => p.category === c.slug)) shop(`shop/${c.slug}`, c.label);
   }
+  if (products.some(p => p.category === 'accessories')) shop('shop/accessories', 'Accessories');
   pages.push({ route: 'collection', meta: {
     title: 'Collection — TATO',
     description: 'The TATO collection — 21 looks. Designed in Rome, made in Italy.',

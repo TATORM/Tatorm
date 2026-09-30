@@ -196,7 +196,7 @@ export function renderHomeDepartments() {
   depts.forEach(d => {
     const a = document.createElement('a');
     a.className = 'home-dept';
-    a.href = `/shop/${d.slug}/`;
+    a.href = `/shop/?dept=${d.slug}`;
     a.style.setProperty('--hx', d.head[0]);
     a.style.setProperty('--hy', d.head[1]);
     a.style.setProperty('--zoom', d.zoom);

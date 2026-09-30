@@ -62,17 +62,22 @@ export function handleShopRoute() {
   if (route === 'shop') {
     const isCat = slug => CATEGORIES.some(c => c.slug === slug);
     if (a === 'women' || a === 'men') {
-      state.shopScope    = a;
-      state.shopCategory = isCat(b) ? b : 'all';
+      // vecchio /shop/women[/cat]/ → /shop/[cat/]?dept=women (reparto = filtro)
+      const cat = isCat(b) ? b : '';
+      const q = new URLSearchParams(location.search);
+      q.set('dept', a);
+      history.replaceState(null, '', `/shop/${cat ? cat + '/' : ''}?${q.toString()}`);
+      state.shopScope = 'all';
+      state.shopCategory = cat || 'all';
+    } else if (a === 'new') {
+      state.shopScope = 'new';
+      state.shopCategory = 'all';
     } else if (a === 'accessories') {
-      state.shopScope    = 'accessories';
+      state.shopScope = 'accessories';
       state.shopCategory = 'all';
-    } else if (isCat(a)) {
-      state.shopScope    = 'new';
-      state.shopCategory = a;
     } else {
-      state.shopScope    = 'new';
-      state.shopCategory = 'all';
+      state.shopScope = 'all';
+      state.shopCategory = isCat(a) ? a : 'all';
     }
     renderShop();
     showSection('shop');
@@ -82,7 +87,7 @@ export function handleShopRoute() {
     setMeta({
       title: label,
       description: `Shop ${label} — TATO. Independent fashion, designed in Rome, made in Italy.`,
-      canonicalPath: hash,
+      canonicalPath: currentRoute(),
     });
   }
 }

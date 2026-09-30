@@ -1,14 +1,16 @@
 import { test, expect, shopifyReady, mockShopify, NODES } from './fixtures.mjs';
 import { test as base } from '@playwright/test';
 
-test('Shop: tutti i prodotti tranne gli accessori, filtri per reparto e categoria', async ({ page, shopify }) => {
+test('Shop: All = tutti i prodotti, pill per categoria', async ({ page, shopify }) => {
   await page.goto('/shop/');
   await shopifyReady(page);
-  const expected = await page.evaluate(() => window.TATO_PRODUCTS.filter(p => p.category !== 'accessories').length);
+  await expect(page.locator('#shop-title')).toHaveText('All');
+  const expected = await page.evaluate(() => window.TATO_PRODUCTS.length);
   await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(expected);
 
   await page.locator('#shop-pills').getByRole('link', { name: 'Pants', exact: true }).click();
   await expect(page).toHaveURL(/\/shop\/pants\/$/);
+  await expect(page.locator('#shop-title')).toHaveText('Pants');
   const pants = await page.evaluate(() => window.TATO_PRODUCTS.filter(p => p.category === 'pants').length);
   await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(pants);
 
@@ -104,4 +106,30 @@ test('Wishlist: salva da card e PDP, contatore, pagina /wishlist/, rimuovi', asy
   await page.locator('#shop-grid .wish-btn').first().click();
   await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(1);
   await expect(page.locator('#wish-badge')).toHaveText('1');
+});
+
+test('Menu: pannello da sinistra, voci Shop, chiusura e navigazione', async ({ page, shopify }) => {
+  await page.goto('/about/');
+  await page.locator('#nav-toggle').click();
+  const drawer = page.locator('#menu-drawer');
+  await expect(drawer).toHaveClass(/open/);
+  await expect(page.locator('#nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('Escape');
+  await expect(drawer).not.toHaveClass(/open/);
+  await page.locator('#nav-toggle').click();
+  await drawer.getByRole('link', { name: 'Outerwear' }).click();
+  await expect(page).toHaveURL(/\/shop\/outerwear\/$/);
+  await expect(drawer).not.toHaveClass(/open/);
+  await expect(page.locator('#shop-title')).toHaveText('Outerwear');
+});
+
+test('Reparto come filtro: Men dalla Home, vecchi link /shop/women/', async ({ page, shopify }) => {
+  await page.goto('/shop/women/skirts/');
+  await expect(page).toHaveURL(/\/shop\/skirts\/\?dept=women$/);
+  await expect(page.locator('#shop-title')).toHaveText('Women / Skirts');
+  await page.goto('/');
+  await page.locator('.home-dept[href="/shop/?dept=men"]').click();
+  await expect(page).toHaveURL(/\/shop\/\?dept=men$/);
+  await expect(page.locator('#shop-title')).toHaveText('Men');
+  await expect(page.locator('#shop-filter-btn')).toHaveText('Filter & sort (1)');
 });
