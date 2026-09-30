@@ -20,6 +20,22 @@
   non scrollabile, deve starci tutto (Look 11 = 4 capi). L'utente NON vuole
   toggle +/− : tutte le info (composizione, colore) sempre visibili.
 - Aperto: header a scomparsa da provare su telefono vero, push bloccato.
+- **Catalogo da Shopify** (`e1f45ba`): Shopify è l'UNICA fonte dei prodotti.
+  `assets/js/catalog-core.js` (config Storefront + trasformazione, gira in browser
+  e in Node) → `catalog-snapshot.js` generato da `npm run catalog`
+  (`scripts/fetch-catalog.mjs`, incluso in `npm run build`, stampa un controllo
+  qualità) → `products.js` costruisce `TATO_PRODUCTS` dalla copia →
+  `shopify.js` aggiorna dal vivo (timeout 6s, 2 tentativi, fallback alla copia).
+  Carrello riallineato (`reconcileCart`), PDP "no longer available", foto dalla
+  CDN Shopify (`cdnSrcset`), `media/products/` eliminata. Deploy: cron 30 min.
+  Guida + checklist per l'utente: `docs/shopify-prodotti.md`.
+  Aperto lato Shopify: tag `women` sulla Long Skirt, foto per colore Smock,
+  metafield `custom.care` (con accesso Storefront).
+- Piano sicurezza/struttura concordato (30/09): 1 ✅ catalogo Shopify →
+  2 sicurezza (deploy solo dist/, escape innerHTML, CSP, token .git/config,
+  main protetto, scope token Storefront) → 3 test Playwright in CI →
+  4 moduli script.js → 5 URL veri prodotto (prerender) → 6 Cloudflare Pages
+  (DNS Aruba; posta su Aruba mx.tatorm.com; manca SPF, DMARC p=none).
 
 ═══════════════════════════════════════════════════════════════════
 ## Sessione 28/09
