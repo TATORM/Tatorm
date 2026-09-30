@@ -65,6 +65,23 @@
   dopo il build → `404.html` + `/404.js` → `/#product/x` → url.js. Dev server
   (`scripts/serve.mjs`) serve index.html per le rotte; `DIR=_site` imita
   l'hosting (usato da `npm run preview` e dai test). Test: `tests/e2e/urls.spec.mjs`.
+- **Pomeriggio 30/09** (fino a `7f11fb9`):
+  design system (`assets/css/parts/*.css`, variabili in `tokens.css`: --fs-*, --ls-*,
+  --dur-*), test visivi locali `npm run test:visual` (64 schermate, 4 formati);
+  tablet 769–1180 (`tablet.css`); mobile a fondo bianco (via il negativo);
+  Home mobile: foto orizzontale al posto delle coppie, Men/Women 2:3 con teste
+  allineate (`--hx/--hy/--zoom` in home.js); shop: hover con foto del look,
+  etichette tag `new`/`exclusive`, filtri+ordinamento (`app/filters.js`, stato in
+  ?dept=&size=&color=&stock=&price=&sort=), wishlist (`app/wishlist.js`, /wishlist/).
+  **Header unico ovunque**: MENU in alto a sx, logo in alto al centro, icone a dx.
+  **Menu**: voci che scendono sotto MENU, testo piccolo, mix-blend, NIENTE pannello
+  bianco né sfumatura della pagina (l'utente li ha rifiutati entrambi).
+  **Shop**: /shop/ = All (accessori compresi), /shop/new/ (tag new), /shop/<cat>/;
+  Women/Men = filtro Department (?dept=), vecchi /shop/women/… convertiti.
+  Prossimi passi concordati: punto 2 (struttura contenuti Shopify: collezioni con
+  campagna+lookbook+archivio, Editorial, About, pagine info — serve setup utente
+  ~20 min con guida), poi ricerca, foto editoriali nella griglia shop, PDP (zoom,
+  visti di recente), motion, account, italiano. Cloudflare prima del lancio.
 - Piano sicurezza/struttura concordato (30/09): 1 ✅ catalogo Shopify →
   2 sicurezza (deploy solo dist/, escape innerHTML, CSP, token .git/config,
   main protetto, scope token Storefront) → 3 test Playwright in CI →
