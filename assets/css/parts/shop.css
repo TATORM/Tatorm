@@ -102,16 +102,9 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
     flex-shrink: 0;
     padding: 8px 14px;
     font-size: var(--fs-xs);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 999px;
-    font-size: var(--fs-xs);
     letter-spacing: var(--ls-3);
-    text-transform: uppercase;
-    color: #fff;
     white-space: nowrap;
   }
-  .shop-pill.is-active { background: #fff; color: #000; border-color: #fff; }
-  .shop-pill.is-scope { border-color: #fff; }   /* reparto attivo dentro una categoria */
 
   /* Header che si nasconde scendendo (Shop / prodotto): logo e icone
      salgono insieme della stessa quota con dissolvenza, curva "decelerate"

@@ -5,25 +5,10 @@
    ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Size guide + info in negativo su mobile */
-  .sizeguide { background: #111; color: #fff; border-color: rgba(255,255,255,0.14); }
-  .sizeguide-close { color: #fff; }
-  .sizeguide th, .sizeguide td { border-bottom-color: rgba(255,255,255,0.16); }
-  .sizeguide thead th { color: rgba(255,255,255,0.6); }
-  .sizeguide-how { color: rgba(255,255,255,0.5); }
-  .info-doc p { color: #fff; }
-  .info-flag { color: #e0a95c; background: rgba(224,169,92,0.12); border-color: rgba(224,169,92,0.5); }
   .cart-qty-btn { border-color: rgba(17,17,17,0.25); }
 
   :root { --image-width: 100vw; }
 
-  /* Tutto in negativo su mobile */
-  body {
-    background: #000;
-    color: #fff;
-  }
-
-  #splash-bg { background: #000; }
   #btn-theme { display: none; }
 
   /* Logo centrato in alto — mix-blend-mode inverte rispetto allo sfondo */
@@ -44,13 +29,29 @@
     transform: none; text-align: left;
     mix-blend-mode: difference;
   }
+  /* testo bianco + mix-blend difference = si inverte sullo sfondo
+     (nero sul bianco, chiaro sulle foto scure), come su desktop */
   .nav-toggle { color: #fff; }
   .nav-links { text-align: left; }
   .nav-links a,
   .nav-links > li > a,
   .nav-group-toggle,
   .nav-sub a { color: #fff; text-align: left; }
-  .nav-links a:hover { color: #fff; }
+
+  /* Menu aperto: pannello bianco a tutta larghezza, leggibile anche sopra le foto */
+  .site-nav:has(.nav-links.open) {
+    mix-blend-mode: normal;
+    background: var(--white);
+    top: 0; left: 0; right: 0;
+    padding: 18px 16px 28px;
+    box-shadow: 0 1px 0 var(--gray-light);
+  }
+  .site-nav:has(.nav-links.open) .nav-toggle,
+  .site-nav:has(.nav-links.open) .nav-links > li > a,
+  .site-nav:has(.nav-links.open) .nav-group-toggle,
+  .site-nav:has(.nav-links.open) .nav-sub a { color: var(--black); }
+  /* icone (monogramma, carrello) sopra al pannello del menu */
+  .top-icons { z-index: 51; }
 
   /* Icone mobile: visibili in alto a destra, nascondi solo toggle B/W */
   .top-icons {
@@ -126,13 +127,7 @@
     object-position: center center;
   }
 
-  /* About in negativo */
   .about-wrap { padding: 80px 28px; max-width: 100%; }
-  .about-label { color: rgba(255,255,255,0.5); }
-  .about-body { color: #fff; }
-  .about-contact-title { color: rgba(255,255,255,0.5); }
-  .about-contact-label { color: rgba(255,255,255,0.5); }
-  .about-contact a { color: #fff; }
 
   /* Breadcrumb in basso a sinistra — mix-blend-mode */
   .collection-breadcrumb {
@@ -269,29 +264,16 @@
     scroll-snap-align: none;
   }
   .shop-head { margin: 0 16px 36px; }
-  #shop { background: #000; }
-  #product { background: #000; }
-  #info { background: #000; }
   .info-wrap { padding: 24px 4px 60px; }
-  .shop-title { color: #fff; }
   .shop-grid,
   .pgrid {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 2px;
     row-gap: 44px;
   }
-  .ph-block,
-  body.dark-mode .ph-block { background: #1c1c1c; }
-  .pgrid-media { background: #1c1c1c; }
   /* packshot flat su mobile: meno aria interna, riempie di più */
   .pgrid-media.is-flat img { padding: 3% 5%; }
-  .product-card-name,
-  .pgrid-name,
-  .pgrid-price { color: #fff; }
   .pgrid-name { padding: 0 10px; line-height: 1.3; }
-  .product-card-meta,
-  .product-card-price { color: rgba(255,255,255,0.6); }
-  .pgrid-swatch { border-color: rgba(255,255,255,0.35); }
 
   /* ─── PDP mobile ──────────────────────────── */
   .pdp-main {
@@ -302,39 +284,17 @@
   }
   .pdp-gallery { grid-template-columns: 1fr 1fr; }
   .pdp-info { position: static; top: auto; padding: 0 16px; }
-  .pdp-back { color: rgba(255,255,255,0.55); }
-  .pdp-back:hover { color: #fff; }
-  .pdp-name, .pdp-color-name, .pdp-size-single { color: #fff; }
-  .pdp-material { color: rgba(255,255,255,0.6); }
-  .pdp-ref { color: rgba(255,255,255,0.4); }
-  .pdp-row-label, .pdp-size-hint, .pdp-pay-marks,
-  .pdp-delivery-note, .pdp-phone-note { color: rgba(255,255,255,0.5); }
-  .pdp-select-wrap { border-bottom-color: #fff; }
-  .pdp-select-wrap::after { border-color: #fff; }
-  .pdp-size-select { color: #fff; }
-  .pdp-size-select option { color: #000; }   /* il menu nativo resta chiaro */
-  .pdp-add-btn { background: #fff; color: #000; }
-  .pdp-add-price s { color: rgba(0,0,0,0.45); }
-  .pdp-express-btn { color: #fff; border-color: rgba(255,255,255,0.3); }
-  .pdp-express-btn:hover { border-color: #fff; }
-  .pdp-tabs { border-bottom-color: rgba(255,255,255,0.2); }
-  .pdp-tab { color: rgba(255,255,255,0.55); }
-  .pdp-tab:hover, .pdp-tab.active { color: #fff; }
-  .pdp-tab.active { border-bottom-color: #fff; }
-  .pdp-tab-panel p, .pdp-details { color: rgba(255,255,255,0.65); }
-  .pdp-tab-panel a, .pdp-inline-link { color: #fff; border-bottom-color: rgba(255,255,255,0.35); }
-  .pdp-complete-title { color: #fff; }
   .pdp-complete { padding: 0; }
   .pdp-complete-row { grid-template-columns: 1fr; gap: 0; }
   .pdp-complete-items {
     grid-template-columns: repeat(2, 1fr) !important;
-    padding: 0;                /* foto a filo, riempiono il nero */
+    padding: 0;                /* foto a filo */
     column-gap: 2px;
     row-gap: 28px;
   }
   .pdp-complete-items .pgrid-card { max-width: none; }
 
-  /* ─── Footer mobile (solo layout — i colori scuri sono già di base) ─── */
+  /* ─── Footer mobile (solo layout: il footer è scuro come su desktop) ─── */
   /* Niente snap sul footer: in Home era l'unico snap point, e al load
      (feed ancora vuoto → footer vicino) Chrome ci si agganciava e poi
      ci restava attaccato mentre il feed cresceva → pagina aperta in fondo. */
