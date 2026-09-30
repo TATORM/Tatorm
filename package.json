@@ -5,7 +5,7 @@
   "type": "module",
   "description": "tatorm.com — sito one-page statico (HTML/CSS/JS vanilla). Build con esbuild.",
   "scripts": {
-    "dev": "esbuild --servedir=. --serve=127.0.0.1:8000",
+    "dev": "node scripts/serve.mjs",
     "catalog": "node scripts/fetch-catalog.mjs",
     "build": "node scripts/fetch-catalog.mjs && node scripts/build.mjs",
     "preview": "esbuild --servedir=_site --serve=127.0.0.1:8001",

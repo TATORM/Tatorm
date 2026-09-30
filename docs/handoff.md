@@ -43,6 +43,13 @@
   con dati dal vivo (`sh.live`). esbuild 0.28, sharp 0.35.
 - Tipografia Collection desktop allineata alla PDP (pannello 0.54–0.62rem,
   breadcrumb 0.56rem).
+- **Moduli** (punto 4): `script.js` eliminato → `assets/js/app.js` (avvio, stesso
+  ordine di prima) + 16 moduli ES in `assets/js/app/` (state, dom, utils, grid,
+  home, intro, nav, newsletter, cart, collection, shop, pdp, info, meta, router,
+  theme). Stato condiviso in `app/state.js` (shopScope, shopCategory, pdp,
+  activeLook). index.html carica `main.js` come `type="module"`.
+  Dev: `npm run dev` (scripts/serve.mjs, porta 8777, Cache-Control no-store —
+  con python http.server i moduli restano in cache).
 - Piano sicurezza/struttura concordato (30/09): 1 ✅ catalogo Shopify →
   2 sicurezza (deploy solo dist/, escape innerHTML, CSP, token .git/config,
   main protetto, scope token Storefront) → 3 test Playwright in CI →

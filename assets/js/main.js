@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════
    TATO — entry del bundle di produzione
    ─────────────────────────────────────────
-   In SVILUPPO i tre file sono caricati singolarmente
-   dai <script> in index.html (tra i marker build:js).
+   In SVILUPPO index.html carica questo file come modulo
+   (<script type="module">) e il browser segue gli import.
    In PRODUZIONE scripts/build.mjs bundla questo file
    con esbuild in assets/dist/app-[hash].js.
 
@@ -10,10 +10,10 @@
    catalog-core.js (config + trasformazione Shopify) →
    catalog-snapshot.js (copia del catalogo, generata) →
    products.js (reparti, look, TATO_PRODUCTS) →
-   shopify.js (dati dal vivo) → script.js (UI).
+   shopify.js (dati dal vivo) → app.js (UI, moduli in app/).
    ═══════════════════════════════════════════ */
 import './catalog-core.js';
 import './catalog-snapshot.js';
 import './products.js';
 import './shopify.js';
-import './script.js';
+import './app.js';
