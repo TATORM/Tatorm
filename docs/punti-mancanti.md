@@ -30,7 +30,7 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 | | Punto | Stato | Chi | Cosa manca |
 |---|---|---|---|---|
 | [ ] | Ricerca | Manca | Io | — |
-| [ ] | Filtri per taglia, colore, disponibilità, prezzo | Manca | Io | Oggi solo reparto e categoria. |
+| [x] | Filtri per taglia, colore, disponibilità, prezzo | Manca | Io | Oggi solo reparto e categoria. |
 | [ ] | Wishlist | Manca | Io | — |
 | [ ] | Account cliente | Manca | Insieme | Shopify lo ha già: va collegato al sito. |
 
@@ -41,7 +41,7 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 | [ ] | Fotografie di alta qualità | A metà | Tu | Solo packshot tecnici, nessuna foto indossata. |
 | [ ] | Stati hover | A metà | Io | Solo una leggera dissolvenza. |
 | [x] | Cambio immagine all'hover | Manca | Tu (foto) · Io | Serve almeno una seconda foto per prodotto. |
-| [ ] | Filtri e ordinamento | Manca | Io | — |
+| [x] | Filtri e ordinamento | Manca | Io | — |
 | [x] | Etichette New / Exclusive | Manca | Io | Sold out c'è già. |
 | [ ] | Immagini editoriali nella griglia dello Shop | Manca | Io | Oggi solo in Home. |
 
