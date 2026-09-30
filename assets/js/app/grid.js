@@ -1,4 +1,5 @@
 import { esc, money, pictureHTML } from './utils.js';
+import { wishBtnHTML } from './wishlist.js';
 
 /* ═══════════════════════════════════════════
    GRIGLIA PRODOTTI condivisa (Shop + Home)
@@ -57,7 +58,7 @@ export function pgridCardHTML(p, colorIdx) {
         `<span class="pgrid-swatch${i === colorIdx ? ' is-active' : ''}" style="background:${c.hex}" aria-hidden="true"></span>`
       ).join('')}</span>`
     : '';
-  return `
+  return `<div class="pgrid-cell">
     <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="/product/${p.slug}/" data-slug="${p.slug}">
       <span class="pgrid-media${img.flat ? ' is-flat' : ''}${altMedia ? ' has-alt' : ''}">
         ${media}
@@ -68,7 +69,9 @@ export function pgridCardHTML(p, colorIdx) {
       <span class="pgrid-name">${esc(p.name)}</span>
       <span class="pgrid-price">${money(price, cur)}</span>
       ${colorInfo}
-    </a>`;
+    </a>
+    ${wishBtnHTML(p.slug)}
+  </div>`;
 }
 
 export function pgridHTML(list) {

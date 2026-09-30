@@ -84,3 +84,24 @@ test('Filtri e ordinamento: taglia, prezzo, URL condivisibile, azzera', async ({
   await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(total);
   await expect(page).toHaveURL(/\/shop\/$/);
 });
+
+test('Wishlist: salva da card e PDP, contatore, pagina /wishlist/, rimuovi', async ({ page, shopify }) => {
+  await page.goto('/shop/');
+  await shopifyReady(page);
+  await page.locator('#shop-grid .pgrid-cell').nth(0).locator('.wish-btn').click();
+  await expect(page.locator('#wish-badge')).toHaveText('1');
+  await page.goto('/product/tobi-pants/');
+  await page.locator('.wish-btn--pdp').click();
+  await expect(page.locator('.wish-btn--pdp')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#wish-badge')).toHaveText('2');
+  await page.locator('#btn-wish').click();
+  await expect(page).toHaveURL(/\/wishlist\/$/);
+  await expect(page.locator('#shop-title')).toHaveText('Wishlist');
+  await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(2);
+  await expect(page.locator('#shop-pills')).toBeHidden();
+  await page.reload();                                   // resta salvata
+  await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(2);
+  await page.locator('#shop-grid .wish-btn').first().click();
+  await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(1);
+  await expect(page.locator('#wish-badge')).toHaveText('1');
+});

@@ -124,3 +124,26 @@
 
 /* Griglia nella Home: a tutta larghezza. Lo stacco dal footer è su .home-feed. */
 .home-pgrid { margin: 8px 0; }
+
+/* Cella = card (link) + segnalibro wishlist accanto (un bottone non può
+   stare dentro un link) */
+.pgrid-cell { position: relative; display: flex; flex-direction: column; }
+.pgrid-cell > .pgrid-card { flex: 1; }
+
+/* Segnalibro wishlist: in alto a destra sulla foto (e accanto al nome in PDP) */
+.wish-btn {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--black);
+  opacity: 0.55;
+  transition: opacity var(--dur-1) ease;
+}
+.wish-btn svg { width: 16px; height: 16px; transition: fill var(--dur-1) ease; }
+.wish-btn:hover { opacity: 1; }
+.wish-btn.is-on { opacity: 1; }
+.wish-btn.is-on svg { fill: currentColor; }
+.pgrid-cell > .wish-btn { position: absolute; top: 6px; right: 6px; z-index: 2; }
+/* sulle foto a colori (hover sul capo indossato) resta leggibile */
+.pgrid-cell:hover > .wish-btn { color: #0a0a0a; }
+.wish-btn--pdp { margin: -6px -8px 0 auto; flex-shrink: 0; }
+.pgrid-empty a { display: block; margin-top: 14px; color: var(--black); text-decoration: underline; text-underline-offset: 4px; }

@@ -2,6 +2,7 @@ import { shopGrid, shopTitleEl } from './dom.js';
 import { pgridHTML } from './grid.js';
 import { state } from './state.js';
 import { activeCount, applyFilters, initFilters, openFilters, readFilters } from './filters.js';
+import { WISHLIST_EVENT, savedProducts } from './wishlist.js';
 
 /* ═══════════════════════════════════════════
    SHOP + PDP — prodotti singoli
@@ -28,6 +29,7 @@ export function renderShopHead() {
     state.shopScope === 'women'         ? 'Women'
     : state.shopScope === 'men'         ? 'Men'
     : state.shopScope === 'accessories' ? 'Accessories'
+    : state.shopScope === 'wishlist'    ? 'Wishlist'
     : 'New Arrivals';
   const cat = (state.shopCategory && state.shopCategory !== 'all')
     ? window.TATO_getCategoryLabel(state.shopCategory)
@@ -41,6 +43,8 @@ export function renderShopHead() {
 export function renderShopPills() {
   const nav = document.getElementById('shop-pills');
   if (!nav) return;
+  nav.hidden = state.shopScope === 'wishlist';
+  if (nav.hidden) return;
   const g = (state.shopScope === 'women' || state.shopScope === 'men') ? state.shopScope : null;
   const inScope = p => p.category !== 'accessories' &&
     (!g || (p.genders || ['women', 'men']).includes(g));
@@ -64,6 +68,7 @@ export function renderShopPills() {
 
 /* ─── SHOP: griglia prodotti ─────────────── */
 export function shopFilteredProducts() {
+  if (state.shopScope === 'wishlist') return savedProducts();
   let list = PRODUCTS.slice();
   if (state.shopScope === 'accessories') {
     return list.filter(p => p.category === 'accessories');
@@ -84,22 +89,29 @@ export function renderShopGrid() {
   const f = readFilters();
   const list = applyFilters(scope, f);
   shopGrid.className = 'pgrid';
-  shopGrid.innerHTML = list.length || !scope.length
-    ? pgridHTML(list)
-    : '<p class="pgrid-empty">No products match these filters.</p>';
+  const wish = state.shopScope === 'wishlist';
+  shopGrid.innerHTML = wish && !scope.length
+    ? '<p class="pgrid-empty">Your wishlist is empty. <a href="/shop/">Discover the collection</a></p>'
+    : list.length || !scope.length
+      ? pgridHTML(list)
+      : '<p class="pgrid-empty">No products match these filters.</p>';
   const count = document.getElementById('shop-count');
   if (count) count.textContent = list.length === 1 ? '1 product' : `${list.length} products`;
   const btn = document.getElementById('shop-filter-btn');
   if (btn) {
     const n = activeCount(f);
     btn.textContent = n ? `Filter & sort (${n})` : 'Filter & sort';
-    btn.hidden = !scope.length;
+    btn.hidden = !scope.length || wish;
   }
 }
 
 /* "Filter & sort": apre il pannello con le opzioni della vista corrente */
 export function initShopFilters() {
   initFilters(renderShopGrid);
+  // togliendo un capo dalla pagina Wishlist la griglia si aggiorna
+  document.addEventListener(WISHLIST_EVENT, () => {
+    if (state.shopScope === 'wishlist' && document.getElementById('shop')?.classList.contains('active')) renderShopGrid();
+  });
   document.getElementById('shop-filter-btn')
     ?.addEventListener('click', () => openFilters(shopFilteredProducts()));
 }

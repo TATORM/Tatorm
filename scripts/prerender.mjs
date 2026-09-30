@@ -130,6 +130,9 @@ export async function prerender({ root, out }) {
     description: 'Get in touch with TATO — general, press and sales enquiries.',
     url: `${BASE}about/`,
   } });
+  pages.push({ route: 'wishlist', noindex: true, meta: {
+    title: 'Wishlist — TATO', description: 'Your saved pieces — TATO.', url: `${BASE}wishlist/`, robots: 'noindex, follow',
+  } });
   /* pagine info: contenuti ancora da fornire → non indicizzate finché non sono reali */
   for (const [k, t] of Object.entries(INFO)) {
     pages.push({ route: k, noindex: true, meta: {

@@ -14,7 +14,7 @@
 
 export const ROUTE_EVENT = 'tato:route';
 
-const APP_ROOTS = ['shop', 'product', 'collection', 'about',
+const APP_ROOTS = ['shop', 'product', 'collection', 'about', 'wishlist',
   'shipping', 'returns', 'faq', 'privacy', 'cookies', 'terms'];
 
 const trim = s => String(s || '').replace(/^\/+|\/+$/g, '');

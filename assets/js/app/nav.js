@@ -118,7 +118,7 @@ export function showSection(id) {
     siteNav.style.opacity       = '';
     siteNav.style.pointerEvents = '';
     if (id === 'shop') {
-      if (!currentRoute().startsWith('shop')) {
+      if (!currentRoute().startsWith('shop') && currentRoute() !== 'wishlist') {
         state.shopScope = 'new';
         state.shopCategory = 'all';
         setUrl('shop');

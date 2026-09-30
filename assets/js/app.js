@@ -14,6 +14,7 @@
      collection  caroselli look + pannello "Shop the look"
      shop        griglia, pill
      filters     filtri e ordinamento dello shop
+     wishlist    capi salvati (segnalibro, pagina /wishlist/)
      pdp         scheda prodotto, size guide, prodotto tolto
      info        pagine info/legali
      meta        title/description/OG + JSON-LD
@@ -33,6 +34,7 @@ import { initSizeGuide } from './app/pdp.js';
 import { initRouter } from './app/router.js';
 import { initTheme } from './app/theme.js';
 import { initShopFilters } from './app/shop.js';
+import { initWishlist } from './app/wishlist.js';
 
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
@@ -51,6 +53,7 @@ if (window.TATO_shopify) window.TATO_shopify.init();
 
 initSizeGuide();
 initShopFilters();
+initWishlist();
 initRouter();
 
 /* Protezione immagini: niente menu contestuale / trascinamento */

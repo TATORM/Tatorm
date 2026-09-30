@@ -6,6 +6,7 @@ import { PRODUCTS } from './shop.js';
 import { state } from './state.js';
 import { esc, money, pictureHTML, shuffle } from './utils.js';
 import { go } from './url.js';
+import { wishBtnHTML } from './wishlist.js';
 
 /* ─── PDP: scheda prodotto ─────────────────
    Shopify (window.TATO_shopify) è fonte autorevole per prezzo,
@@ -123,6 +124,7 @@ export function renderPDP(slug) {
         <div class="pdp-head">
           <h1 class="pdp-name">${esc(p.name)}</h1>
           ${(p.badges || []).length ? `<p class="pdp-badges">${p.badges.map(b => `<span class="pdp-badge">${esc(b)}</span>`).join('')}</p>` : ''}
+          ${wishBtnHTML(p.slug, 'wish-btn--pdp')}
         </div>
         <div class="pdp-subhead">
           <p class="pdp-material">${esc(p.composition)}</p>

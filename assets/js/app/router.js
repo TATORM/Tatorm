@@ -48,6 +48,17 @@ export function handleShopRoute() {
     return;
   }
 
+  if (route === 'wishlist') {
+    state.shopScope = 'wishlist';
+    state.shopCategory = 'all';
+    renderShop();
+    showSection('shop');
+    document.getElementById('shop')?.classList.add('active');
+    setProductJsonLd(null);
+    setMeta({ title: 'Wishlist', description: 'Your saved pieces — TATO.', canonicalPath: 'wishlist' });
+    return;
+  }
+
   if (route === 'shop') {
     const isCat = slug => CATEGORIES.some(c => c.slug === slug);
     if (a === 'women' || a === 'men') {

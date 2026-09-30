@@ -3,7 +3,7 @@
    riconverte nel percorso vero e mostra la pagina (o "no longer available"). */
 (function () {
   var route = location.pathname.replace(/^\/+|\/+$/g, '');
-  var roots = ['shop', 'product', 'collection', 'about', 'shipping', 'returns', 'faq', 'privacy', 'cookies', 'terms'];
+  var roots = ['shop', 'product', 'collection', 'about', 'wishlist', 'shipping', 'returns', 'faq', 'privacy', 'cookies', 'terms'];
   if (route && roots.indexOf(route.split('/')[0]) !== -1) {
     location.replace('/' + location.search + '#' + route);
   }
