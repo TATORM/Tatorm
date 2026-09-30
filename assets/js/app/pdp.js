@@ -122,6 +122,7 @@ export function renderPDP(slug) {
 
         <div class="pdp-head">
           <h1 class="pdp-name">${esc(p.name)}</h1>
+          ${(p.badges || []).length ? `<p class="pdp-badges">${p.badges.map(b => `<span class="pdp-badge">${esc(b)}</span>`).join('')}</p>` : ''}
         </div>
         <div class="pdp-subhead">
           <p class="pdp-material">${esc(p.composition)}</p>

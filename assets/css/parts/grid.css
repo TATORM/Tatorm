@@ -54,6 +54,41 @@
   padding: 7% 11%;
 }
 .pgrid-card:hover .pgrid-media img { opacity: 0.8; }
+
+/* Seconda immagine all'hover (solo mouse): il capo indossato sopra il packshot */
+.pgrid-alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--dur-3) ease;
+}
+.pgrid-media .pgrid-alt img {
+  object-fit: cover;
+  object-position: center top;
+  padding: 0;
+}
+.pgrid-card:hover .pgrid-media.has-alt .pgrid-alt { opacity: 1; }
+.pgrid-card:hover .pgrid-media.has-alt img { opacity: 1; }
+.pgrid-card:hover .pgrid-media.has-alt .pgrid-badges { opacity: 0; }
+
+/* Etichette New / Exclusive (tag Shopify), in alto a sinistra */
+.pgrid-badges {
+  position: absolute;
+  top: 12px; left: 12px;
+  display: flex;
+  gap: 6px;
+  transition: opacity var(--dur-2) ease;
+}
+.pgrid-badge,
+.pdp-badge {
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--black);
+  border: 1px solid var(--black);
+  padding: 3px 7px;
+  line-height: 1.2;
+}
 .pgrid-name {
   text-align: center;
   margin-top: 16px;

@@ -391,3 +391,6 @@ body.dark-mode .pdp-ref { color: var(--gray); }
   transition: color var(--dur-1) ease, border-color var(--dur-1) ease;
 }
 .pdp-lookrefs a:hover { color: var(--black); border-color: var(--black); }
+
+/* Etichette New / Exclusive accanto al nome (stile in grid.css) */
+.pdp-badges { display: flex; gap: 6px; margin-top: 4px; }

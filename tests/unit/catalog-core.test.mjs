@@ -102,3 +102,8 @@ test('la copia del catalogo nel sito è valida e completa', () => {
     assert.ok(p.colors.every(c => c.sizes.length), `${p.slug}: colore senza taglie`);
   }
 });
+
+test('etichette New / Exclusive dai tag', () => {
+  assert.deepEqual(core.buildCatalog([node({ tags: ['New', 'women', 'exclusive'] })])[0].badges, ['New', 'Exclusive']);
+  assert.deepEqual(core.buildCatalog([node()])[0].badges, []);
+});

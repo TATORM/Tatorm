@@ -14,6 +14,18 @@ export function productImgSrc(p) {
   return { src: look || '', flat: false };
 }
 
+/* Seconda immagine mostrata al passaggio del mouse: la 2ª foto di quel
+   colore su Shopify se c'è, altrimenti il capo indossato (foto del look).
+   Solo con mouse: su touch non esiste l'hover e sarebbe traffico sprecato. */
+const CAN_HOVER = typeof matchMedia === 'function' && matchMedia('(hover: hover) and (pointer: fine)').matches;
+function hoverImgSrc(p, col) {
+  const c = col || (p.colors && p.colors[0]);
+  if (c && c.images && c.images[1]) return c.images[1];
+  return window.TATO_lookImages
+    ? window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 1 })[0] || ''
+    : '';
+}
+
 /* colorIdx opzionale: card di una specifica variante colore
    (immagine + nome colore). Usata dalla Home per mostrare ogni colorway. */
 export function pgridCardHTML(p, colorIdx) {
@@ -25,6 +37,11 @@ export function pgridCardHTML(p, colorIdx) {
   const media = img.src
     ? pictureHTML(img.src, { alt: col ? `${p.name} — ${col.name}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
     : '<span class="ph-block"></span>';
+  const alt = CAN_HOVER && img.flat ? hoverImgSrc(p, col) : '';
+  const altMedia = alt && alt !== img.src
+    ? `<span class="pgrid-alt" aria-hidden="true">${pictureHTML(alt, { alt: '', sizes: '(max-width: 1180px) 33vw, 25vw' })}</span>`
+    : '';
+  const badges = (p.badges || []).map(b => `<span class="pgrid-badge">${esc(b)}</span>`).join('');
   const sh = window.TATO_shopify;
   const shReady = !!(sh && sh.ready);
   const sold = col
@@ -42,8 +59,10 @@ export function pgridCardHTML(p, colorIdx) {
     : '';
   return `
     <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="/product/${p.slug}/" data-slug="${p.slug}">
-      <span class="pgrid-media${img.flat ? ' is-flat' : ''}">
+      <span class="pgrid-media${img.flat ? ' is-flat' : ''}${altMedia ? ' has-alt' : ''}">
         ${media}
+        ${altMedia}
+        ${badges ? `<span class="pgrid-badges">${badges}</span>` : ''}
         ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}
       </span>
       <span class="pgrid-name">${esc(p.name)}</span>

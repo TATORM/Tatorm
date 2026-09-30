@@ -13,6 +13,7 @@
    • Tipo prodotto  → categoria (vedi CATEGORY_BY_TYPE)
      tag `category:<slug>` la forza (es. category:outerwear)
    • tag `women` / `men` → reparto; nessuno dei due = entrambi
+   • tag `new` / `exclusive` → etichetta sulla card e nella PDP
    • Opzioni "Color" e "Size" → varianti
    • Immagine della variante → foto di quel colore
    • Descrizione: elenco puntato; la riga con la % è la
@@ -115,6 +116,12 @@
     return { list: g.length ? g : ['women', 'men'], tagged: g.length > 0 };
   }
 
+  /* Etichette sulla card / PDP da tag Shopify: `new`, `exclusive` */
+  const BADGE_TAGS = { new: 'New', exclusive: 'Exclusive' };
+  function badgesOf(node) {
+    return (node.tags || []).map(lc).filter(t => BADGE_TAGS[t]).map(t => BADGE_TAGS[t]);
+  }
+
   /* <ul><li>100% Cotton</li><li>…</li></ul> → composizione + testo */
   function parseDescription(html) {
     const text = s => s.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
@@ -195,6 +202,7 @@
       details: desc.details,
       colors,
       genders: gen.list,
+      badges: badgesOf(node),
       lookRefs: [],
       status: 'available',
     };
