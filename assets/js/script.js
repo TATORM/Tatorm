@@ -499,12 +499,13 @@ function removeFromCart(key) {
 
 /* Allinea il carrello salvato al catalogo attuale: righe di prodotti
    tolti da Shopify, varianti sparite o esaurite → rimosse (con avviso);
-   id variante e prezzo aggiornati. Gira all'avvio (copia del catalogo)
-   e di nuovo quando arrivano i dati dal vivo. */
+   id variante e prezzo aggiornati. Solo con i dati DAL VIVO: la copia
+   del catalogo può essere vecchia (stock, prodotti nuovi) e svuoterebbe
+   carrelli validi. */
 let cartNotice = '';
 function reconcileCart() {
   const sh = window.TATO_shopify;
-  if (!sh || !sh.ready || !cart.length) return;
+  if (!sh || !sh.live || !cart.length) return;
   let removed = 0, changed = false;
   cart = cart.filter(it => {
     const hit = it.slug ? sh._hit(it.slug, it.color, it.size) : null;

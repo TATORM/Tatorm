@@ -25,3 +25,7 @@ SHOPIFY EXPORT/
 
 # Documenti interni in PDF (non pubblicare)
 docs/*.pdf
+
+# Output dei test
+test-results/
+playwright-report/

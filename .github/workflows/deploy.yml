@@ -32,11 +32,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
-      - run: npm run build
+      # stessi test di test.yml: se falliscono il sito NON va online
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
 
       - uses: actions/configure-pages@v5
       # online va SOLO _site/ (vedi scripts/build.mjs → PUBLIC)
