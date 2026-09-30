@@ -18,6 +18,17 @@ export const heroPhotosDesktop = [
    o busto — a tutto schermo restano tagliate a metà comunque le si
    inquadri, il soggetto è già al bordo dello scatto originale. */
 
+/* Foto orizzontali per gli stacchi a tutta larghezza su mobile (al posto
+   delle coppie). Esclusi hero 05/06 (già in Men/Women) e 01/03/07
+   (dettagli ravvicinati). `widths` = derivati AVIF disponibili. */
+export const WIDE_PHOTOS_MOBILE = [
+  { src: 'media/home/11.jpg',      widths: [900, 1440] },
+  { src: 'media/home/13.jpg',      widths: [900, 1440] },
+  { src: 'media/home/hero/02.jpg', widths: [1600, 2400] },
+  { src: 'media/home/hero/04.jpg', widths: [1600, 2400] },
+  { src: 'media/home/hero/08.jpg', widths: [1600, 2400] },
+];
+
 /* ─── Home feed — ordine casuale + scroll infinito.
    Su mobile questo pool serve anche per l'hero (invariato). ─ */
 export const allHomePhotos = [
@@ -235,6 +246,19 @@ export function initHome() {
     return fig;
   };
 
+  /* Mobile: al posto della coppia di foto affiancate (troppo piccole su
+     telefono) una sola foto orizzontale a tutta larghezza. */
+  const wideShots = shuffle(WIDE_PHOTOS_MOBILE);
+  let wide = 0;
+  const wideFig = () => {
+    const w = wideShots[wide++ % wideShots.length];
+    const fig = document.createElement('figure');
+    fig.className = 'home-look home-look--wide';
+    fig.appendChild(pictureEl(w.src, { alt: homePhotoAlt(w.src), sizes: '100vw', widths: w.widths }));
+    return fig;
+  };
+  const mobile = !isDesktopViewport();
+
   // quanti stacchi foto ci sono, e quali diventano una coppia (fianco a fianco)
   const slotCount = Math.max(0, Math.ceil(cards.length / PER_BLOCK) - 1);
   const pairSlots = new Set();
@@ -253,7 +277,9 @@ export function initHome() {
     feed.appendChild(grid);
 
     if (i + PER_BLOCK < cards.length && lookShots.length) {
-      if (pairSlots.has(slot)) {
+      if (pairSlots.has(slot) && mobile && wideShots.length) {
+        feed.appendChild(wideFig());
+      } else if (pairSlots.has(slot)) {
         const pair = document.createElement('div');
         pair.className = 'home-look-pair';
         pair.appendChild(lookFig(nextShot(), '(max-width: 768px) 50vw, 38vw'));
