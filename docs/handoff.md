@@ -68,7 +68,7 @@ account `samuelemurru1-wq` senza permessi su TATORM/Tatorm).
   192.168.1.15:8777); serve.mjs toglie upgrade-insecure-requests solo in locale.
 - PDF per l'utente: `docs/TATO - Collezioni, look e pagine Shopify.pdf` (ReportLab,
   stile degli altri due; generatore non nel repo).
-- Test: 21 unit, 53 e2e, 64 visivi (baseline aggiornate a ogni modifica voluta).
+- Test: 15 unit, 53 e2e, 64 visivi (baseline aggiornate a ogni modifica voluta).
 
 ### Prossimi passi
 Pagine About/info (testi utente) · Formspree per pre-order · ricerca · foto
