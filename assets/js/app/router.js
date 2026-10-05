@@ -1,11 +1,12 @@
 import { shopTitleEl } from './dom.js';
-import { INFO_ROUTES, showInfo } from './info.js';
+import { showCollection } from './collection.js';
+import { INFO_ROUTES, showAbout, showArchive, showInfo } from './info.js';
 import { setMeta, setProductJsonLd } from './meta.js';
 import { renderNavMenu, showSection } from './nav.js';
 import { renderPDP, renderPDPMissing } from './pdp.js';
 import { CATEGORIES, renderShop } from './shop.js';
 import { state } from './state.js';
-import { ROUTE_EVENT, currentRoute, isAppRoute } from './url.js';
+import { ROUTE_EVENT, currentRoute, isAppRoute, setUrl } from './url.js';
 
 /* ─── Routing (percorsi veri, vedi url.js) ─ */
 export function handleShopRoute() {
@@ -16,8 +17,23 @@ export function handleShopRoute() {
   const b = parts[2] || '';
 
   if (!hash)               { setProductJsonLd(null); setMeta({}); showSection('home');       return; }
-  if (route === 'collection') { setProductJsonLd(null); setMeta({ title: 'Collection', description: 'The TATO collection — 21 looks. Designed in Rome, made in Italy.', canonicalPath: 'collection' }); showSection('collection'); return; }
-  if (route === 'about')      { setProductJsonLd(null); setMeta({ title: 'Contacts', description: 'Get in touch with TATO — general, press and sales enquiries.', canonicalPath: 'about' }); showSection('about'); return; }
+  if (route === 'collection') {
+    setProductJsonLd(null);
+    const c = window.TATO_CONTENT;
+    const col = a && c.archive.find(x => x.handle === a);
+    if (a && !col) setUrl('collection');          // collezione sconosciuta → la corrente
+    showCollection(col ? col.handle : null);
+    const shown = col || c.current;
+    const name = col ? [shown.season, shown.title].filter(Boolean).join(' ') : 'Collection';
+    setMeta({
+      title: name,
+      description: (shown.intro[0] || `The TATO collection — ${shown.looks.length} looks.`) + ' Designed in Rome, made in Italy.',
+      canonicalPath: col ? `collection/${col.handle}` : 'collection',
+    });
+    return;
+  }
+  if (route === 'archive')    { setProductJsonLd(null); showArchive(); return; }
+  if (route === 'about')      { setProductJsonLd(null); showAbout(); return; }
   if (INFO_ROUTES.includes(route)) { setProductJsonLd(null); showInfo(route); return; }
 
   if (route === 'product' && a) {

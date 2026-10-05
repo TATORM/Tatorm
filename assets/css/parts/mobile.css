@@ -94,6 +94,12 @@
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
+  /* testo campagna (senza foto): schermata intera, anch'essa uno stop */
+  .collection-intro {
+    min-height: 100dvh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
   /* In Collection ogni swipe si ferma su un look intero (altrove proximity) */
   body.collection-mode { scroll-snap-type: y mandatory; }
   .carousel-slide img {

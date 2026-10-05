@@ -1,8 +1,41 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-09-30
+**Ultimo aggiornamento:** 2026-10-05
 **Branch di lavoro:** `ecommerce-dev` — HEAD `dcec316` (+ questo commit docs)
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
+
+═══════════════════════════════════════════════════════════════════
+## RIPRENDERE DA QUI (05/10) — contenuti da Shopify (punto 2)
+═══════════════════════════════════════════════════════════════════
+- **Contenuti editoriali da Shopify**: `assets/js/content-core.js` (query +
+  trasformazione, browser e Node) → `scripts/fetch-content.mjs` (`npm run content`,
+  incluso in `npm run build`) → `assets/js/content-snapshot.js` (generata).
+  Solo al build, NIENTE dati dal vivo (cambiano di rado). Metaoggetti
+  `tato_collection` (title, season, intro, campaign_images, looks, current) e
+  `tato_look` (number, images, items = righe "NOME | comp | colore"); Pagine
+  Shopify per handle about/shipping/returns/faq/privacy/cookies/terms.
+- **Riserva**: senza collezioni su Shopify si usano i look locali
+  (`TATO_LOOKS_LOCAL` in products.js + media/looks). `TATO_CONTENT` =
+  { source, collections, current, archive, pages }; `TATO_LOOKS` /
+  `TATO_LOOK_PHOTOS` derivati dalla corrente (catalogo, Home, PDP invariati).
+- **Collection costruita da JS** (`app/collection.js` renderCollection /
+  showCollection): i caroselli statici in index.html sono stati tolti.
+  Blocco campagna (`data-look="campaign"`, testo nel pannello) o
+  `.collection-intro` (solo testo, snap stop su mobile). Archivio:
+  `/archive/` + `/collection/<handle>/`, voce menu "Archive" solo se esiste.
+  About: `#about-text` sopra i contatti. Info: testo Shopify se c'è, altrimenti
+  segnaposto; indicizzate solo con testo vero. HTML Shopify ripulito
+  (`safeHTML` in app/info.js: solo tag di testo + href).
+- **Bloccato lato utente**: la chiave Storefront NON ha
+  `unauthenticated_read_metaobjects` / `unauthenticated_read_content`
+  (build stampa l'avviso). L'utente ha scelto l'inserimento A MANO
+  (niente app Admin): guida `docs/shopify-contenuti.md` con testo dei 21 look
+  pronto da incollare. Consigliato: prima Look 1–2 + Collection di prova → verifico.
+- Verificato con contenuti finti (desktop + mobile): campagna, look, archivio,
+  About, Shipping. Test: 15 unit (nuovo `content-core.test.mjs`), 53 e2e, 64 visivi ok.
+- Prossimo: verificare i primi look inseriti dall'utente; poi Home da Shopify (C4),
+  ricerca, foto editoriali nello shop, PDP, motion, account, italiano. Editorial:
+  rimandato (scelta utente). Cloudflare prima del lancio.
 
 ═══════════════════════════════════════════════════════════════════
 ## RIPRENDERE DA QUI (30/09)

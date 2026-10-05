@@ -1,27 +1,103 @@
-import { fixedLookInfo, lookCarousels } from './dom.js';
+import { fixedLookInfo } from './dom.js';
+import { showSection } from './nav.js';
 import { state } from './state.js';
-import { esc, money } from './utils.js';
+import { esc, money, pictureHTML } from './utils.js';
 
 /* ═══════════════════════════════════════════
-   INTERSECTIONOBSERVER — aggiorna .fixed-look-info
-   Osserva i caroselli (non più i singoli blocchi)
+   COLLECTION
+   ─────────────────────────────────────────
+   I caroselli si costruiscono dai dati (TATO_CONTENT,
+   vedi content-core.js): collezione corrente su
+   /collection/, quelle d'archivio su /collection/<handle>/.
+   Ordine: [campagna] → look 1…N. Il pannello fisso mostra
+   il testo della campagna o i capi del look a schermo.
    ═══════════════════════════════════════════ */
 
+const SIZES = '(max-width: 768px) 100vw, min(700px, 36vw)';
+let shown = null;        // collezione disegnata ora
+let observer = null;
 
-/* Pannello Collection = "Shop the look".
-   Elenca i capi del look; quello a catalogo è un link alla sua
-   scheda prodotto (con prezzo), gli altri sono "Archive piece".
-   L'acquisto avviene solo sulla PDP → un unico flusso carrello. */
+export function collectionShown() { return shown; }
+
+function carouselHTML(key, images, label) {
+  const slides = images.map((src, j) =>
+    `<div class="carousel-slide">${pictureHTML(src, { alt: `TATO — ${label}, view ${j + 1} of ${images.length}`, sizes: SIZES })}</div>`
+  ).join('');
+  return `
+        <div class="look-carousel" data-look="${esc(key)}">
+          <div class="carousel-track"><div class="carousel-slides">${slides}</div></div>
+          <p class="image-counter">1 / —</p>
+        </div>`;
+}
+
+export function renderCollection(col) {
+  const column = document.querySelector('#collection .visual-column');
+  if (!column || !col) return;
+  shown = col;
+  state.activeLook = null;
+  const intro = col.intro.length && !col.campaign.length
+    ? `<div class="collection-intro" data-look="intro">
+         ${col.season ? `<p class="collection-intro-season">${esc(col.season)}</p>` : ''}
+         <p class="collection-intro-title">${esc(col.title)}</p>
+         ${col.intro.map(t => `<p class="collection-intro-text">${esc(t)}</p>`).join('')}
+       </div>`
+    : '';
+  const campaign = col.campaign.length ? carouselHTML('campaign', col.campaign, `${col.title} campaign`) : '';
+  column.innerHTML = intro + campaign + col.looks.map(l => carouselHTML(l.key, l.images, `Look ${l.number}`)).join('');
+
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          state.activeLook = null;
+          renderLookPanel(entry.target.dataset.look);
+        }
+      });
+    },
+    { root: null, rootMargin: '-30% 0px -30% 0px', threshold: 0 }
+  );
+  column.querySelectorAll('.look-carousel').forEach(c => { bindCarousel(c); observer.observe(c); });
+  column.querySelectorAll('.collection-intro').forEach(c => observer.observe(c));
+}
+
+/* Mostra una collezione (default: la corrente), ridisegnandola se serve */
+export function showCollection(handle) {
+  const col = window.TATO_getCollection(handle);
+  if (col !== shown) renderCollection(col);
+  showSection('collection');
+  return col;
+}
+
+/* Prima voce del pannello all'apertura della Collection */
+export function firstCollectionKey() {
+  const el = document.querySelector('#collection .visual-column [data-look]');
+  return el ? el.dataset.look : '1';
+}
+
 export function renderLookPanel(lookKey) {
   if (lookKey === state.activeLook) return;
   state.activeLook = lookKey;
 
-  const data = window.TATO_resolveLook(lookKey);
-  if (!data) return;
+  const col = shown || window.TATO_getCollection();
+  if (lookKey === 'intro') { fixedLookInfo.innerHTML = ''; return; }
+  const data = lookKey === 'campaign' ? null : window.TATO_resolveLook(lookKey, col);
+  if (!data && lookKey !== 'campaign') return;
 
   fixedLookInfo.classList.add('panel-updating');
 
   setTimeout(() => {
+    if (!data) {
+      // blocco campagna: stagione, titolo e testo della collezione
+      fixedLookInfo.innerHTML = `
+        <p class="panel-look-number">${esc(col.season || 'Campaign')}</p>
+        <div class="panel-look-items"><div class="panel-item">
+          <p class="panel-item-name">${esc(col.title)}</p>
+          ${col.intro.map(t => `<p class="panel-item-info">${esc(t)}</p>`).join('')}
+        </div></div>`;
+      fixedLookInfo.classList.remove('panel-updating');
+      return;
+    }
     const itemsHTML = data.items.map(item => {
       const action = item.slug
         ? `<a class="panel-item-shop" href="/product/${item.slug}/">${money(item.price, item.currency)} — Shop</a>`
@@ -29,15 +105,15 @@ export function renderLookPanel(lookKey) {
       return `
         <div class="panel-item">
           <p class="panel-item-name">${esc(item.name)}</p>
-          <p class="panel-item-info">${esc(item.composition)}</p>
-          <p class="panel-item-info">Color: ${esc(item.color)}</p>
+          ${item.composition ? `<p class="panel-item-info">${esc(item.composition)}</p>` : ''}
+          ${item.color ? `<p class="panel-item-info">Color: ${esc(item.color)}</p>` : ''}
           ${action}
         </div>
       `;
     }).join('');
 
     fixedLookInfo.innerHTML = `
-      <p class="panel-look-number">${data.number}</p>
+      <p class="panel-look-number">${esc(data.number)}</p>
       <div class="panel-look-items">${itemsHTML}</div>
     `;
 
@@ -45,11 +121,8 @@ export function renderLookPanel(lookKey) {
   }, 180);
 }
 
-export function initCollection() {
-/* ═══════════════════════════════════════════
-   CAROSELLI LOOK — crossfade
-   ═══════════════════════════════════════════ */
-lookCarousels.forEach(carousel => {
+/* CAROSELLI — crossfade, click (desktop) e swipe (mobile) */
+function bindCarousel(carousel) {
   const slideEls = Array.from(carousel.querySelectorAll('.carousel-slide'));
   const counter  = carousel.querySelector('.image-counter');
   const lookKey  = carousel.dataset.look;
@@ -95,28 +168,10 @@ lookCarousels.forEach(carousel => {
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 30) goTo(dx < 0 ? current + 1 : current - 1);
   });
-});
+}
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const lookKey = entry.target.dataset.look;
-        state.activeLook = null;
-        renderLookPanel(lookKey);
-      }
-    });
-  },
-  {
-    root: null,
-    rootMargin: '-30% 0px -30% 0px',
-    threshold: 0
-  }
-);
-
-lookCarousels.forEach(c => observer.observe(c));
-
-// Mostra home al caricamento (già .active nel HTML)
-// Il pannello look parte nascosto (aggiunto da showSection)
-fixedLookInfo.classList.remove('panel-visible');
+export function initCollection() {
+  renderCollection(window.TATO_getCollection());
+  // Il pannello look parte nascosto (aggiunto da showSection)
+  fixedLookInfo.classList.remove('panel-visible');
 }

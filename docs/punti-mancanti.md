@@ -63,7 +63,7 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 
 | | Punto | Stato | Chi | Cosa manca |
 |---|---|---|---|---|
-| [ ] | Archivio collezioni | A metà | Insieme | Solo la collezione attuale (21 look). |
+| [ ] | Archivio collezioni | A metà | Tu (contenuti) | Struttura pronta: /archive/ e /collection/<handle>/ compaiono appena c'è una collezione passata su Shopify. |
 | [ ] | Campaign | Manca | Tu (contenuti) · Io | — |
 | [ ] | Journal / Stories / Editorial | Manca | Tu (contenuti) · Io | — |
 | [ ] | Collaborazioni e progetti speciali | Manca | Tu (contenuti) · Io | — |
@@ -126,7 +126,7 @@ Chi: **Tu** = pannelli o contenuti · **Io** = codice · **Insieme** = decisione
 |---|---|---|---|---|
 | [ ] | Collezioni Shopify | A metà | Io | Il sito usa tipo prodotto e tag, non le collezioni Shopify. |
 | [ ] | Discount codes, gift cards | Da attivare su Shopify | Tu | — |
-| [ ] | Contenuti editoriali senza sviluppatore | Manca | Io | Look, Home e testi sono ancora nel codice → Shopify Metaobjects e Pagine. |
+| [ ] | Contenuti editoriali senza sviluppatore | A metà | Tu (inserimento) | Struttura pronta (collezioni, look, About, pagine info da Shopify): da inserire seguendo docs/shopify-contenuti.md. Home ancora nel codice. |
 
 ## 13. Internazionalizzazione
 

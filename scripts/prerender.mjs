@@ -2,7 +2,7 @@
    Pagine per URL vero — chiamato da build.mjs
    ─────────────────────────────────────────
    Per ogni rotta nota (prodotti dalla copia del catalogo, shop,
-   collection, about, pagine info) scrive _site/<rotta>/index.html:
+   collection + archivio, about, pagine info) scrive _site/<rotta>/index.html:
    stesso index.html del sito, ma con title, description, canonical,
    Open Graph e (per i prodotti) JSON-LD Product propri. Così Google e
    le anteprime dei link (WhatsApp, Instagram, iMessage…) vedono il
@@ -25,7 +25,7 @@ const attr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').repla
 /* Catalogo, categorie e look come li vede il browser */
 async function loadSiteData(root) {
   const ctx = { window: {}, console };
-  for (const f of ['catalog-core.js', 'catalog-snapshot.js', 'products.js']) {
+  for (const f of ['catalog-core.js', 'catalog-snapshot.js', 'content-core.js', 'content-snapshot.js', 'products.js']) {
     vm.runInNewContext(await readFile(path.join(root, 'assets/js', f), 'utf8'), ctx, { filename: f });
   }
   return ctx.window;
@@ -111,12 +111,38 @@ export async function prerender({ root, out }) {
     if (products.some(p => p.category === c.slug)) shop(`shop/${c.slug}`, c.label);
   }
   if (products.some(p => p.category === 'accessories')) shop('shop/accessories', 'Accessories');
-  pages.push({ route: 'collection', meta: {
-    title: 'Collection — TATO',
-    description: 'The TATO collection — 21 looks. Designed in Rome, made in Italy.',
-    url: `${BASE}collection/`,
-  } });
-  pages.push({ route: 'about', meta: {
+  /* collezioni: corrente su /collection/, passate su /collection/<handle>/ + /archive/ */
+  const content = W.TATO_CONTENT;
+  const colImage = c => {
+    const src = (c.campaign[0] || (c.looks[0] && c.looks[0].images[0]) || '');
+    if (!src) return null;
+    return src.startsWith('https://') ? src + (src.includes('?') ? '&' : '?') + 'width=1200' : BASE + src;
+  };
+  const colMeta = (c, route, name) => ({
+    title: `${name} — TATO`,
+    description: `${c.intro[0] || `The TATO collection — ${c.looks.length} looks.`} Designed in Rome, made in Italy.`.slice(0, 300),
+    url: `${BASE}${route}/`,
+    image: colImage(c),
+  });
+  pages.push({ route: 'collection', meta: colMeta(content.current, 'collection', 'Collection') });
+  for (const c of content.archive) {
+    if (!/^[a-z0-9-]+$/.test(c.handle)) continue;   // handle Shopify: finisce in un percorso
+    pages.push({ route: `collection/${c.handle}`, meta: colMeta(c, `collection/${c.handle}`, [c.season, c.title].filter(Boolean).join(' ')) });
+  }
+  if (content.archive.length) {
+    pages.push({ route: 'archive', meta: {
+      title: 'Archive — TATO',
+      description: 'Past TATO collections. Designed in Rome, made in Italy.',
+      url: `${BASE}archive/`,
+    } });
+  }
+  const plain = h => String(h || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+  const about = content.pages.about;
+  pages.push({ route: 'about', meta: about ? {
+    title: `${about.title || 'About'} — TATO`,
+    description: plain(about.body).slice(0, 300) || 'About TATO.',
+    url: `${BASE}about/`,
+  } : {
     title: 'Contacts — TATO',
     description: 'Get in touch with TATO — general, press and sales enquiries.',
     url: `${BASE}about/`,
@@ -124,10 +150,13 @@ export async function prerender({ root, out }) {
   pages.push({ route: 'wishlist', noindex: true, meta: {
     title: 'Wishlist — TATO', description: 'Your saved pieces — TATO.', url: `${BASE}wishlist/`, robots: 'noindex, follow',
   } });
-  /* pagine info: contenuti ancora da fornire → non indicizzate finché non sono reali */
-  for (const [k, t] of Object.entries(INFO)) {
-    pages.push({ route: k, noindex: true, meta: {
-      title: `${t} — TATO`, description: `${t} — TATO.`, url: `${BASE}${k}/`, robots: 'noindex, follow',
+  /* pagine info: indicizzate solo quando il testo vero è su Shopify
+     (finché restano i segnaposto [DA FORNIRE] → noindex) */
+  for (const [k, t0] of Object.entries(INFO)) {
+    const sp = content.pages[k];
+    const t = (sp && sp.title) || t0;
+    pages.push({ route: k, noindex: !sp, meta: {
+      title: `${t} — TATO`, description: `${t} — TATO.`, url: `${BASE}${k}/`, robots: sp ? undefined : 'noindex, follow',
     } });
   }
   for (const p of products) {

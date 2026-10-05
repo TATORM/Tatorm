@@ -227,3 +227,12 @@
   padding-bottom: 2px;
 }
 .info-back a:hover { color: var(--black); border-color: var(--black); }
+
+/* Testo da Pagine Shopify + elenco Archivio */
+.info-doc ul, .info-doc ol { list-style: none; margin: 0 auto 6px; max-width: 44ch; }
+.info-doc li { font-size: var(--fs-l); line-height: 1.9; }
+.info-doc :is(p, li):not(.info-back) a { text-decoration: underline; text-underline-offset: 3px; }
+.archive-list li { text-transform: uppercase; letter-spacing: var(--ls-3); }
+.info-doc .archive-list li a { text-decoration: none; }
+.info-doc .archive-list li a:hover { text-decoration: underline; }
+.archive-season { color: var(--gray); }

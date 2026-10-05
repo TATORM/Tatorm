@@ -19,7 +19,7 @@ const PROJECT = path.resolve(import.meta.dirname, '..');
 const ROOT = process.env.DIR ? path.resolve(PROJECT, process.env.DIR) : PROJECT;
 const SPA_FALLBACK = !process.env.DIR;
 const PORT = Number(process.env.PORT) || 8777;
-const APP_ROOTS = ['shop', 'product', 'collection', 'about', 'wishlist',
+const APP_ROOTS = ['shop', 'product', 'collection', 'archive', 'about', 'wishlist',
   'shipping', 'returns', 'faq', 'privacy', 'cookies', 'terms'];
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',

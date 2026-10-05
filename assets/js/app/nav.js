@@ -1,4 +1,4 @@
-import { renderLookPanel } from './collection.js';
+import { firstCollectionKey, renderLookPanel } from './collection.js';
 import { fixedLookInfo, logo, navLinks, navToggle, siteBreadcrumb } from './dom.js';
 import { renderHomeHero } from './home.js';
 import { handleShopRoute } from './router.js';
@@ -12,7 +12,7 @@ import { currentRoute, go, setUrl } from './url.js';
    ═══════════════════════════════════════════ */
 /* ─── Menu principale (voci sotto MENU, pagina sfumata) ──
    Shop ▸ (All · New arrivals · categorie · Accessories)
-   · Collection · About
+   · Collection · Archive (solo se ci sono collezioni passate) · About
    Solo le voci con prodotti: New arrivals = tag Shopify `new`.
    Women/Men non sono voci di menu: sono un filtro dello shop. */
 export function shopMenuItems() {
@@ -33,6 +33,7 @@ export function renderNavMenu() {
       <ul class="nav-sub">${shopMenuItems().map(i => `<li><a href="${i.href}">${i.label}</a></li>`).join('')}</ul>
     </li>
     <li><a href="/collection/">Collection</a></li>
+    ${(window.TATO_CONTENT && window.TATO_CONTENT.archive.length) ? '<li><a href="/archive/">Archive</a></li>' : ''}
     <li><a href="/about/">About</a></li>
   `;
   /* i link veri li gestisce url.js (navigazione senza ricaricare);
@@ -101,7 +102,7 @@ export function showSection(id) {
     fixedLookInfo.classList.add('panel-visible');
     siteBreadcrumb.classList.add('visible');
     state.activeLook = null;
-    renderLookPanel('1');
+    renderLookPanel(firstCollectionKey());
   } else if (id === 'about') {
     fixedLookInfo.classList.remove('panel-visible');
     siteBreadcrumb.classList.add('visible');
@@ -130,7 +131,8 @@ export function showSection(id) {
 
   // Allinea l'indirizzo alla sezione (replaceState: niente nuova cronologia)
   if (id === 'home') setUrl('');
-  else if (id === 'collection' || id === 'about') setUrl(id);
+  else if (id === 'about') setUrl(id);
+  else if (id === 'collection' && !currentRoute().startsWith('collection/')) setUrl(id);   // /collection/<archivio>/ resta
 
   closeNav();
 }

@@ -5,7 +5,7 @@
      ''                  Home            → /
      'shop/women/pants'  Shop            → /shop/women/pants/
      'product/tobi-pants' PDP            → /product/tobi-pants/
-     'collection' · 'about' · 'shipping' …
+     'collection' · 'collection/<handle>' · 'archive' · 'about' · 'shipping' …
    Il build genera un index.html per ogni rotta nota (meta e JSON-LD
    propri); le altre arrivano da 404.html → /#rotta → convertita qui.
    I vecchi link con # (#product/…) continuano a funzionare.
@@ -14,7 +14,7 @@
 
 export const ROUTE_EVENT = 'tato:route';
 
-const APP_ROOTS = ['shop', 'product', 'collection', 'about', 'wishlist',
+const APP_ROOTS = ['shop', 'product', 'collection', 'archive', 'about', 'wishlist',
   'shipping', 'returns', 'faq', 'privacy', 'cookies', 'terms'];
 
 const trim = s => String(s || '').replace(/^\/+|\/+$/g, '');

@@ -72,3 +72,17 @@
   transition: color var(--dur-1);
 }
 .about-contact a:hover { color: var(--gray); }
+
+/* Testo della Pagina Shopify "about" (sopra i contatti) */
+.about-text { margin-bottom: 56px; }
+.about-text p { margin-bottom: 1em; }
+.about-text h1, .about-text h2, .about-text h3 {
+  font-size: var(--fs-xs);
+  font-weight: inherit;
+  letter-spacing: var(--ls-6);
+  text-transform: uppercase;
+  color: var(--gray);
+  margin: 40px 0 16px;
+}
+.about-text > :first-child { margin-top: 0; }
+.about-text a { text-decoration: underline; text-underline-offset: 3px; }

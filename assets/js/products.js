@@ -48,19 +48,16 @@ window.TATO_LOOK_PHOTO_COUNT = {
   11: 8, 12: 3, 13: 3, 14: 3, 15: 3, 16: 2, 17: 4, 18: 4, 19: 3, 20: 4, 21: 3,
 };
 
-/* Restituisce gli URL delle foto dei look indicati.
+/* Restituisce gli URL delle foto dei look indicati
+   (della collezione corrente, vedi TATO_LOOK_PHOTOS sotto).
    opts.onePerLook → solo la 1ª foto di ogni look
    opts.limit      → massimo N URL                     */
 window.TATO_lookImages = function (lookRefs, opts) {
   opts = opts || {};
   const out = [];
   (lookRefs || []).forEach(function (n) {
-    const count = window.TATO_LOOK_PHOTO_COUNT[n] || 0;
-    const nn = String(n).padStart(2, '0');
-    const max = opts.onePerLook ? Math.min(1, count) : count;
-    for (let i = 1; i <= max; i++) {
-      out.push('media/looks/look-' + nn + '/' + String(i).padStart(2, '0') + '.jpg');
-    }
+    const photos = window.TATO_LOOK_PHOTOS[String(n)] || [];
+    out.push.apply(out, opts.onePerLook ? photos.slice(0, 1) : photos);
   });
   return opts.limit ? out.slice(0, opts.limit) : out;
 };
@@ -91,7 +88,10 @@ window.TATO_categoriesFor = function (dept) {
 };
 
 /* ═══════════════════════════════════════════
-   LOOKS — composizione dei 21 look della collezione.
+   LOOKS LOCALI — riserva finché la collezione non è
+   su Shopify (metaoggetti, vedi content-core.js e
+   docs/shopify-contenuti.md). Quando su Shopify c'è
+   almeno una collezione, questi dati non si usano più.
    ─────────────────────────────────────────
    Ogni capo è { name, comp, color }. Se il nome coincide
    con il titolo di un prodotto Shopify, nel pannello
@@ -100,7 +100,7 @@ window.TATO_categoriesFor = function (dept) {
    ═══════════════════════════════════════════ */
 const i = (name, comp, color) => ({ name, comp, color });
 
-window.TATO_LOOKS = {
+window.TATO_LOOKS_LOCAL = {
   '1':  { number: 'LOOK #1',  items: [ i('2 BUTTON WINDBREAKER','100% Cotton','White'), i('BACK SHIRT','100% Cotton','White'), i('TOBI PANTS','100% Cotton','White') ] },
   '2':  { number: 'LOOK #2',  items: [ i('CROPPED TAILORED JACKET','100% Wool','Anthracite'), i('BACK SHIRT','100% Cotton','Black'), i('2 BUTTON TAILORED PANTS','100% Wool','Anthracite') ] },
   '3':  { number: 'LOOK #3',  items: [ i('CARDIGAN V NECK','100% Wool','Chocolate'), i('BACK SHIRT','100% Cotton','White'), i('2 BUTTON TAILORED PANTS','100% Wool','Anthracite') ] },
@@ -124,18 +124,60 @@ window.TATO_LOOKS = {
   '21': { number: 'LOOK #21', items: [ i('2 BUTTON SHIRT DRESS','100% Cotton','White'), i('2 BUTTON LONG SKIRT','100% Cotton','Shiny White') ] },
 };
 
+/* Foto dei caroselli locali: tutte quelle in media/looks/look-NN/
+   (le prime TATO_LOOK_PHOTO_COUNT sono le "pulite", usate anche
+   come foto prodotto; le altre sono crop editoriali). */
+const LOCAL_SLIDES = { 4: 4, 17: 5 };
+
+function localCollection() {
+  const nn = n => String(n).padStart(2, '0');
+  return {
+    handle: 'current', title: 'Collection', season: '', intro: [], campaign: [], current: true,
+    looks: Object.keys(window.TATO_LOOKS_LOCAL).map(function (k) {
+      const n = Number(k);
+      const slides = LOCAL_SLIDES[n] || window.TATO_LOOK_PHOTO_COUNT[n] || 0;
+      const images = [];
+      for (let j = 1; j <= slides; j++) images.push('media/looks/look-' + nn(n) + '/' + nn(j) + '.jpg');
+      return {
+        key: k, number: n, label: window.TATO_LOOKS_LOCAL[k].number,
+        images, photos: images.slice(0, window.TATO_LOOK_PHOTO_COUNT[n] || images.length),
+        items: window.TATO_LOOKS_LOCAL[k].items,
+      };
+    }),
+  };
+}
+
+/* ─── Contenuti: Shopify se c'è, altrimenti i look locali ───
+   TATO_CONTENT = { source, collections, current, archive, pages }
+   TATO_LOOKS   = look della collezione corrente (stesso formato
+                  di sempre: lo usano catalogo, Home, PDP)       */
+window.TATO_CONTENT = window.TATO_contentCore.buildContent(
+  window.TATO_CONTENT_SNAPSHOT || {}, localCollection()
+);
+window.TATO_LOOKS = window.TATO_contentCore.lookMap(window.TATO_CONTENT.current);
+window.TATO_LOOK_PHOTOS = {};
+((window.TATO_CONTENT.current || {}).looks || []).forEach(function (l) {
+  window.TATO_LOOK_PHOTOS[l.key] = l.photos;
+});
+
+window.TATO_getCollection = function (handle) {
+  const c = window.TATO_CONTENT;
+  return (handle && c.collections.find(x => x.handle === handle)) || c.current;
+};
+
 /* Look "risolto" per il pannello Collection: unisce i dati del look
-   al prezzo/valuta del prodotto reale quando il capo è a catalogo. */
-window.TATO_resolveLook = function (n) {
-  const look = window.TATO_LOOKS[String(n)];
+   al prezzo/valuta del prodotto reale quando il capo è a catalogo.
+   col = collezione (default: la corrente). */
+window.TATO_resolveLook = function (n, col) {
+  const look = ((col || window.TATO_CONTENT.current || {}).looks || []).find(l => l.key === String(n));
   if (!look) return null;
   return {
-    number: look.number,
+    number: look.label,
     items: look.items.map(function (it) {
       const p = window.TATO_PRODUCTS.find(x => x.name === String(it.name).toUpperCase()) || null;
       return {
         name: it.name,
-        composition: it.comp,
+        composition: it.comp || (p ? p.composition : ''),
         color: it.color,
         slug: p ? p.slug : null,
         price: p ? p.price : null,

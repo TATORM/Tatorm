@@ -1,7 +1,7 @@
 import { addToCart, openCart } from './cart.js';
+import { showCollection } from './collection.js';
 import { pdpEl } from './dom.js';
 import { pgridCardHTML } from './grid.js';
-import { showSection } from './nav.js';
 import { PRODUCTS } from './shop.js';
 import { state } from './state.js';
 import { esc, money, pictureHTML, shuffle } from './utils.js';
@@ -231,7 +231,7 @@ export function renderPDP(slug) {
     a.addEventListener('click', e => {
       e.preventDefault();
       const n = parseInt(a.dataset.lookRef);
-      showSection('collection');
+      showCollection();
       const target = document.querySelector(`.look-carousel[data-look="${n}"]`);
       if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 80);
     });
