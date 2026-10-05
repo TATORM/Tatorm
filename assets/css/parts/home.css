@@ -43,6 +43,9 @@
   margin: 44px 0;
 }
 .home-look-pair .home-look { width: 100%; margin: 0; }
+/* stesso formato per le due foto (il look 1 è 2:3, gli altri 4:5):
+   così finiscono alla stessa altezza */
+.home-look-pair .home-look img { aspect-ratio: 4 / 5; height: auto; object-fit: cover; object-position: center top; }
 /* foto orizzontale che sostituisce la coppia: solo mobile (vedi mobile.css) */
 .home-look--wide { display: none; }
 
