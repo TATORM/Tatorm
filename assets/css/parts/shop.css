@@ -47,36 +47,38 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   color: var(--black);
 }
 
-/* Pill categorie — desktop: riga centrata a capo; mobile: riga scorrevole */
+/* Categorie — solo testo (niente "pill"): attiva sottolineata, come LOOK #
+   nel pannello Collection. Desktop: riga centrata a capo; mobile: riga scorrevole */
 .shop-pills {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: 6px 26px;
   max-width: 900px;
   margin: 26px auto 0;
   padding: 0 24px;
 }
 .shop-pill {
-  padding: 7px 14px;
-  border: 1px solid var(--gray-light);
-  border-radius: 999px;
+  padding: 4px 0;
   font-size: var(--fs-2xs);
   letter-spacing: var(--ls-3);
   text-transform: uppercase;
   color: var(--black);
   white-space: nowrap;
-  transition: border-color var(--dur-1) ease, background var(--dur-1) ease, color var(--dur-1) ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--dur-1) ease;
 }
-.shop-pill:hover { border-color: var(--black); }
-.shop-pill.is-active { background: var(--black); color: var(--white); border-color: var(--black); }
-.shop-pill.is-scope { border-color: var(--black); }
+.shop-pill:hover,
+.shop-pill.is-active,
+.shop-pill.is-scope { text-decoration-color: currentColor; }
 @media (max-width: 768px) {
   .shop-pills {
     flex-wrap: nowrap;
     justify-content: flex-start;
     max-width: none;
-    gap: 8px;
+    gap: 22px;
     margin: 22px -16px 0;     /* a filo schermo: .shop-head ha margin 0 16px */
     padding: 0 16px;
     overflow-x: auto;
@@ -86,7 +88,7 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   .shop-pills::-webkit-scrollbar { display: none; }
   .shop-pill {
     flex-shrink: 0;
-    padding: 8px 14px;
+    padding: 6px 0;
     font-size: var(--fs-xs);
     letter-spacing: var(--ls-3);
     white-space: nowrap;
