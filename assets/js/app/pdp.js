@@ -23,7 +23,12 @@ export function renderPDP(slug) {
   const p = window.TATO_getProduct(slug);
   if (!p || !pdpEl) return false;
 
-  if (state.pdp.slug !== slug) state.pdp = { slug, colorIdx: 0, size: null };
+  if (state.pdp.slug !== slug) {
+    // ?color=Red (link dalle card di un colore) → si apre su quel colore
+    const want = new URLSearchParams(location.search).get('color');
+    const i = want ? p.colors.findIndex(c => c.name === want) : -1;
+    state.pdp = { slug, colorIdx: i >= 0 ? i : 0, size: null };
+  }
   const color = p.colors[state.pdp.colorIdx] || p.colors[0];
 
   const sh = window.TATO_shopify;

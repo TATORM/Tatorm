@@ -15,7 +15,9 @@ test('Shop: All = tutti i prodotti, pill per categoria', async ({ page, shopify 
   await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(pants);
 
   await page.locator('#shop-pills').getByRole('link', { name: 'Accessories' }).click();
-  await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(1);
+  // Accessories: una card per colore
+  const capColors = await page.evaluate(() => window.TATO_getProduct('tato-cap').colors.length);
+  await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(capColors);
   await expect(page.locator('#shop-grid')).toContainText('TATO CAP');
 });
 

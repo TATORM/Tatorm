@@ -1,5 +1,5 @@
 import { shopGrid, shopTitleEl } from './dom.js';
-import { pgridHTML } from './grid.js';
+import { pgridCardHTML, pgridHTML } from './grid.js';
 import { state } from './state.js';
 import { activeCount, applyFilters, initFilters, openFilters, readFilters } from './filters.js';
 import { WISHLIST_EVENT, savedProducts } from './wishlist.js';
@@ -79,13 +79,20 @@ export function renderShopGrid() {
   const list = applyFilters(scope, f);
   shopGrid.className = 'pgrid';
   const wish = state.shopScope === 'wishlist';
+  /* Accessories: una card per ogni colore (es. il cappello in tutti i colori),
+     rispettando il filtro colore se attivo */
+  const perColor = state.shopScope === 'accessories';
+  const cards = perColor
+    ? list.flatMap(p => p.colors.map((c, ci) => ({ p, c, ci })).filter(x => !f.color.length || f.color.includes(x.c.name)))
+    : null;
   shopGrid.innerHTML = wish && !scope.length
     ? '<p class="pgrid-empty">Your wishlist is empty. <a href="/shop/">Discover the collection</a></p>'
     : list.length || !scope.length
-      ? pgridHTML(list)
+      ? (perColor ? cards.map(x => pgridCardHTML(x.p, x.ci)).join('') : pgridHTML(list))
       : '<p class="pgrid-empty">No products match these filters.</p>';
+  const n = perColor ? cards.length : list.length;
   const count = document.getElementById('shop-count');
-  if (count) count.textContent = list.length === 1 ? '1 product' : `${list.length} products`;
+  if (count) count.textContent = n === 1 ? '1 product' : `${n} products`;
   const btn = document.getElementById('shop-filter-btn');
   if (btn) {
     const n = activeCount(f);

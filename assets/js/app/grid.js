@@ -69,7 +69,7 @@ export function pgridCardHTML(p, colorIdx) {
       ).join('')}</span>`
     : '';
   return `<div class="pgrid-cell">
-    <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="/product/${p.slug}/" data-slug="${p.slug}">
+    <a class="pgrid-card${sold ? ' is-soldout' : ''}" href="/product/${p.slug}/${col && p.colors.length > 1 ? `?color=${encodeURIComponent(col.name)}` : ''}" data-slug="${p.slug}">
       <span class="pgrid-media${img.flat ? ' is-flat' : ''}${altMedia ? ' has-alt' : ''}">
         ${media}
         ${altMedia}
