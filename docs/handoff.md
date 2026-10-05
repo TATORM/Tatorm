@@ -1,42 +1,79 @@
 # TATO — Handoff
 
 **Ultimo aggiornamento:** 2026-10-05
-**Branch di lavoro:** `ecommerce-dev` — HEAD `dcec316` (+ questo commit docs)
+**Branch di lavoro:** `ecommerce-dev` (tutto solo in locale: push ancora bloccato,
+account `samuelemurru1-wq` senza permessi su TATORM/Tatorm).
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
 
 ═══════════════════════════════════════════════════════════════════
-## RIPRENDERE DA QUI (05/10) — contenuti da Shopify (punto 2)
+## RIPRENDERE DA QUI (05/10, sera)
 ═══════════════════════════════════════════════════════════════════
-- **Contenuti editoriali da Shopify**: `assets/js/content-core.js` (query +
-  trasformazione, browser e Node) → `scripts/fetch-content.mjs` (`npm run content`,
-  incluso in `npm run build`) → `assets/js/content-snapshot.js` (generata).
-  Solo al build, NIENTE dati dal vivo (cambiano di rado). Metaoggetti
-  `tato_collection` (title, season, intro, campaign_images, looks, current) e
-  `tato_look` (number, images, items = righe "NOME | comp | colore"); Pagine
-  Shopify per handle about/shipping/returns/faq/privacy/cookies/terms.
-- **Riserva**: senza collezioni su Shopify si usano i look locali
-  (`TATO_LOOKS_LOCAL` in products.js + media/looks). `TATO_CONTENT` =
-  { source, collections, current, archive, pages }; `TATO_LOOKS` /
-  `TATO_LOOK_PHOTOS` derivati dalla corrente (catalogo, Home, PDP invariati).
-- **Collection costruita da JS** (`app/collection.js` renderCollection /
-  showCollection): i caroselli statici in index.html sono stati tolti.
-  Blocco campagna (`data-look="campaign"`, testo nel pannello) o
-  `.collection-intro` (solo testo, snap stop su mobile). Archivio:
-  `/archive/` + `/collection/<handle>/`, voce menu "Archive" solo se esiste.
-  About: `#about-text` sopra i contatti. Info: testo Shopify se c'è, altrimenti
-  segnaposto; indicizzate solo con testo vero. HTML Shopify ripulito
-  (`safeHTML` in app/info.js: solo tag di testo + href).
-- **Chiave Storefront nuova (05/10 sera)**: canale Headless › "Tato Headless",
-  token `08eb0ee8…ffe7e` in catalog-core.js (il vecchio era del Buy Button, scope
-  non modificabili). Legge prodotti, carrello, metaoggetti, pagine: verificato.
-  Parte A prodotti fatta dall'utente: Care su tutti, tag women gonna, foto Smock. L'utente ha scelto l'inserimento A MANO
-  (niente app Admin): guida `docs/shopify-contenuti.md` con testo dei 21 look
-  pronto da incollare. Consigliato: prima Look 1–2 + Collection di prova → verifico.
-- Verificato con contenuti finti (desktop + mobile): campagna, look, archivio,
-  About, Shipping. Test: 15 unit (nuovo `content-core.test.mjs`), 53 e2e, 64 visivi ok.
-- Prossimo: verificare i primi look inseriti dall'utente; poi Home da Shopify (C4),
-  ricerca, foto editoriali nello shop, PDP, motion, account, italiano. Editorial:
-  rimandato (scelta utente). Cloudflare prima del lancio.
+> ⚠️ Prima del lancio: **Cloudflare Pages** (vedi sezione 30/09) e quantità reali
+> in magazzino su Shopify (oggi quasi tutto a 0 → Sold out).
+
+### Aperto / da chiedere all'utente
+- **App Admin "TATO app"** (Dev Dashboard, scope write_files + write_metaobjects)
+  creata per l'import dei look: l'utente doveva ELIMINARLA dopo l'import. Verificare.
+  Client secret mai salvato nel progetto; token temporaneo cancellato.
+- **Pre-order**: oggi apre l'email precompilata (mailto: info@tatorm.com). Proposto
+  Formspree per invio dal sito: `ENDPOINT` in `assets/js/app/preorder.js` +
+  dominio in connect-src della CSP. In attesa di decisione.
+- 6 colori senza foto del look all'hover (Cap Black/Navy/Red, Smock Black/Dark Grey,
+  Tiny Crewneck Black, 2 Button Shirt Light Grey/White): serve 2ª foto variante su
+  Shopify o correzione colore nei look.
+- Proposte in sospeso: tailored pants anche in Pants (oggi solo Tailoring);
+  card per colore anche fuori da Accessories; trattini lunghi rimasti ("€295 — Shop",
+  footer "Designed in Rome — Made in Italy", titoli scheda).
+- Pagine About / info su Shopify (Negozio online › Pagine, handle about, shipping,
+  returns, faq, privacy, cookies, terms): l'utente le scrive quando ha i testi.
+
+### Fatto oggi
+- **Contenuti da Shopify** (`content-core.js` → `scripts/fetch-content.mjs`, in
+  `npm run build` → `content-snapshot.js`). Solo al build, niente dal vivo.
+  Metaoggetti `tato_collection` (title, season, intro, campaign_images, looks,
+  current) e `tato_look` (number, images, items = righe "NOME | comp | colore");
+  Pagine Shopify per handle. Riserva: `TATO_LOOKS_LOCAL` + media/looks se su
+  Shopify non c'è nessuna collezione. `TATO_CONTENT` = { source, collections,
+  current, archive, pages }; `TATO_LOOKS`/`TATO_LOOK_PHOTOS` dalla corrente.
+- **Collection da JS** (`app/collection.js`), caroselli statici tolti da index.html;
+  blocco campagna / `.collection-intro`; archivio `/archive/` + `/collection/<handle>/`
+  (voce menu solo se esiste). About `#about-text`; info da Shopify (`safeHTML`).
+- **Su Shopify ORA**: "Debut Collection" (handle `debut-collection`, current, senza
+  season) con 21 look e 74 foto, importati con `scripts/import-looks.mjs`
+  (`SHOPIFY_ADMIN_TOKEN=… node scripts/import-looks.mjs 1-21`, rilanciabile).
+  Foto dei look servite dalla CDN Shopify. Copia per upload manuale:
+  `~/Desktop/TATO - FOTO LOOK PER SHOPIFY/look-NN/look-NN-0X.jpg`.
+- **Chiave Storefront nuova**: canale Headless › "Tato Headless", token
+  `08eb0ee8…ffe7e` in catalog-core.js (Buy Button non leggeva metaoggetti/pagine).
+- **Prodotti (fatto dall'utente)**: metafield `custom.care` su tutti (2 Button Shirt
+  con testo etichetta completo), tag `women` sulla gonna, foto per colore Smock.
+  PDP: Care una istruzione per riga (`careLines` in pdp.js).
+- **Shop**: categoria **Tailoring** (tipo Shopify Tailoring: giacca, cappotto,
+  2 Button Tailored Pants, Tailored Pants) e **Jersey** al posto di Outerwear/Knitwear
+  (`RENAMED` in router.js reindirizza i vecchi /shop/outerwear|knitwear/).
+  Categorie solo testo con attiva sottolineata (niente pill); titolo nascosto
+  (sr-only) se ripete la categoria, visibile con reparto e in Wishlist.
+  Filtri: opzioni rettangolari. Accessories: una card per colore; card di un
+  colore → PDP `?color=Nome`. Hover griglia: foto del look con il capo nello
+  STESSO colore della card (`lookPhotoFor` in grid.js), altrimenti niente.
+- **Pre-order** (`app/preorder.js`) al posto di "Archive piece" nel pannello Collection:
+  modale con capo/colore precompilati, taglia, nome, email, telefono, paese, note,
+  consenso; pulsante sticky; testi garbati (l'utente ha bocciato la versione secca).
+- **Menu**: aperto fa SCENDERE la pagina (`--menu-push` da ResizeObserver in nav.js,
+  margin-top di #site); a pagina scorsa la fascia dietro le voci resta vuota
+  (clip-path su #site); con menu aperto l'header shop mobile non si nasconde.
+- Home: coppie di look in 4:5; su mobile foto orizzontale al posto della coppia
+  anche dopo resize (CSS, non più solo al load). Footer: "© 2026 TATO De Simone".
+- Server locale: `HOST=0.0.0.0 npm run dev` → visibile in rete (IP Mac oggi
+  192.168.1.15:8777); serve.mjs toglie upgrade-insecure-requests solo in locale.
+- PDF per l'utente: `docs/TATO - Collezioni, look e pagine Shopify.pdf` (ReportLab,
+  stile degli altri due; generatore non nel repo).
+- Test: 21 unit, 53 e2e, 64 visivi (baseline aggiornate a ogni modifica voluta).
+
+### Prossimi passi
+Pagine About/info (testi utente) · Formspree per pre-order · ricerca · foto
+editoriali nello shop · PDP (zoom, visti di recente) · motion · account · italiano ·
+Cloudflare prima del lancio.
 
 ═══════════════════════════════════════════════════════════════════
 ## RIPRENDERE DA QUI (30/09)
