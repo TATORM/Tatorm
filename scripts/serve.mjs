@@ -54,10 +54,15 @@ createServer(async (req, res) => {
       'Content-Type': TYPES[path.extname(file).toLowerCase()] || 'application/octet-stream',
       'Cache-Control': 'no-store',
     });
-    res.end(await readFile(file));
+    let body = await readFile(file);
+    // In http su un indirizzo di rete (telefono / altro computer, HOST=0.0.0.0)
+    // upgrade-insecure-requests della CSP forzerebbe https su CSS, JS e foto
+    // → pagina senza stili. Solo nel server locale; online il sito è in https.
+    if (file.endsWith('.html')) body = String(body).replace(/;\s*upgrade-insecure-requests/, '');
+    res.end(body);
   } catch (e) {
     res.writeHead(500).end(String(e));
   }
-}).listen(PORT, '127.0.0.1', () => {
+}).listen(PORT, process.env.HOST || '127.0.0.1', () => {   // HOST=0.0.0.0 → visibile in rete locale (stesso Wi-Fi)
   console.log(`TATO ${SPA_FALLBACK ? 'dev' : 'preview ' + process.env.DIR} → http://localhost:${PORT}`);
 });
