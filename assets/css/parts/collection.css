@@ -167,7 +167,16 @@
 }
 .panel-item-shop:hover { border-color: var(--black); opacity: 0.7; }
 
-/* capo da lookbook, non in vendita */
+/* capo non in vendita → "Pre-order" (pulsante con l'aspetto del link Shop) */
+.panel-item-preorder {
+  background: none;
+  border-top: 0; border-left: 0; border-right: 0;
+  font-family: var(--font);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* capo da lookbook, non in vendita (non più usato: ora Pre-order) */
 .panel-item-archive {
   margin-top: 5px;
   font-size: var(--fs-s);

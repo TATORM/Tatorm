@@ -21,7 +21,7 @@
        number, images, items (una riga per capo:
        NOME | composizione | colore)
      Un capo il cui nome coincide con un prodotto Shopify
-     diventa link alla PDP; gli altri sono "Archive piece".
+     diventa link alla PDP; gli altri sono "Pre-order".
    • Pagine Shopify (handle about, shipping, returns, faq,
      privacy, cookies, terms) → testo di quelle pagine.
    Finché su Shopify non c'è nessuna collezione, il sito

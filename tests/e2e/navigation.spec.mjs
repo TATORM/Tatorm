@@ -15,7 +15,16 @@ test('Collection: pannello del look con link Shop ai capi in vendita', async ({ 
   await expect(panel.locator('.panel-look-number')).toHaveText('LOOK #1');
   const shop = panel.locator('a.panel-item-shop');
   await expect(shop).toHaveAttribute('href', '/product/tobi-pants/');
-  await expect(panel.getByText('Archive piece').first()).toBeVisible();
+  // capi non in vendita: Pre-order → form con capo e colore già compilati
+  await panel.locator('.panel-item-preorder').first().click();
+  const dlg = page.locator('.preorder');
+  await expect(dlg).toBeVisible();
+  await expect(dlg.locator('#preorder-title')).toHaveText('Pre-order — 2 BUTTON WINDBREAKER');
+  await expect(dlg.locator('input[name=color]')).toHaveValue('White');
+  await dlg.locator('.preorder-submit').click();
+  await expect(dlg.locator('.preorder-error')).toBeVisible();   // campi obbligatori
+  await page.keyboard.press('Escape');
+  await expect(dlg).toBeHidden();
 });
 
 test('Rotte dirette e tasto indietro', async ({ page, shopify }) => {

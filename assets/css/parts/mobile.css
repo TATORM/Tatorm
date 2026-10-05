@@ -215,7 +215,7 @@
   .cart-drawer { width: 100vw; border-left: none; }
 
   /* Il pannello look è pointer-events:none; riabilita solo il link "Shop" */
-  .fixed-look-info .panel-item-shop { pointer-events: auto; }
+  .fixed-look-info .panel-item-shop { pointer-events: auto; }   /* anche Pre-order */
 
   /* Pannello mobile scrollabile se molti item */
   .fixed-look-info {

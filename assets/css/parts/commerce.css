@@ -236,3 +236,33 @@
 .info-doc .archive-list li a { text-decoration: none; }
 .info-doc .archive-list li a:hover { text-decoration: underline; }
 .archive-season { color: var(--gray); }
+
+/* Pre-order — form nella modale (stessa base della size guide) */
+.preorder { max-width: 480px; }
+.preorder-intro { font-size: var(--fs-s); line-height: 1.7; color: rgba(17,17,17,0.6); margin-bottom: 18px; }
+.preorder-form { display: flex; flex-direction: column; gap: 12px; }
+.preorder-form[hidden], .preorder-status[hidden], .preorder-error[hidden] { display: none; }
+.preorder-field { display: flex; flex-direction: column; gap: 4px; }
+.preorder-field span {
+  font-size: var(--fs-2xs); letter-spacing: var(--ls-4); text-transform: uppercase; color: rgba(17,17,17,0.6);
+}
+.preorder-field input, .preorder-field select, .preorder-field textarea {
+  font-family: var(--font); font-weight: 500; font-size: var(--fs-m); color: #111;
+  background: transparent; border: 0; border-bottom: 1px solid rgba(17,17,17,0.25);
+  border-radius: 0; padding: 6px 0; width: 100%;
+}
+.preorder-field textarea { resize: vertical; }
+.preorder-field input:focus, .preorder-field select:focus, .preorder-field textarea:focus { outline: none; border-bottom-color: #111; }
+.preorder-consent { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-xs); line-height: 1.6; color: rgba(17,17,17,0.7); margin-top: 4px; }
+.preorder-consent input { margin-top: 2px; }
+.preorder-consent a { text-decoration: underline; }
+.preorder-error { font-size: var(--fs-xs); color: #8a1f1f; }
+.preorder-submit {
+  margin-top: 6px; padding: 13px 16px; background: #111; color: #fff; border: 0; cursor: pointer;
+  font-family: var(--font); font-weight: 500; font-size: var(--fs-xs); letter-spacing: var(--ls-4); text-transform: uppercase;
+}
+.preorder-submit:disabled { opacity: 0.5; }
+.preorder-status { font-size: var(--fs-m); line-height: 1.7; }
+@media (max-width: 768px) {
+  .preorder-field input, .preorder-field select, .preorder-field textarea { font-size: 16px; }   /* niente zoom su iOS */
+}

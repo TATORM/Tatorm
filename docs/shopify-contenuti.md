@@ -65,7 +65,7 @@ Di nuovo **Aggiungi definizione**:
   su quella attuale, che passa da sola in archivio.
 - **Capi del look**: se il NOME è identico al titolo di un prodotto Shopify (maiuscole
   non contano), nel pannello diventa il link "€ — Shop" alla scheda prodotto;
-  altrimenti appare come "Archive piece". Se è un prodotto in vendita puoi anche
+  altrimenti ha il pulsante "Pre-order" (form di richiesta). Se è un prodotto in vendita puoi anche
   lasciare vuota la composizione (`TOBI PANTS | | Black`): la prende dal prodotto.
 - Le foto caricate su Shopify vengono servite dalla CDN di Shopify, già ridimensionate.
 

@@ -113,7 +113,7 @@ if (!same) await writeFile(OUT, body);
 const nLooks = content.collections.reduce((s, c) => s + c.looks.length, 0);
 console.log(`[content] ${content.collections.length} collezioni (${nLooks} look), ${Object.keys(content.pages).length} pagine${same ? ' (invariato)' : ' → content-snapshot.js aggiornato'}`);
 if (!content.collections.length) console.log('[content] Nessuna collezione su Shopify → il sito usa i look locali.');
-if (archive.size) console.log(`[content] "Archive piece" (nome diverso da ogni prodotto in vendita): ${[...archive].sort().join(', ')}`);
+if (archive.size) console.log(`[content] "Pre-order" (nome diverso da ogni prodotto in vendita): ${[...archive].sort().join(', ')}`);
 const where = Object.keys(issues);
 if (where.length) {
   console.log('[content] Da controllare su Shopify:');

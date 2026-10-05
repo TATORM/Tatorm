@@ -1,5 +1,6 @@
 import { fixedLookInfo } from './dom.js';
 import { showSection } from './nav.js';
+import { openPreorder } from './preorder.js';
 import { state } from './state.js';
 import { esc, money, pictureHTML } from './utils.js';
 
@@ -101,7 +102,7 @@ export function renderLookPanel(lookKey) {
     const itemsHTML = data.items.map(item => {
       const action = item.slug
         ? `<a class="panel-item-shop" href="/product/${item.slug}/">${money(item.price, item.currency)} — Shop</a>`
-        : `<p class="panel-item-archive">Archive piece</p>`;
+        : `<button type="button" class="panel-item-shop panel-item-preorder" data-name="${esc(item.name)}" data-color="${esc(item.color)}">Pre-order</button>`;
       return `
         <div class="panel-item">
           <p class="panel-item-name">${esc(item.name)}</p>
@@ -172,6 +173,11 @@ function bindCarousel(carousel) {
 
 export function initCollection() {
   renderCollection(window.TATO_getCollection());
+  // capi non in vendita → form di pre-order (app/preorder.js)
+  fixedLookInfo.addEventListener('click', e => {
+    const b = e.target.closest('.panel-item-preorder');
+    if (b) openPreorder({ name: b.dataset.name, color: b.dataset.color });
+  });
   // Il pannello look parte nascosto (aggiunto da showSection)
   fixedLookInfo.classList.remove('panel-visible');
 }
