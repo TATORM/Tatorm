@@ -3,7 +3,11 @@
    Uguale su tutte le pagine e dispositivi. Nessun pannello: le voci
    scendono sotto la scritta MENU (testo bianco + mix-blend difference
    come logo e icone, quindi nero sul chiaro e chiaro sullo scuro),
-   direttamente sopra la pagina. Un click fuori lo chiude. */
+   direttamente sopra la pagina. Un click fuori lo chiude.
+   Aperto, la pagina (#site, e con lei il footer) scende dell'altezza delle voci
+   (--menu-push, calcolata in app/nav.js): le voci non coprono i testi. */
+
+#site { margin-top: var(--menu-push, 0px); }   /* il footer viene dopo e scende con lei */
 
 .site-nav {
   position: fixed;

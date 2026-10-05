@@ -160,6 +160,28 @@ logo.addEventListener('click', e => {
 // Stato iniziale nav
 renderNavMenu();
 
+/* Menu aperto → la pagina scende della stessa altezza delle voci, così
+   le voci non finiscono sopra i testi (niente pannello né sfumatura).
+   Segue l'animazione del menu fotogramma per fotogramma (ResizeObserver). */
+if ('ResizeObserver' in window) {
+  const MARGIN = 18;   // margin-top di .nav-links (menu.css)
+  const site = document.getElementById('site');
+  const root = document.documentElement;
+  /* Pagina già scorsa: la parte di pagina dietro le voci resta vuota
+     (colore di fondo), come quando il menu si apre in cima. */
+  const update = () => {
+    const r = navLinks.getBoundingClientRect();
+    const open = r.height > 1;
+    root.style.setProperty('--menu-push', (open ? Math.round(r.height + MARGIN) : 0) + 'px');
+    // su mobile scorre <body> (mobile.css), non la finestra
+    const scrolled = Math.max(window.scrollY, document.body.scrollTop, document.documentElement.scrollTop) > 0;
+    const clip = open && scrolled ? Math.round(r.bottom + 24 - site.getBoundingClientRect().top) : 0;
+    site.style.clipPath = clip > 0 ? `inset(${clip}px 0 0 0)` : '';
+  };
+  new ResizeObserver(update).observe(navLinks);
+  document.addEventListener('scroll', () => { if (navLinks.classList.contains('open')) update(); }, { passive: true, capture: true });
+}
+
 /* ─── Toggle menu ────────────────────────── */
 navToggle.addEventListener('click', () => {
   if (navLinks.classList.contains('open')) closeNav();

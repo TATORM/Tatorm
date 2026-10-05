@@ -58,6 +58,8 @@ window.addEventListener('load', () => {
     return Math.max(0, el.scrollHeight - el.clientHeight);
   }
   function setHidden(on) {
+    // con il menu aperto l'intestazione resta: le voci restano visibili
+    if (on && document.body.classList.contains('menu-open')) return;
     document.body.classList.toggle('header-hidden', on);
   }
   function onScroll() {
