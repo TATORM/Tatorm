@@ -31,6 +31,10 @@ export function renderShopHead() {
     : 'All';
   const dept = state.shopScope !== 'wishlist' && DEPT_LABEL[readFilters().dept];
   shopTitleEl.textContent = dept ? (base === 'All' ? dept : `${dept} / ${base}`) : base;
+  /* visibile solo se aggiunge qualcosa alla categoria sottolineata sotto:
+     reparto filtrato (WOMEN / PANTS) o Wishlist (senza categorie).
+     Altrimenti resta per lettori di schermo e meta, ma non si vede. */
+  shopTitleEl.classList.toggle('sr-only', !dept && state.shopScope !== 'wishlist');
 }
 
 /* Pill: All · New arrivals · categorie con prodotti · Accessories.
