@@ -26,13 +26,15 @@
 (function (root) {
   'use strict';
 
-  /* Connessione Storefront. Il token Storefront è pubblico per
+  /* Connessione Storefront (canale Headless › "Tato Headless", dal 05/10/2026;
+     prima Buy Button, che non permetteva di leggere metaobject e pagine).
+     Il token Storefront è pubblico per
      design (solo lettura catalogo + creazione carrello).
      Se cambia `domain`, aggiornare anche connect-src nella
      Content-Security-Policy di index.html. */
   root.TATO_SHOPIFY = {
     domain: 'pshgtp-ak.myshopify.com',
-    storefrontToken: '387e563b969e48b03ea0be98c1851e2f',
+    storefrontToken: '08eb0ee8f54cc0241abc1806956ffe7e',
     apiVersion: '2024-10',
   };
 

@@ -12,17 +12,11 @@ Tempo stimato: **passo 1–3 ~20 min** · inserimento dei 21 look **~40 min** ·
 
 ---
 
-## Passo 1 — Permessi della chiave del sito (2 min)
+## Passo 1 — Chiave del sito ✅ fatto (05/10)
 
-Il sito legge Shopify con una chiave "Storefront" che oggi vede solo i prodotti.
-
-1. Shopify → **Impostazioni → App e canali di vendita** → apri **Headless**
-   (il canale da cui è stata creata la chiave del sito).
-2. Apri lo storefront del sito → **Storefront API → Gestisci** (permessi).
-3. Attiva anche:
-   - **Metaobjects** — lettura (`unauthenticated_read_metaobjects`)
-   - **Content / Pagine** — lettura (`unauthenticated_read_content`)
-4. **Salva.** La chiave resta la stessa, non serve mandarmi niente.
+Il sito usa la chiave del canale **Headless** (vetrina "Tato Headless"), che legge
+prodotti, carrello, metaoggetti e pagine. La vecchia chiave del Buy Button non
+poteva leggere metaoggetti e pagine. Niente da fare.
 
 ## Passo 2 — Definizione "Look" (5 min)
 

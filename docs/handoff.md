@@ -26,9 +26,10 @@
   About: `#about-text` sopra i contatti. Info: testo Shopify se c'è, altrimenti
   segnaposto; indicizzate solo con testo vero. HTML Shopify ripulito
   (`safeHTML` in app/info.js: solo tag di testo + href).
-- **Bloccato lato utente**: la chiave Storefront NON ha
-  `unauthenticated_read_metaobjects` / `unauthenticated_read_content`
-  (build stampa l'avviso). L'utente ha scelto l'inserimento A MANO
+- **Chiave Storefront nuova (05/10 sera)**: canale Headless › "Tato Headless",
+  token `08eb0ee8…ffe7e` in catalog-core.js (il vecchio era del Buy Button, scope
+  non modificabili). Legge prodotti, carrello, metaoggetti, pagine: verificato.
+  Parte A prodotti fatta dall'utente: Care su tutti, tag women gonna, foto Smock. L'utente ha scelto l'inserimento A MANO
   (niente app Admin): guida `docs/shopify-contenuti.md` con testo dei 21 look
   pronto da incollare. Consigliato: prima Look 1–2 + Collection di prova → verifico.
 - Verificato con contenuti finti (desktop + mobile): campagna, look, archivio,
