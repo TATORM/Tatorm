@@ -23,7 +23,7 @@ window.TATO_CATEGORIES = [
   { slug: 'tailoring', label: 'Tailoring' },   // tipo Shopify "Tailoring": giacche, cappotti, pantaloni sartoriali
   { slug: 'outerwear', label: 'Outerwear' },   // capispalla non sartoriali (oggi nessuno → voce nascosta)
   { slug: 'shirts',    label: 'Shirts' },
-  { slug: 'knitwear',  label: 'Knitwear' },    // jersey / maglieria
+  { slug: 'jersey',    label: 'Jersey' },      // jersey / maglieria (tipo Shopify Jersey o Knitwear)
   { slug: 'pants',     label: 'Pants' },
   { slug: 'skirts',    label: 'Skirts' },
 ];

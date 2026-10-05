@@ -8,6 +8,10 @@ import { CATEGORIES, renderShop } from './shop.js';
 import { state } from './state.js';
 import { ROUTE_EVENT, currentRoute, isAppRoute, setUrl } from './url.js';
 
+/* Categorie rinominate il 05/10/2026: i vecchi /shop/<slug>/ portano alla nuova
+   (finché nessun prodotto usa di nuovo il vecchio slug) */
+const RENAMED = { outerwear: 'tailoring', knitwear: 'jersey' };
+
 /* ─── Routing (percorsi veri, vedi url.js) ─ */
 export function handleShopRoute() {
   const hash = currentRoute();
@@ -91,11 +95,11 @@ export function handleShopRoute() {
     } else if (a === 'accessories') {
       state.shopScope = 'accessories';
       state.shopCategory = 'all';
-    } else if (a === 'outerwear' && !(window.TATO_PRODUCTS || []).some(p => p.category === 'outerwear')) {
-      // giacche e cappotti sono passati in Tailoring (05/10/2026): vecchi link → /shop/tailoring/
-      history.replaceState(null, '', '/shop/tailoring/' + location.search);
+    } else if (RENAMED[a] && !(window.TATO_PRODUCTS || []).some(p => p.category === a)) {
+      // categoria rinominata: vecchio link → nuovo percorso
+      history.replaceState(null, '', `/shop/${RENAMED[a]}/` + location.search);
       state.shopScope = 'all';
-      state.shopCategory = 'tailoring';
+      state.shopCategory = RENAMED[a];
     } else {
       state.shopScope = 'all';
       state.shopCategory = isCat(a) ? a : 'all';

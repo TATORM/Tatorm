@@ -58,7 +58,7 @@ test('colori: foto per variante, taglie disponibili, tinta da swatch o tabella',
 
 test('categoria: tipo prodotto, Tailoring dal titolo, tag category: vince', () => {
   const cat = over => core.buildCatalog([node(over)])[0].category;
-  assert.equal(cat({ productType: 'Jersey' }), 'knitwear');
+  assert.equal(cat({ productType: 'Jersey' }), 'jersey');
   assert.equal(cat({ productType: 'Tailoring', title: 'Tailored Pants' }), 'tailoring');
   assert.equal(cat({ productType: 'Tailoring', title: 'Cropped Jacket' }), 'tailoring');
   assert.equal(cat({ productType: 'Pants', tags: ['category:skirts'] }), 'skirts');

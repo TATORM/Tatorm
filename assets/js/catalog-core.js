@@ -74,7 +74,7 @@
     pants: 'pants', trousers: 'pants',
     shirts: 'shirts', shirt: 'shirts',
     skirts: 'skirts', skirt: 'skirts',
-    jersey: 'knitwear', knitwear: 'knitwear', knit: 'knitwear',
+    jersey: 'jersey', knitwear: 'jersey', knit: 'jersey',
     outerwear: 'outerwear', coats: 'outerwear', jackets: 'outerwear',
     accessories: 'accessories',
   };
