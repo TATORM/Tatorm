@@ -12,6 +12,13 @@ import { wishBtnHTML } from './wishlist.js';
    Shopify (window.TATO_shopify) è fonte autorevole per prezzo,
    compare-at, disponibilità taglie e stato sold-out quando `ready`.
    In assenza (offline / prefetch non finito) si usa il catalogo locale. */
+/* Campo Care di Shopify ("Machine wash cold, Do not bleach, …" oppure
+   una istruzione per riga) → una istruzione per riga, iniziale maiuscola */
+function careLines(care) {
+  return String(care || '').split(/[\n,;]+/).map(t => t.trim()).filter(Boolean)
+    .map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+}
+
 export function renderPDP(slug) {
   const p = window.TATO_getProduct(slug);
   if (!p || !pdpEl) return false;
@@ -175,7 +182,8 @@ export function renderPDP(slug) {
             <p><button class="pdp-inline-link" id="pdp-sizeguide-2" type="button">Open size guide</button></p>
           </div>
           <div class="pdp-tab-panel" data-panel="care">
-            <p>${esc(p.composition)}<br>${esc(p.care)}</p>
+            ${p.composition ? `<p>${esc(p.composition)}</p>` : ''}
+            ${careLines(p.care).length ? `<ul class="pdp-details">${careLines(p.care).map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
           </div>
           <div class="pdp-tab-panel" data-panel="ship">
             <p><a href="/shipping/">Shipping information</a><br>
