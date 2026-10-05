@@ -16,15 +16,25 @@ export function productImgSrc(p) {
 }
 
 /* Seconda immagine mostrata al passaggio del mouse: la 2ª foto di quel
-   colore su Shopify se c'è, altrimenti il capo indossato (foto del look).
+   colore su Shopify se c'è, altrimenti il capo indossato in un look DELLO
+   STESSO COLORE (colore del capo nel look = colore della card). Nessun look
+   con quel colore → nessuna seconda immagine (meglio che un colore diverso).
    Solo con mouse: su touch non esiste l'hover e sarebbe traffico sprecato. */
 const CAN_HOVER = typeof matchMedia === 'function' && matchMedia('(hover: hover) and (pointer: fine)').matches;
+const SAME = { bordeaux: 'burgundy' };          // nomi diversi per lo stesso colore
+const colorKey = name => String(name || '').toLowerCase().split(/\s*[\/&]\s*/)
+  .map(t => SAME[t.trim()] || t.trim()).filter(Boolean).sort().join('/');
+function lookPhotoFor(p, colorName) {
+  const want = colorKey(colorName);
+  const looks = ((window.TATO_CONTENT && window.TATO_CONTENT.current) || {}).looks || [];
+  const look = looks.find(l => l.items.some(it =>
+    String(it.name).toUpperCase() === p.name && colorKey(it.color) === want));
+  return look ? (look.photos || look.images)[0] || '' : '';
+}
 function hoverImgSrc(p, col) {
   const c = col || (p.colors && p.colors[0]);
   if (c && c.images && c.images[1]) return c.images[1];
-  return window.TATO_lookImages
-    ? window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 1 })[0] || ''
-    : '';
+  return c ? lookPhotoFor(p, c.name) : '';
 }
 
 /* colorIdx opzionale: card di una specifica variante colore
