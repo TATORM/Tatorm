@@ -20,7 +20,8 @@ window.TATO_DEPARTMENTS = [
 /* Categorie merceologiche — sottomenu di WOMEN / MEN.
    (accessories è gestita separatamente, vedi sotto) */
 window.TATO_CATEGORIES = [
-  { slug: 'outerwear', label: 'Outerwear' },   // cappotti + giacche tailoring
+  { slug: 'tailoring', label: 'Tailoring' },   // tipo Shopify "Tailoring": giacche, cappotti, pantaloni sartoriali
+  { slug: 'outerwear', label: 'Outerwear' },   // capispalla non sartoriali (oggi nessuno → voce nascosta)
   { slug: 'shirts',    label: 'Shirts' },
   { slug: 'knitwear',  label: 'Knitwear' },    // jersey / maglieria
   { slug: 'pants',     label: 'Pants' },

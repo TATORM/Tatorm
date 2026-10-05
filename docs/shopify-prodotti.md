@@ -25,9 +25,9 @@ Il sito legge i prodotti da Shopify. Nel codice non si scrive nessun prodotto.
    | Jersey / Knitwear | Knitwear |
    | Outerwear | Outerwear |
    | Accessories | Accessories |
-   | Tailoring | Pants se il titolo contiene "pants", Skirts se "skirt", altrimenti Outerwear |
+   | Tailoring | Tailoring (giacche, cappotti e pantaloni sartoriali) |
 
-   Per forzare una categoria: tag `category:outerwear` (o shirts, knitwear, pants, skirts, accessories).
+   Per forzare una categoria: tag `category:tailoring` (o outerwear, shirts, knitwear, pants, skirts, accessories).
 7. **Tag reparto**: `women` e/o `men`. Nessuno dei due = compare in entrambi.
    Tag facoltativi `new` / `exclusive` → etichetta "New" / "Exclusive" su card e pagina prodotto.
 8. **Lavaggio**: campo "Care" (metafield) in fondo alla pagina prodotto.

@@ -91,6 +91,11 @@ export function handleShopRoute() {
     } else if (a === 'accessories') {
       state.shopScope = 'accessories';
       state.shopCategory = 'all';
+    } else if (a === 'outerwear' && !(window.TATO_PRODUCTS || []).some(p => p.category === 'outerwear')) {
+      // giacche e cappotti sono passati in Tailoring (05/10/2026): vecchi link → /shop/tailoring/
+      history.replaceState(null, '', '/shop/tailoring/' + location.search);
+      state.shopScope = 'all';
+      state.shopCategory = 'tailoring';
     } else {
       state.shopScope = 'all';
       state.shopCategory = isCat(a) ? a : 'all';

@@ -11,7 +11,7 @@
 
    COME SI GESTISCE UN PRODOTTO (tutto da Shopify):
    • Tipo prodotto  → categoria (vedi CATEGORY_BY_TYPE)
-     tag `category:<slug>` la forza (es. category:outerwear)
+     tag `category:<slug>` la forza (es. category:tailoring)
    • tag `women` / `men` → reparto; nessuno dei due = entrambi
    • tag `new` / `exclusive` → etichetta sulla card e nella PDP
    • Opzioni "Color" e "Size" → varianti
@@ -70,6 +70,7 @@
 
   /* Tipo prodotto Shopify (minuscolo) → categoria del sito */
   const CATEGORY_BY_TYPE = {
+    tailoring: 'tailoring',                 // giacche, cappotti e pantaloni sartoriali
     pants: 'pants', trousers: 'pants',
     shirts: 'shirts', shirt: 'shirts',
     skirts: 'skirts', skirt: 'skirts',
@@ -102,12 +103,6 @@
     const forced = (node.tags || []).map(lc).find(t => t.startsWith('category:'));
     if (forced) return { slug: forced.slice(9), how: 'tag' };
     const type = lc(node.productType);
-    if (type === 'tailoring') {
-      const t = lc(node.title);
-      if (/pant|trouser/.test(t)) return { slug: 'pants', how: 'tailoring' };
-      if (/skirt/.test(t))        return { slug: 'skirts', how: 'tailoring' };
-      return { slug: 'outerwear', how: 'tailoring' };
-    }
     if (CATEGORY_BY_TYPE[type]) return { slug: CATEGORY_BY_TYPE[type], how: 'type' };
     return { slug: type || 'other', how: 'unknown' };
   }

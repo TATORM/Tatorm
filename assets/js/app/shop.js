@@ -10,7 +10,7 @@ import { WISHLIST_EVENT, savedProducts } from './wishlist.js';
    Rotte:
      /shop/              All (tutto, accessori compresi)
      /shop/new/          New arrivals (tag Shopify `new`)
-     /shop/<categoria>/  categoria (outerwear, pants… accessories)
+     /shop/<categoria>/  categoria (tailoring, pants… accessories)
      /wishlist/          capi salvati
    Women / Men = filtro "Department" (?dept=women), vedi filters.js.
    I vecchi /shop/women/<cat>/ diventano /shop/<cat>/?dept=women.

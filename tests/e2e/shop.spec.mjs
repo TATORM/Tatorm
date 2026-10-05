@@ -118,11 +118,11 @@ test('Menu: voci sotto MENU, pagina sfumata, chiusura e navigazione', async ({ p
   await page.keyboard.press('Escape');
   await expect(links).not.toHaveClass(/open/);
   await page.locator('#nav-toggle').click();
-  await links.getByRole('link', { name: 'Outerwear' }).click();
-  await expect(page).toHaveURL(/\/shop\/outerwear\/$/);
+  await links.getByRole('link', { name: 'Tailoring' }).click();
+  await expect(page).toHaveURL(/\/shop\/tailoring\/$/);
   await expect(links).not.toHaveClass(/open/);
   await expect(page.locator('body')).not.toHaveClass(/menu-open/);
-  await expect(page.locator('#shop-title')).toHaveText('Outerwear');
+  await expect(page.locator('#shop-title')).toHaveText('Tailoring');
 });
 
 test('Reparto come filtro: Men dalla Home, vecchi link /shop/women/', async ({ page, shopify }) => {
