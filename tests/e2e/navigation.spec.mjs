@@ -19,7 +19,7 @@ test('Collection: pannello del look con link Shop ai capi in vendita', async ({ 
   await panel.locator('.panel-item-preorder').first().click();
   const dlg = page.locator('.preorder');
   await expect(dlg).toBeVisible();
-  await expect(dlg.locator('#preorder-title')).toHaveText('Pre-order — 2 BUTTON WINDBREAKER');
+  await expect(dlg.locator('#preorder-title')).toHaveText('Pre-order / 2 BUTTON WINDBREAKER');
   await expect(dlg.locator('input[name=color]')).toHaveValue('White');
   await dlg.locator('.preorder-submit').click();
   await expect(dlg.locator('.preorder-error')).toBeVisible();   // campi obbligatori

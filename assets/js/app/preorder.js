@@ -38,7 +38,7 @@ function build() {
     <div class="sizeguide preorder" role="dialog" aria-modal="true" aria-labelledby="preorder-title">
       <button class="sizeguide-close" type="button" aria-label="Close pre-order">×</button>
       <p class="sizeguide-title" id="preorder-title">Pre-order</p>
-      <p class="preorder-intro">This piece is made to order in small quantities. Leave your details: we will contact you with price, timing and payment. No payment is taken now.</p>
+      <p class="preorder-intro">We make this piece to order, in small quantities. Leave your details and we will write to you with price, timing and payment. You pay nothing now.</p>
       <form class="preorder-form" novalidate>
         <input type="hidden" name="piece">
         <label class="preorder-field"><span>Colour</span><input name="color" autocomplete="off"></label>
@@ -49,7 +49,7 @@ function build() {
         <label class="preorder-field"><span>Country *</span><input name="country" autocomplete="country-name" required></label>
         <label class="preorder-field"><span>Notes</span><textarea name="notes" rows="3"></textarea></label>
         <label class="preorder-consent"><input type="checkbox" name="consent" required>
-          <span>I agree that TATO uses these details to answer my pre-order request (<a href="/privacy/">privacy</a>).</span></label>
+          <span>TATO can use these details to answer my request (<a href="/privacy/">privacy</a>).</span></label>
         <p class="preorder-error" role="alert" hidden></p>
         <button class="preorder-submit" type="submit">Send request</button>
       </form>
@@ -74,7 +74,7 @@ function close() {
 
 function summary(d) {
   return [
-    `Pre-order request — ${d.piece}`,
+    `Pre-order request: ${d.piece}`,
     '',
     `Piece: ${d.piece}`,
     `Colour: ${d.color || '—'}`,
@@ -93,9 +93,9 @@ async function submit(e) {
   const err = form.querySelector('.preorder-error');
   if (!form.checkValidity()) {
     const bad = form.querySelector(':invalid');
-    err.textContent = bad && bad.name === 'consent' ? 'Please accept to continue.'
-      : bad && bad.type === 'email' ? 'Please enter a valid email.'
-      : 'Please fill in the required fields.';
+    err.textContent = bad && bad.name === 'consent' ? 'Tick the box to continue.'
+      : bad && bad.type === 'email' ? 'Check your email address.'
+      : 'Fill in the fields marked *.';
     err.hidden = false;
     if (bad) bad.focus();
     return;
@@ -103,7 +103,7 @@ async function submit(e) {
   err.hidden = true;
   const d = Object.fromEntries(new FormData(form).entries());
   delete d.consent;
-  const subject = `Pre-order — ${d.piece}${d.color ? ` (${d.color})` : ''}, size ${d.size}`;
+  const subject = `Pre-order: ${d.piece}${d.color ? ` (${d.color})` : ''}, size ${d.size}`;
 
   if (ENDPOINT) {
     const btn = form.querySelector('.preorder-submit');
@@ -115,9 +115,9 @@ async function submit(e) {
         body: JSON.stringify({ ...d, _subject: subject, _replyto: d.email, message: summary(d) }),
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      done('Thank you. Your request has been sent — we will be in touch by email.');
+      done('Thank you. We have your request and will write to you by email.');
     } catch (_) {
-      err.textContent = `Something went wrong. Please try again or write to ${EMAIL}.`;
+      err.textContent = `We could not send your request. Try again or write to ${EMAIL}.`;
       err.hidden = false;
     } finally {
       btn.disabled = false;
@@ -126,7 +126,7 @@ async function submit(e) {
   }
   // senza servizio form: email già scritta nell'app di posta del cliente
   location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary(d))}`;
-  done(`Your email app should open with the request ready: just press send. If it doesn't, write to ${EMAIL}.`);
+  done(`Your email app opens with the request ready. Press send. No email app? Write to ${EMAIL}.`);
 }
 
 function done(msg) {
@@ -138,7 +138,7 @@ function done(msg) {
 export function openPreorder(item) {
   if (!overlay) build();
   lastFocus = document.activeElement;
-  titleEl.textContent = `Pre-order — ${item.name}`;
+  titleEl.textContent = `Pre-order / ${item.name}`;
   form.reset();
   form.hidden = false;
   statusEl.hidden = true;
