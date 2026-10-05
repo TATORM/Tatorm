@@ -95,11 +95,10 @@ for (const f of ['catalog-core.js', 'catalog-snapshot.js']) {
   vm.runInNewContext(await readFile(path.join(ROOT, 'assets/js', f), 'utf8'), ctx);
 }
 const names = new Set(((ctx.window.TATO_CATALOG_SNAPSHOT || {}).nodes || []).map(n => String(n.title).trim().toUpperCase()));
+const archive = new Set();   // capi non in vendita: normale, si elencano in una riga sola
 for (const c of content.collections) {
   for (const l of c.looks) {
-    for (const it of l.items) {
-      if (!names.has(it.name.toUpperCase())) warn('collezione ' + c.handle, `look ${l.number}: "${it.name}" non è un prodotto in vendita → "Archive piece"`);
-    }
+    for (const it of l.items) if (!names.has(it.name.toUpperCase())) archive.add(it.name.toUpperCase());
   }
 }
 
@@ -114,6 +113,7 @@ if (!same) await writeFile(OUT, body);
 const nLooks = content.collections.reduce((s, c) => s + c.looks.length, 0);
 console.log(`[content] ${content.collections.length} collezioni (${nLooks} look), ${Object.keys(content.pages).length} pagine${same ? ' (invariato)' : ' → content-snapshot.js aggiornato'}`);
 if (!content.collections.length) console.log('[content] Nessuna collezione su Shopify → il sito usa i look locali.');
+if (archive.size) console.log(`[content] "Archive piece" (nome diverso da ogni prodotto in vendita): ${[...archive].sort().join(', ')}`);
 const where = Object.keys(issues);
 if (where.length) {
   console.log('[content] Da controllare su Shopify:');
