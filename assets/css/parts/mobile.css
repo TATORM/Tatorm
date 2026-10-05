@@ -72,6 +72,9 @@
      si incollano ai pallini colore della card sopra */
   .home-look { width: 100vw; margin: 44px 0; }
   .home-look-pair { width: 100vw; margin: 44px 0; gap: 12px; padding: 0 12px; }
+  /* coppia → una foto orizzontale a tutta larghezza */
+  .home-look-pair--desktop { display: none; }
+  .home-look--wide { display: block; }
 
   /* Hero: leggera sfumatura scura sul fondo, così quando scorre sotto
      l'header (mix-blend difference) MENU/icone restano leggibili anche

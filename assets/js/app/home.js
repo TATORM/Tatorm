@@ -254,7 +254,9 @@ export function initHome() {
   };
 
   /* Mobile: al posto della coppia di foto affiancate (troppo piccole su
-     telefono) una sola foto orizzontale a tutta larghezza. */
+     telefono) una sola foto orizzontale a tutta larghezza. Si inseriscono
+     entrambe e il CSS mostra quella giusta per la larghezza (anche se la
+     finestra cambia dopo il caricamento); quella nascosta, lazy, non si scarica. */
   const wideShots = shuffle(WIDE_PHOTOS_MOBILE);
   let wide = 0;
   const wideFig = () => {
@@ -264,7 +266,6 @@ export function initHome() {
     fig.appendChild(pictureEl(w.src, { alt: homePhotoAlt(w.src), sizes: '100vw', widths: w.widths }));
     return fig;
   };
-  const mobile = !isDesktopViewport();
 
   // quanti stacchi foto ci sono, e quali diventano una coppia (fianco a fianco)
   const slotCount = Math.max(0, Math.ceil(cards.length / PER_BLOCK) - 1);
@@ -284,14 +285,13 @@ export function initHome() {
     feed.appendChild(grid);
 
     if (i + PER_BLOCK < cards.length && lookShots.length) {
-      if (pairSlots.has(slot) && mobile && wideShots.length) {
-        feed.appendChild(wideFig());
-      } else if (pairSlots.has(slot)) {
+      if (pairSlots.has(slot)) {
         const pair = document.createElement('div');
-        pair.className = 'home-look-pair';
+        pair.className = 'home-look-pair' + (wideShots.length ? ' home-look-pair--desktop' : '');
         pair.appendChild(lookFig(nextShot(), '(max-width: 768px) 50vw, 38vw'));
         pair.appendChild(lookFig(nextShot(), '(max-width: 768px) 50vw, 38vw'));
         feed.appendChild(pair);
+        if (wideShots.length) feed.appendChild(wideFig());
       } else {
         feed.appendChild(lookFig(nextShot(), '(max-width: 768px) 100vw, min(700px, 36vw)'));
       }

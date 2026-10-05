@@ -43,6 +43,8 @@
   margin: 44px 0;
 }
 .home-look-pair .home-look { width: 100%; margin: 0; }
+/* foto orizzontale che sostituisce la coppia: solo mobile (vedi mobile.css) */
+.home-look--wide { display: none; }
 
 /* Prima foto: hero fullscreen — altezza = viewport (in CSS, non JS) */
 .home-hero {
