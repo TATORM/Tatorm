@@ -238,8 +238,10 @@
 .archive-season { color: var(--gray); }
 
 /* Pre-order — form nella modale (stessa base della size guide) */
-.preorder { max-width: 480px; }
-.preorder-intro { font-size: var(--fs-s); line-height: 1.7; color: rgba(17,17,17,0.6); margin-bottom: 18px; }
+.preorder { max-width: 520px; max-height: 90vh; max-height: 90dvh; padding-bottom: 0; }
+/* due campi per riga dove ci stanno (taglia+colore, nome+email, telefono+paese) */
+.preorder-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; }
+.preorder-intro { font-size: var(--fs-s); line-height: 1.7; color: rgba(17,17,17,0.6); margin-bottom: 14px; }
 .preorder-form { display: flex; flex-direction: column; gap: 12px; }
 .preorder-form[hidden], .preorder-status[hidden], .preorder-error[hidden] { display: none; }
 .preorder-field { display: flex; flex-direction: column; gap: 4px; }
@@ -257,12 +259,20 @@
 .preorder-consent input { margin-top: 2px; }
 .preorder-consent a { text-decoration: underline; }
 .preorder-error { font-size: var(--fs-xs); color: #8a1f1f; }
+.preorder-actions {
+  /* "Send request" sempre visibile: resta in fondo al riquadro mentre il form scorre */
+  position: sticky; bottom: 0;
+  margin: 4px -26px 0; padding: 12px 26px 22px;
+  background: #f3f3ef;
+  border-top: 1px solid rgba(17,17,17,0.08);
+}
 .preorder-submit {
-  margin-top: 6px; padding: 13px 16px; background: #111; color: #fff; border: 0; cursor: pointer;
+  width: 100%; padding: 13px 16px; background: #111; color: #fff; border: 0; cursor: pointer;
   font-family: var(--font); font-weight: 500; font-size: var(--fs-xs); letter-spacing: var(--ls-4); text-transform: uppercase;
 }
 .preorder-submit:disabled { opacity: 0.5; }
 .preorder-status { font-size: var(--fs-m); line-height: 1.7; }
 @media (max-width: 768px) {
   .preorder-field input, .preorder-field select, .preorder-field textarea { font-size: 16px; }   /* niente zoom su iOS */
+  .preorder-row { grid-template-columns: 1fr; }
 }

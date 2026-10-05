@@ -41,17 +41,23 @@ function build() {
       <p class="preorder-intro">Each piece is made to order, in small quantities. Leave your details and we will be in touch with price, timing and payment. Nothing is charged at this stage.</p>
       <form class="preorder-form" novalidate>
         <input type="hidden" name="piece">
-        <label class="preorder-field"><span>Colour</span><input name="color" autocomplete="off"></label>
-        <label class="preorder-field"><span>Size *</span><select name="size" required></select></label>
-        <label class="preorder-field"><span>Name *</span><input name="name" autocomplete="name" required></label>
-        <label class="preorder-field"><span>Email *</span><input name="email" type="email" autocomplete="email" required></label>
-        <label class="preorder-field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel"></label>
-        <label class="preorder-field"><span>Country *</span><input name="country" autocomplete="country-name" required></label>
-        <label class="preorder-field"><span>Notes</span><textarea name="notes" rows="3"></textarea></label>
+        <div class="preorder-row">
+          <label class="preorder-field"><span>Colour</span><input name="color" autocomplete="off"></label>
+          <label class="preorder-field"><span>Size *</span><select name="size" required></select></label>
+        </div>
+        <div class="preorder-row">
+          <label class="preorder-field"><span>Name *</span><input name="name" autocomplete="name" required></label>
+          <label class="preorder-field"><span>Email *</span><input name="email" type="email" autocomplete="email" required></label>
+        </div>
+        <div class="preorder-row">
+          <label class="preorder-field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel"></label>
+          <label class="preorder-field"><span>Country *</span><input name="country" autocomplete="country-name" required></label>
+        </div>
+        <label class="preorder-field"><span>Notes</span><textarea name="notes" rows="2"></textarea></label>
         <label class="preorder-consent"><input type="checkbox" name="consent" required>
           <span>I agree that TATO may use these details to reply to my request (<a href="/privacy/">privacy</a>).</span></label>
         <p class="preorder-error" role="alert" hidden></p>
-        <button class="preorder-submit" type="submit">Send request</button>
+        <div class="preorder-actions"><button class="preorder-submit" type="submit">Send request</button></div>
       </form>
       <p class="preorder-status" role="status" hidden></p>
     </div>`;
