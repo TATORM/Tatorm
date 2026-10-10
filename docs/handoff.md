@@ -1,9 +1,38 @@
 # TATO — Handoff
 
-**Ultimo aggiornamento:** 2026-10-05
+**Ultimo aggiornamento:** 2026-10-10
 **Branch di lavoro:** `ecommerce-dev` (tutto solo in locale: push ancora bloccato,
 account `samuelemurru1-wq` senza permessi su TATORM/Tatorm).
 **Branch live:** `main` → tatorm.com (invariato, non toccato).
+
+═══════════════════════════════════════════════════════════════════
+## RIPRENDERE DA QUI (10/10)
+═══════════════════════════════════════════════════════════════════
+### Fatto oggi
+- Menu: in home le voci stanno sopra la foto (niente --menu-push quando #home è attiva).
+- Shop: una card per colore ovunque (tranne Wishlist); i tailored pants anche in Pants
+  (`TATO_inCategory` in products.js); trattini lunghi tolti dai testi (titoli "X · TATO").
+- PDP: zoom a schermo intero (`app/zoom.js`, foto CDN a 2048px; base.css spegne i click
+  sulle img, riattivati solo su .pdp-gallery-img/.zoom-img) e "Recently viewed" (`app/recent.js`, localStorage).
+- Motion (`app/motion.js` + parts/motion.css): foto prodotto in dissolvenza, card che salgono
+  entrando nello schermo; spento con "riduci animazioni".
+- Account: icona (desktop/tablet; su mobile solo voce di menu) → pagina account Shopify
+  `shopify.com/107005968724/account` (nuovi account, login con codice email).
+- Italiano (`app/i18n.js`): dizionario EN→IT con t(), testi fissi di index.html tradotti
+  all'avvio, selettore EN / IT in footer e menu (localStorage `tato-lang` + ricarica; prima
+  visita = lingua del browser). tColor/tComposition/tCare per i dati Shopify. URL invariati.
+  Restano in inglese: descrizioni prodotto, testi collezione/pagine (da tradurre su Shopify:
+  lo store ha SOLO l'italiano come lingua, quindi il checkout è già in italiano).
+- Playwright riscaricato (chromium headless shell 1243) dopo l'aggiornamento.
+- Test: 15 unit, 59 e2e, 64 visivi.
+
+### Aperto
+- Negozio Shopify `pshgtp-ak.myshopify.com` mostra il tema di default (ci si arriva dal
+  link "torna al negozio" dell'account): `docs/shopify-redirect.liquid` da incollare in
+  theme.liquid **solo dopo il lancio**. Personalizzare il branding di account/checkout
+  (Impostazioni › Checkout › Personalizza: logo, colori, font).
+- Prodotti/descrizioni in italiano: decidere se tradurle (aggiungere l'inglese come lingua
+  su Shopify o tradurre nel dizionario).
 
 ═══════════════════════════════════════════════════════════════════
 ## RIPRENDERE DA QUI (05/10, sera)

@@ -1,0 +1,26 @@
+{%- comment -%}
+  TATO: il negozio Shopify (pshgtp-ak.myshopify.com) rimanda al sito vero.
+  ─────────────────────────────────────────
+  Dove: Shopify admin › Negozio online › Temi › … › Modifica codice ›
+  layout/theme.liquid → incollare questo blocco SUBITO DOPO <head>.
+  Nell'editor del tema (personalizza) non scatta, così il tema resta modificabile.
+
+  Prodotto → stessa scheda sul sito; collezioni/catalogo → shop;
+  pagine → stessa pagina; tutto il resto → home.
+  Checkout e pagina account NON passano dal tema: continuano a funzionare.
+
+  ⚠ Attivare solo quando il nuovo sito è online su tatorm.com
+    (oggi tatorm.com ha ancora il sito vecchio, senza /product/…).
+{%- endcomment -%}
+{%- unless request.design_mode -%}
+  {%- assign tato = 'https://www.tatorm.com/' -%}
+  {%- case template.name -%}
+    {%- when 'product' -%}{%- assign tato_url = tato | append: 'product/' | append: product.handle | append: '/' -%}
+    {%- when 'collection', 'list-collections', 'search' -%}{%- assign tato_url = tato | append: 'shop/' -%}
+    {%- when 'page' -%}{%- assign tato_url = tato | append: page.handle | append: '/' -%}
+    {%- else -%}{%- assign tato_url = tato -%}
+  {%- endcase -%}
+  <meta http-equiv="refresh" content="0; url={{ tato_url }}">
+  <link rel="canonical" href="{{ tato_url }}">
+  <script>window.location.replace({{ tato_url | json }});</script>
+{%- endunless -%}
