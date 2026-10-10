@@ -27,6 +27,8 @@ export function shopMenuItems() {
 }
 
 export function renderNavMenu() {
+  // pagina account Shopify: stesso indirizzo dell'icona nell'header (index.html)
+  const account = document.getElementById('btn-account')?.getAttribute('href');
   navLinks.innerHTML = `
     <li class="nav-group open">
       <button type="button" class="nav-group-toggle" aria-expanded="true">Shop</button>
@@ -35,6 +37,7 @@ export function renderNavMenu() {
     <li><a href="/collection/">Collection</a></li>
     ${(window.TATO_CONTENT && window.TATO_CONTENT.archive.length) ? '<li><a href="/archive/">Archive</a></li>' : ''}
     <li><a href="/about/">About</a></li>
+    ${account ? `<li><a href="${account}">Account</a></li>` : ''}
   `;
   /* i link veri li gestisce url.js (navigazione senza ricaricare);
      il pannello si chiude in showSection() */

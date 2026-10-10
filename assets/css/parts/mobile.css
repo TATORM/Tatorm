@@ -35,6 +35,7 @@
     mix-blend-mode: difference;
   }
   #btn-theme { display: none; }
+  #btn-account { display: none; }   /* non ci sta accanto al logo: su mobile è nel menu */
   .icon-btn { color: #fff; }
   /* bianco pieno + opacità 1: col difference un grigio all'80% spariva sui packshot chiari */
   #btn-monogram img { filter: brightness(0) invert(1); }

@@ -156,3 +156,10 @@ test('PDP: zoom delle foto e visti di recente', async ({ page, shopify }) => {
   await page.keyboard.press('Escape');
   await expect(page.locator('.zoom')).toBeHidden();
 });
+
+test('Account cliente: icona e voce di menu verso la pagina account Shopify', async ({ page, shopify }) => {
+  await page.goto('/shop/');
+  await shopifyReady(page);
+  await expect(page.locator('#nav-links a', { hasText: 'Account' })).toHaveAttribute('href', /^https:\/\/shopify\.com\/\d+\/account/);
+  await expect(page.locator('#btn-account')).toHaveAttribute('href', /^https:\/\/shopify\.com\/\d+\/account/);
+});
