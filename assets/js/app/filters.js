@@ -158,6 +158,7 @@ export function openFilters(products) {
   drawer.classList.add('open');
   overlay.classList.add('open');
   drawer.setAttribute('aria-hidden', 'false');
+  drawer.inert = false;
   drawer.querySelector('.cart-close').focus();
 }
 
@@ -165,6 +166,7 @@ export function closeFilters() {
   drawer.classList.remove('open');
   overlay.classList.remove('open');
   drawer.setAttribute('aria-hidden', 'true');
+  drawer.inert = true;   // chiuso: niente Tab dentro il pannello
   document.getElementById('shop-filter-btn')?.focus();
 }
 
@@ -178,6 +180,7 @@ export function initFilters(changed) {
   drawer.setAttribute('aria-modal', 'true');
   drawer.setAttribute('aria-label', t('Filter and sort'));
   drawer.setAttribute('aria-hidden', 'true');
+  drawer.inert = true;   // chiuso: niente Tab dentro il pannello
   drawer.innerHTML = `
     <div class="cart-drawer-header">
       <p class="cart-drawer-title">${esc(t('Filter & sort'))}</p>

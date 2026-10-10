@@ -31,7 +31,7 @@
 
 :root {
   --black:      #0a0a0a;
-  --gray:       #888888;
+  --gray:       #767676;   /* il grigio più chiaro leggibile su bianco (contrasto 4.5:1, WCAG AA) */
   --gray-light: #d8d8d8;
   --white:      #ffffff;
 
@@ -79,6 +79,7 @@ body.dark-mode {
   --black:      #f0f0f0;
   --white:      #0a0a0a;
   --gray-light: #2a2a2a;
+  --gray:       #8f8f8f;   /* su fondo quasi nero: contrasto ≥ 4.5:1 */
 }
 body.dark-mode .site-logo img { filter: invert(1); }
 body.dark-mode #btn-account img { filter: invert(1); }

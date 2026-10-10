@@ -76,3 +76,8 @@ button {
 ul { list-style: none; }
 .hidden { display: none !important; }
 [hidden] { display: none !important; }
+
+/* ─── Contenuti almeno alti quanto lo schermo ──────────────
+   Le sezioni si riempiono via JS: senza questa altezza minima il footer
+   compariva in cima e poi veniva spinto giù (spostamento del layout, CLS). */
+#site { min-height: 100vh; min-height: 100svh; }

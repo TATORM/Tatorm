@@ -158,9 +158,8 @@
 .lang-btn {
   font: inherit;
   letter-spacing: inherit;
-  color: inherit;
-  opacity: 0.45;
-  transition: opacity var(--dur-1) ease;
+  color: inherit;               /* grigio del footer: leggibile (contrasto ≥ 4.5:1) */
+  transition: color var(--dur-1) ease;
 }
-.lang-btn:hover, .lang-btn.is-on { opacity: 1; }
+.lang-btn:hover, .lang-btn.is-on { color: #f0f0f0; }
 .lang-btn.is-on { text-decoration: underline; text-underline-offset: 3px; }

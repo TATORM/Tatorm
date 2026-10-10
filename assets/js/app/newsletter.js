@@ -19,6 +19,7 @@ export function initNewsletter() {
     if (localStorage.getItem('tato-nl-done')) return;
     popup.classList.add('is-open');
     popup.setAttribute('aria-hidden', 'false');
+    popup.inert = false;
     form.style.display = 'block';
     status.classList.remove('is-visible');
     errorText.classList.remove('is-visible');
@@ -27,6 +28,7 @@ export function initNewsletter() {
   function closePopup() {
     popup.classList.remove('is-open');
     popup.setAttribute('aria-hidden', 'true');
+    popup.inert = true;
   }
 
   /* Apertura automatica: in home subito dopo l'intro; nelle altre pagine

@@ -152,6 +152,7 @@ export function openCart() {
   drawer.classList.add('open');
   overlay.classList.add('open');
   drawer.setAttribute('aria-hidden', 'false');
+  drawer.inert = false;
 }
 
 export function closeCart() {
@@ -161,6 +162,7 @@ export function closeCart() {
   drawer.classList.remove('open');
   overlay.classList.remove('open');
   drawer.setAttribute('aria-hidden', 'true');
+  drawer.inert = true;   // chiuso: niente Tab dentro il pannello
 }
 
 export function initCartUI() {
