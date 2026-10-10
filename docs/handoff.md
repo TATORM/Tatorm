@@ -23,6 +23,15 @@ account `samuelemurru1-wq` senza permessi su TATORM/Tatorm).
   visita = sempre inglese). tColor/tComposition/tCare per i dati Shopify. URL invariati.
   Restano in inglese: descrizioni prodotto, testi collezione/pagine (da tradurre su Shopify:
   lo store ha SOLO l'italiano come lingua, quindi il checkout è già in italiano).
+- Pomeriggio: header a scomparsa anche su desktop (shop/PDP); menu che si chiude scorrendo;
+  Collection nel menu = elenco collezioni (voce Archive tolta), menu sopra le foto in home e
+  Collection; monogramma = account (via icona omino, niente pulsante newsletter); popup
+  newsletter subito in home, dopo 8s altrove, mai in Collection; "Bag" ovunque (IT "Shopping
+  bag"); 404 nello stile del sito; footer: Instagram tato_it, Women/Men → /shop/?dept=.
+- Accessibilità: --gray #767676 (AA), inert sui pannelli chiusi, `npm run a11y` (axe, serve
+  `npm run preview` acceso). Lighthouse mobile: 83–84 performance, 100 accessibilità/SEO,
+  CLS 0 (#site min-height 100svh). Resta: testi < 12px su mobile (scelta di stile).
+- npm: la cache ~/.npm ha cartelle di root (EACCES) → per npx usare npm_config_cache=… .
 - Playwright riscaricato (chromium headless shell 1243) dopo l'aggiornamento.
 - Test: 15 unit, 59 e2e, 64 visivi.
 
