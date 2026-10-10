@@ -94,6 +94,15 @@ export function isDesktopViewport() {
   return !window.matchMedia('(max-width: 768px)').matches;
 }
 
+/* €295 · $320 · £280 · ¥52,000 (decimali solo se ci sono) */
 export function money(price, currency) {
-  return (currency === 'EUR' ? '€' : '') + price;
+  const n = Number(price);
+  const cur = currency || 'EUR';
+  if (!isFinite(n)) return '';
+  try {
+    return new Intl.NumberFormat('en', {
+      style: 'currency', currency: cur, currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: n % 1 ? 2 : 0,
+    }).format(n);
+  } catch (_) { return (cur === 'EUR' ? '€' : cur + ' ') + n; }
 }

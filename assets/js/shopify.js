@@ -24,6 +24,31 @@ window.TATO_shopify = {
   products: {},                  // { handle: { title, available, minPrice, currency, images:[], soldOut } }
   TIMEOUT_MS: 6000,
 
+  /* Valute: EUR (Italia, base) e quelle dei mercati Shopify attivi.
+     La scelta del cliente (footer, app/currency.js) è in localStorage;
+     se Shopify non ha quel mercato si resta in euro. */
+  CURRENCIES: { EUR: 'IT', USD: 'US', GBP: 'GB', JPY: 'JP' },
+  currency: 'EUR',               // valuta attiva (dopo init: quella confermata da Shopify)
+  currencies: ['EUR'],           // valute disponibili su Shopify (tra quelle sopra)
+  wantedCurrency() {
+    try {
+      const c = localStorage.getItem('tato-currency');
+      return this.CURRENCIES[c] ? c : 'EUR';
+    } catch (_) { return 'EUR'; }
+  },
+  country() { return this.CURRENCIES[this.currency] || 'IT'; },
+
+  /* Paesi venduti dallo store → valute disponibili */
+  async _fetchCurrencies() {
+    const json = await this._gql('{ localization { availableCountries { isoCode currency { isoCode } } } }');
+    const countries = (json.data && json.data.localization && json.data.localization.availableCountries) || [];
+    const out = ['EUR'];
+    Object.keys(this.CURRENCIES).forEach(code => {
+      if (code !== 'EUR' && countries.some(c => c.isoCode === this.CURRENCIES[code] && c.currency.isoCode === code)) out.push(code);
+    });
+    return out;
+  },
+
   _key(color, size) { return (color || '') + '||' + (size || 'One Size'); },
 
   _endpoint() {
@@ -88,7 +113,7 @@ window.TATO_shopify = {
     const query = window.TATO_catalogCore.CATALOG_QUERY;
     let nodes = [], after = null;
     do {
-      const json = await this._gql(query, { after });
+      const json = await this._gql(query, { after, country: this.country() });
       if (json.errors && json.errors.length) {
         throw new Error(json.errors.map(e => e.message).join('; '));
       }
@@ -106,6 +131,16 @@ window.TATO_shopify = {
     const prev = this.state;
     this.state = 'loading';
     let nodes = null;
+    const wanted = this.wantedCurrency();
+    if (wanted !== 'EUR') {
+      try { this.currencies = await this._fetchCurrencies(); } catch (_) { this.currencies = ['EUR']; }
+      this.currency = this.currencies.includes(wanted) ? wanted : 'EUR';
+    } else {
+      this._fetchCurrencies().then(list => {          // solo per mostrare il selettore
+        this.currencies = list;
+        document.dispatchEvent(new CustomEvent('tato:currencies', { detail: list }));
+      }).catch(() => {});
+    }
     for (let attempt = 1; attempt <= 2 && !nodes; attempt++) {
       try { nodes = await this._fetchAll(); }
       catch (e) { this.error = e.message || String(e); }
@@ -186,8 +221,8 @@ window.TATO_shopify = {
      lineItems: [{ variantId, quantity }] */
   async createCheckoutUrl(lineItems) {
     if (!lineItems.length) return null;
-    const query = `mutation($lines:[CartLineInput!]!){
-      cartCreate(input:{lines:$lines}){
+    const query = `mutation($lines:[CartLineInput!]!, $country: CountryCode){
+      cartCreate(input:{lines:$lines, buyerIdentity:{countryCode:$country}}){
         cart{ checkoutUrl }
         userErrors{ field message }
       }
@@ -197,6 +232,7 @@ window.TATO_shopify = {
         merchandiseId: li.variantId,
         quantity: li.quantity || 1,
       })),
+      country: this.country(),      // checkout nella valuta scelta
     });
     const errs = json.errors || (json.data && json.data.cartCreate && json.data.cartCreate.userErrors);
     if (errs && errs.length) throw new Error(JSON.stringify(errs));

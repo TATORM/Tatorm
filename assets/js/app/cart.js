@@ -62,7 +62,9 @@ export function reconcileCart() {
     const hit = it.slug ? sh._hit(it.slug, it.color, it.size) : null;
     if (!hit || !hit.available) { removed++; return false; }
     if (hit.id !== it.shopifyVariantId) { it.shopifyVariantId = hit.id; changed = true; }
-    if (hit.price != null && hit.price !== it.price) { it.price = hit.price; changed = true; }
+    if (hit.price != null && (hit.price !== it.price || hit.currency !== it.currency)) {
+      it.price = hit.price; it.currency = hit.currency; changed = true;   // anche al cambio valuta
+    }
     return true;
   });
   if (removed) {

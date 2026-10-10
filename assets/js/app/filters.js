@@ -76,7 +76,7 @@ function matches(p, f) {
   const okVariant = colors.some(c => c.sizes.some(s =>
     (!f.size.length || f.size.includes(s.label)) && (!f.stock || available(p, c, s))));
   if (!okVariant) return false;
-  if (f.price) {
+  if (f.price && (!window.TATO_shopify || window.TATO_shopify.currency === 'EUR')) {
     const b = PRICE_BANDS.find(x => x.id === f.price);
     const pr = priceOf(p);
     if (pr == null || pr < b.min || pr >= b.max) return false;
@@ -99,7 +99,9 @@ function optionsFor(products) {
     c.sizes.forEach(s => { if (!sizes.includes(s.label)) sizes.push(s.label); });
   }));
   sizes.sort((a, b) => (isNaN(a) ? 1 : 0) - (isNaN(b) ? 1 : 0) || Number(a) - Number(b) || a.localeCompare(b));
-  const bands = PRICE_BANDS.filter(b => products.some(p => { const pr = priceOf(p); return pr >= b.min && pr < b.max; }));
+  // fasce di prezzo in euro: con un'altra valuta il filtro prezzo non compare
+  const eur = !window.TATO_shopify || window.TATO_shopify.currency === 'EUR';
+  const bands = eur ? PRICE_BANDS.filter(b => products.some(p => { const pr = priceOf(p); return pr >= b.min && pr < b.max; })) : [];
   const depts = products.some(p => p.category !== 'accessories');
   return { sizes, colors: [...colors].map(([name, hex]) => ({ name, hex })), bands, depts };
 }

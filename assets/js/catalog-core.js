@@ -61,7 +61,8 @@
     }`;
 
   /* Paginato: $after = cursore della pagina precedente */
-  const CATALOG_QUERY = `query Catalog($after: String) {
+  /* $country: prezzi nella valuta del mercato Shopify di quel paese (IT = euro) */
+  const CATALOG_QUERY = `query Catalog($after: String, $country: CountryCode = IT) @inContext(country: $country) {
     products(first: 100, after: $after, sortKey: CREATED_AT, reverse: true) {
       pageInfo { hasNextPage endCursor }
       nodes { ${PRODUCT_FIELDS} }
