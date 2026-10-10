@@ -1,25 +1,26 @@
 {%- comment -%}
   TATO: il negozio Shopify (pshgtp-ak.myshopify.com) rimanda al sito vero.
   ─────────────────────────────────────────
-  Dove: Shopify admin › Negozio online › Temi › … › Modifica codice ›
-  layout/theme.liquid → incollare questo blocco SUBITO DOPO <head>.
-  Nell'editor del tema (personalizza) non scatta, così il tema resta modificabile.
-
-  Prodotto → stessa scheda sul sito; collezioni/catalogo → shop;
-  pagine → stessa pagina; tutto il resto → home.
+  Dove: Shopify admin › Negozio online › Temi › (tema attivo) › ⋯ › Modifica codice ›
+  layout/theme.liquid → incollare questo blocco SUBITO DOPO <head>, poi Salva.
+  Nell'editor del tema (Personalizza) non scatta, così il tema resta modificabile.
   Checkout e pagina account NON passano dal tema: continuano a funzionare.
 
-  ⚠ Attivare solo quando il nuovo sito è online su tatorm.com
-    (oggi tatorm.com ha ancora il sito vecchio, senza /product/…).
+  OGGI (sito vecchio online): nuovo_sito = false → tutto va alla home di tatorm.com.
+  AL LANCIO del nuovo sito: cambiare false in true (riga sotto) e salvare →
+  prodotto → stessa scheda sul sito; collezioni/catalogo → shop; pagine → stessa pagina.
 {%- endcomment -%}
+{%- assign nuovo_sito = false -%}
 {%- unless request.design_mode -%}
-  {%- assign tato = 'https://www.tatorm.com/' -%}
-  {%- case template.name -%}
-    {%- when 'product' -%}{%- assign tato_url = tato | append: 'product/' | append: product.handle | append: '/' -%}
-    {%- when 'collection', 'list-collections', 'search' -%}{%- assign tato_url = tato | append: 'shop/' -%}
-    {%- when 'page' -%}{%- assign tato_url = tato | append: page.handle | append: '/' -%}
-    {%- else -%}{%- assign tato_url = tato -%}
-  {%- endcase -%}
+  {%- assign tato = 'https://tatorm.com/' -%}
+  {%- assign tato_url = tato -%}
+  {%- if nuovo_sito -%}
+    {%- case template.name -%}
+      {%- when 'product' -%}{%- assign tato_url = tato | append: 'product/' | append: product.handle | append: '/' -%}
+      {%- when 'collection', 'list-collections', 'search' -%}{%- assign tato_url = tato | append: 'shop/' -%}
+      {%- when 'page' -%}{%- assign tato_url = tato | append: page.handle | append: '/' -%}
+    {%- endcase -%}
+  {%- endif -%}
   <meta http-equiv="refresh" content="0; url={{ tato_url }}">
   <link rel="canonical" href="{{ tato_url }}">
   <script>window.location.replace({{ tato_url | json }});</script>

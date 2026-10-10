@@ -28,8 +28,10 @@ account `samuelemurru1-wq` senza permessi su TATORM/Tatorm).
 
 ### Aperto
 - Negozio Shopify `pshgtp-ak.myshopify.com` mostra il tema di default (ci si arriva dal
-  link "torna al negozio" dell'account): `docs/shopify-redirect.liquid` da incollare in
-  theme.liquid **solo dopo il lancio**. Personalizzare il branding di account/checkout
+  link "torna al negozio" dell'account): `docs/shopify-redirect.liquid` in layout/theme.liquid.
+  Oggi `nuovo_sito = false` (tutto → home di tatorm.com); **al lancio** metterlo a `true`
+  (prodotti → /product/<handle>/, collezioni → /shop/, pagine → /<handle>/). Modalità
+  privata (password) del negozio online va lasciata SPENTA, altrimenti il tema non gira. Personalizzare il branding di account/checkout
   (Impostazioni › Checkout › Personalizza: logo, colori, font).
 - Prodotti/descrizioni in italiano: decidere se tradurle (aggiungere l'inglese come lingua
   su Shopify o tradurre nel dizionario).
