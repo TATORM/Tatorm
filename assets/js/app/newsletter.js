@@ -29,8 +29,8 @@ export function initNewsletter() {
     popup.setAttribute('aria-hidden', 'true');
   }
 
-  /* Apertura automatica: qualche secondo dopo l'intro, così non copre
-     subito la pagina; mai sopra la Collection (coprirebbe il pannello del
+  /* Apertura automatica: in home subito dopo l'intro; nelle altre pagine
+     qualche secondo dopo, così non copre subito la pagina; mai sopra la Collection (coprirebbe il pannello del
      look): lì aspetta che si passi a un'altra pagina. */
   const AUTO_DELAY = 8000;    // ms dopo la fine dell'intro
   const AFTER_ROUTE = 3000;   // ms dopo essere usciti dalla Collection
@@ -44,7 +44,12 @@ export function initNewsletter() {
     }, AFTER_ROUTE);
     window.addEventListener(ROUTE_EVENT, onRoute);
   }
-  window.addEventListener('tato:intro-done', () => setTimeout(autoOpen, AUTO_DELAY), { once: true });
+  // in home subito dopo l'intro, nelle altre pagine dopo AUTO_DELAY
+  const inHome = () => document.getElementById('home')?.classList.contains('active');
+  window.addEventListener('tato:intro-done', () => {
+    if (inHome()) openPopup();
+    else setTimeout(autoOpen, AUTO_DELAY);
+  }, { once: true });
 
   closeBtn.addEventListener('click', closePopup);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
