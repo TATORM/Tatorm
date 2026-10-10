@@ -2,7 +2,7 @@
    I18N — sito in inglese (base) e italiano
    ─────────────────────────────────────────
    · La lingua si sceglie da EN / IT (footer e menu): resta salvata nel
-     browser e la pagina si ricarica. Prima visita: lingua del browser.
+     browser e la pagina si ricarica. Prima visita: sempre inglese.
    · t('Testo inglese') → traduzione italiana se esiste, altrimenti il
      testo inglese. {nome} nel testo = valore da vars.
    · L'HTML fisso di index.html si traduce all'avvio (translateStatic):
@@ -20,7 +20,7 @@ function detect() {
     const saved = localStorage.getItem(KEY);
     if (LANGS.includes(saved)) return saved;
   } catch (_) {}
-  return /^it\b/i.test(navigator.language || '') ? 'it' : 'en';
+  return 'en';   // sempre inglese finché non si sceglie IT
 }
 export const LANG = detect();
 
