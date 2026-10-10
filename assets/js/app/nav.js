@@ -51,7 +51,13 @@ export function renderNavMenu() {
   });
 }
 
+/* posizione di scroll della pagina (su mobile scorre <body>, vedi mobile.css) */
+const pageY = () => Math.max(window.scrollY, document.body.scrollTop, document.documentElement.scrollTop);
+let openedAtY = 0;
+const CLOSE_AFTER = 40;   // px scorsi verso il basso con il menu aperto → si chiude
+
 export function openNav() {
+  openedAtY = pageY();
   navLinks.classList.add('open');
   document.body.classList.add('menu-open');
   navToggle.setAttribute('aria-expanded', 'true');
@@ -187,6 +193,15 @@ if ('ResizeObserver' in window) {
   new ResizeObserver(update).observe(navLinks);
   document.addEventListener('scroll', () => { if (navLinks.classList.contains('open')) update(); }, { passive: true, capture: true });
 }
+
+/* Menu aperto + pagina scorsa verso il basso → il menu si chiude
+   (lo scroll dentro l'elenco delle voci non conta: pageY non cambia) */
+document.addEventListener('scroll', () => {
+  if (!navLinks.classList.contains('open')) return;
+  const y = pageY();
+  if (y - openedAtY > CLOSE_AFTER) closeNav();
+  else if (y < openedAtY) openedAtY = y;   // risalendo si riparte da lì
+}, { passive: true, capture: true });
 
 /* ─── Toggle menu ────────────────────────── */
 navToggle.addEventListener('click', () => {
