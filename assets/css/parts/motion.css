@@ -1,0 +1,17 @@
+/* motion.css — animazioni di entrata (app/motion.js)
+   ─────────────────────────────────────────
+   Le classi le mette solo il JS: senza JS tutto resta visibile.
+   Animazioni senza "fill" sull'opacità delle foto, così a fine
+   dissolvenza torna a valere l'hover della card (opacity 0.8). */
+
+@keyframes tato-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tato-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.fade-img:not(.is-loaded) { opacity: 0; }
+.fade-img.is-loaded { animation: tato-fade 0.7s var(--ease-out); }
+
+.reveal:not(.is-in) { opacity: 0; }
+.reveal.is-in { animation: tato-rise 0.8s var(--ease-out) var(--d, 0ms) both; }

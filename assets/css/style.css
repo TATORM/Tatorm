@@ -23,6 +23,7 @@
 @import './parts/grid.css';
 @import './parts/pdp.css';
 @import './parts/zoom.css';
+@import './parts/motion.css';
 @import './parts/footer.css';
 @import './parts/commerce.css';
 @import './parts/mobile.css';
