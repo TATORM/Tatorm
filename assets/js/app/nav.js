@@ -5,7 +5,7 @@ import { renderHomeHero } from './home.js';
 import { handleShopRoute } from './router.js';
 import { renderShop } from './shop.js';
 import { state } from './state.js';
-import { isDesktopViewport } from './utils.js';
+import { esc, isDesktopViewport } from './utils.js';
 import { currentRoute, go, setUrl } from './url.js';
 
 /* ═══════════════════════════════════════════
@@ -27,6 +27,16 @@ export function shopMenuItems() {
   ];
 }
 
+/* Collection ▸ una voce per collezione: la corrente (/collection/) e poi
+   quelle d'archivio (/collection/<handle>/), dalla più recente */
+export function collectionMenuItems() {
+  const c = window.TATO_CONTENT;
+  if (!c || !c.current) return [{ href: '/collection/', label: t('Collection') }];
+  const name = col => [col.season, col.title].filter(Boolean).join(' ') || t('Collection');
+  return [{ href: '/collection/', label: name(c.current) }]
+    .concat(c.archive.map(col => ({ href: `/collection/${col.handle}/`, label: name(col) })));
+}
+
 export function renderNavMenu() {
   // pagina account Shopify: stesso indirizzo dell'icona nell'header (index.html)
   const account = document.getElementById('btn-account')?.getAttribute('href');
@@ -35,8 +45,10 @@ export function renderNavMenu() {
       <button type="button" class="nav-group-toggle" aria-expanded="true">${t('Shop')}</button>
       <ul class="nav-sub">${shopMenuItems().map(i => `<li><a href="${i.href}">${i.label}</a></li>`).join('')}</ul>
     </li>
-    <li><a href="/collection/">${t('Collection')}</a></li>
-    ${(window.TATO_CONTENT && window.TATO_CONTENT.archive.length) ? `<li><a href="/archive/">${t('Archive')}</a></li>` : ''}
+    <li class="nav-group">
+      <button type="button" class="nav-group-toggle" aria-expanded="false">${t('Collection')}</button>
+      <ul class="nav-sub">${collectionMenuItems().map(i => `<li><a href="${i.href}">${esc(i.label)}</a></li>`).join('')}</ul>
+    </li>
     <li><a href="/about/">${t('About')}</a></li>
     ${account ? `<li><a href="${account}">${t('Account')}</a></li>` : ''}
     <li class="nav-lang">${langSwitchHTML()}</li>
@@ -182,8 +194,9 @@ if ('ResizeObserver' in window) {
      (colore di fondo), come quando il menu si apre in cima. */
   const update = () => {
     const r = navLinks.getBoundingClientRect();
-    // in home il menu resta sopra la foto: la pagina non scende
-    const open = r.height > 1 && !document.getElementById('home').classList.contains('active');
+    // in home e in Collection il menu resta sopra le foto: la pagina non scende
+    const overPhotos = ['home', 'collection'].some(id => document.getElementById(id)?.classList.contains('active'));
+    const open = r.height > 1 && !overPhotos;
     root.style.setProperty('--menu-push', (open ? Math.round(r.height + MARGIN) : 0) + 'px');
     // su mobile scorre <body> (mobile.css), non la finestra
     const scrolled = Math.max(window.scrollY, document.body.scrollTop, document.documentElement.scrollTop) > 0;

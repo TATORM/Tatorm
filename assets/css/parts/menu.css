@@ -6,7 +6,7 @@
    direttamente sopra la pagina. Un click fuori lo chiude.
    Aperto, la pagina (#site, e con lei il footer) scende dell'altezza delle voci
    (--menu-push, calcolata in app/nav.js): le voci non coprono i testi.
-   In home no: le voci restano sopra la foto. */
+   In home e in Collection no: le voci restano sopra le foto. */
 
 #site { margin-top: var(--menu-push, 0px); }   /* il footer viene dopo e scende con lei */
 
