@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════
    I18N — sito in inglese (base) e italiano
    ─────────────────────────────────────────
-   · La lingua si sceglie da EN / IT (footer e menu): resta salvata nel
+   · La lingua si sceglie da EN / IT nel footer: resta salvata nel
      browser e la pagina si ricarica. Prima visita: sempre inglese.
    · t('Testo inglese') → traduzione italiana se esiste, altrimenti il
      testo inglese. {nome} nel testo = valore da vars.
@@ -219,7 +219,7 @@ export function translateStatic(root = document.body) {
   });
 }
 
-/* Selettore EN / IT (footer e menu) */
+/* Selettore EN / IT (footer) */
 export function langSwitchHTML() {
   return `<span class="lang-switch">${LANGS.map(l =>
     `<button type="button" class="lang-btn${l === LANG ? ' is-on' : ''}" data-lang="${l}" aria-pressed="${l === LANG}" lang="${l}">${l.toUpperCase()}</button>`

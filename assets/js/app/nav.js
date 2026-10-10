@@ -1,4 +1,4 @@
-import { t, langSwitchHTML } from './i18n.js';
+import { t } from './i18n.js';
 import { firstCollectionKey, renderLookPanel } from './collection.js';
 import { fixedLookInfo, logo, navLinks, navToggle, siteBreadcrumb } from './dom.js';
 import { renderHomeHero } from './home.js';
@@ -51,7 +51,6 @@ export function renderNavMenu() {
     </li>
     <li><a href="/about/">${t('About')}</a></li>
     ${account ? `<li><a href="${account}">${t('Account')}</a></li>` : ''}
-    <li class="nav-lang">${langSwitchHTML()}</li>
   `;
   /* i link veri li gestisce url.js (navigazione senza ricaricare);
      il pannello si chiude in showSection() */

@@ -71,7 +71,7 @@
 .nav-sub li + li { margin-top: 8px; }
 .nav-sub a {
   display: block;
-  font-size: var(--fs-2xs);
+  font-size: 0.53rem;          /* ~10.6px: poco più delle etichette minime (--fs-2xs) */
   letter-spacing: var(--ls-3);
   color: #fff;
   opacity: 0.65;

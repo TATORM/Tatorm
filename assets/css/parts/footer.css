@@ -153,7 +153,7 @@
   color: var(--fg-dim);
 }
 
-/* Selettore lingua EN / IT (app/i18n.js): nel footer e in fondo al menu */
+/* Selettore lingua EN / IT (app/i18n.js), nel footer */
 .lang-switch { display: inline-flex; gap: 6px; align-items: baseline; }
 .lang-btn {
   font: inherit;
@@ -164,10 +164,3 @@
 }
 .lang-btn:hover, .lang-btn.is-on { opacity: 1; }
 .lang-btn.is-on { text-decoration: underline; text-underline-offset: 3px; }
-.nav-lang { margin-top: 6px; }
-.nav-lang .lang-switch {
-  font-size: var(--fs-xs);
-  letter-spacing: var(--ls-4);
-  font-weight: 500;
-  color: #fff;            /* come le voci del menu (mix-blend difference) */
-}

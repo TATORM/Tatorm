@@ -19,7 +19,7 @@ account `samuelemurru1-wq` senza permessi su TATORM/Tatorm).
 - Account: icona (desktop/tablet; su mobile solo voce di menu) → pagina account Shopify
   `shopify.com/107005968724/account` (nuovi account, login con codice email).
 - Italiano (`app/i18n.js`): dizionario EN→IT con t(), testi fissi di index.html tradotti
-  all'avvio, selettore EN / IT in footer e menu (localStorage `tato-lang` + ricarica; prima
+  all'avvio, selettore EN / IT nel footer (localStorage `tato-lang` + ricarica; prima
   visita = sempre inglese). tColor/tComposition/tCare per i dati Shopify. URL invariati.
   Restano in inglese: descrizioni prodotto, testi collezione/pagine (da tradurre su Shopify:
   lo store ha SOLO l'italiano come lingua, quindi il checkout è già in italiano).
