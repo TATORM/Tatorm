@@ -3,6 +3,11 @@
 **Aggiornato:** 2026-10-10 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
 Mappa del codice e regole: `CLAUDE.md`. Storico sessioni: `docs/archive/handoff-storico.md`.
 
+## Ripartire da qui
+Fine sessione 10/10: tutto committato e pushato su `origin/ecommerce-dev`, server locale su :8777.
+Prossimi passi possibili: guida Shopify Markets (USA/UK/JP) · Formspree per il pre-ordine ·
+descrizioni prodotto in italiano · passaggio a Cloudflare (al lancio). Chiedere all'utente da cosa partire.
+
 ## Stato
 Sito completo lato codice: home, collection (da Shopify), shop con filtri, scheda prodotto (zoom,
 visti di recente, guida taglie), bag + checkout Shopify, wishlist, pre-ordine (mailto), account
