@@ -141,3 +141,18 @@ test('Reparto come filtro: Men dalla Home, vecchi link /shop/women/', async ({ p
   await expect(page.locator('#shop-title')).toHaveText('Men');
   await expect(page.locator('#shop-filter-btn')).toHaveText('Filter & sort (1)');
 });
+
+test('PDP: zoom delle foto e visti di recente', async ({ page, shopify }) => {
+  await page.goto('/product/tato-cap/');
+  await shopifyReady(page);
+  await page.goto('/product/tobi-pants/');
+  await shopifyReady(page);
+  await expect(page.locator('.pdp-recent .pgrid-card[data-slug="tato-cap"]')).toHaveCount(1);
+  await expect(page.locator('.pdp-recent .pgrid-card[data-slug="tobi-pants"]')).toHaveCount(0);   // non quello aperto
+
+  await page.locator('.pdp-gallery-img').first().click();
+  await expect(page.locator('.zoom')).toBeVisible();
+  await expect(page.locator('.zoom-img').first()).toHaveAttribute('src', /width=2048/);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.zoom')).toBeHidden();
+});

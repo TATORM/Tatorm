@@ -394,3 +394,18 @@ body.dark-mode .pdp-ref { color: var(--gray); }
 
 /* Etichette New / Exclusive accanto al nome (stile in grid.css) */
 .pdp-badges { display: flex; gap: 6px; margin-top: 4px; }
+
+/* Foto cliccabili → zoom (app/zoom.js) */
+.pdp-gallery-img { cursor: zoom-in; pointer-events: auto; }   /* base.css le spegne su tutte le img */
+
+/* Visti di recente — stessa griglia dello shop, sotto "Complete the look" */
+.pdp-recent { margin-top: 80px; }
+.pdp-recent-items {
+  padding: 0 3vw;
+  grid-template-columns: repeat(var(--n, 4), minmax(0, 25%));   /* meno di 4 capi: al centro, stessa misura */
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .pdp-recent { margin-top: 56px; }
+  .pdp-recent-items { padding: 0; grid-template-columns: 1fr 1fr; }
+}

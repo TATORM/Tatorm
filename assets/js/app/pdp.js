@@ -7,6 +7,8 @@ import { state } from './state.js';
 import { esc, money, pictureHTML, shuffle } from './utils.js';
 import { go } from './url.js';
 import { wishBtnHTML } from './wishlist.js';
+import { addRecent, recentHTML } from './recent.js';
+import { openZoom } from './zoom.js';
 
 /* ─── PDP: scheda prodotto ─────────────────
    Shopify (window.TATO_shopify) è fonte autorevole per prezzo,
@@ -198,9 +200,15 @@ export function renderPDP(slug) {
       </div>
     </div>
     ${completeHTML}
+    ${recentHTML(slug)}
   `;
+  addRecent(slug);
 
   /* ── handlers ── */
+  // click su una foto → zoom a schermo intero da quella foto
+  pdpEl.querySelectorAll('.pdp-gallery-img').forEach((img, i) => {
+    img.addEventListener('click', () => openZoom(galleryImgs, i, `${p.name}, ${color.name}`, galleryFlat));
+  });
   const openGuide = () => window.TATO_openSizeGuide && window.TATO_openSizeGuide(p.category, p.name);
   pdpEl.querySelector('#pdp-sizeguide')?.addEventListener('click', openGuide);
   pdpEl.querySelector('#pdp-sizeguide-2')?.addEventListener('click', openGuide);
