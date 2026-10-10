@@ -12,13 +12,18 @@
 {%- endcomment -%}
 {%- assign nuovo_sito = false -%}
 {%- unless request.design_mode -%}
-  {%- assign tato = 'https://tatorm.com/' -%}
-  {%- assign tato_url = tato -%}
+  {%- assign tato_url = 'https://tatorm.com/' -%}
   {%- if nuovo_sito -%}
     {%- case template.name -%}
-      {%- when 'product' -%}{%- assign tato_url = tato | append: 'product/' | append: product.handle | append: '/' -%}
-      {%- when 'collection', 'list-collections', 'search' -%}{%- assign tato_url = tato | append: 'shop/' -%}
-      {%- when 'page' -%}{%- assign tato_url = tato | append: page.handle | append: '/' -%}
+      {%- when 'product' -%}
+        {%- assign tato_url = tato_url | append: 'product/' -%}
+        {%- assign tato_url = tato_url | append: product.handle -%}
+        {%- assign tato_url = tato_url | append: '/' -%}
+      {%- when 'collection', 'list-collections', 'search' -%}
+        {%- assign tato_url = tato_url | append: 'shop/' -%}
+      {%- when 'page' -%}
+        {%- assign tato_url = tato_url | append: page.handle -%}
+        {%- assign tato_url = tato_url | append: '/' -%}
     {%- endcase -%}
   {%- endif -%}
   <meta http-equiv="refresh" content="0; url={{ tato_url }}">
