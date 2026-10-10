@@ -128,6 +128,7 @@ export function showSection(id) {
   // Modalità header per shop / product
   document.body.classList.toggle('shop-mode', id === 'shop' || id === 'product');
   document.body.classList.toggle('collection-mode', id === 'collection');
+  document.body.classList.toggle('home-mode', id === 'home');
 
   // Allinea l'indirizzo alla sezione (replaceState: niente nuova cronologia)
   if (id === 'home') setUrl('');
@@ -171,7 +172,8 @@ if ('ResizeObserver' in window) {
      (colore di fondo), come quando il menu si apre in cima. */
   const update = () => {
     const r = navLinks.getBoundingClientRect();
-    const open = r.height > 1;
+    // in home il menu resta sopra la foto: la pagina non scende
+    const open = r.height > 1 && !document.body.classList.contains('home-mode');
     root.style.setProperty('--menu-push', (open ? Math.round(r.height + MARGIN) : 0) + 'px');
     // su mobile scorre <body> (mobile.css), non la finestra
     const scrolled = Math.max(window.scrollY, document.body.scrollTop, document.documentElement.scrollTop) > 0;
