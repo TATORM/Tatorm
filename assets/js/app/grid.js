@@ -1,3 +1,4 @@
+import { t, tColor } from './i18n.js';
 import { esc, money, pictureHTML } from './utils.js';
 import { wishBtnHTML } from './wishlist.js';
 
@@ -46,7 +47,7 @@ export function pgridCardHTML(p, colorIdx) {
   else img = productImgSrc(p);
 
   const media = img.src
-    ? pictureHTML(img.src, { alt: col ? `${p.name}, ${col.name}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
+    ? pictureHTML(img.src, { alt: col ? `${p.name}, ${tColor(col.name)}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
     : '<span class="ph-block"></span>';
   const alt = CAN_HOVER && img.flat ? hoverImgSrc(p, col) : '';
   const altMedia = alt && alt !== img.src
@@ -74,7 +75,7 @@ export function pgridCardHTML(p, colorIdx) {
         ${media}
         ${altMedia}
         ${badges ? `<span class="pgrid-badges">${badges}</span>` : ''}
-        ${sold ? '<span class="pgrid-soldout">Sold out</span>' : ''}
+        ${sold ? `<span class="pgrid-soldout">${t('Sold out')}</span>` : ''}
       </span>
       <span class="pgrid-name">${esc(p.name)}</span>
       <span class="pgrid-price">${money(price, cur)}</span>
@@ -85,7 +86,7 @@ export function pgridCardHTML(p, colorIdx) {
 }
 
 export function pgridHTML(list) {
-  if (!list || !list.length) return '<p class="pgrid-empty">Coming soon.</p>';
+  if (!list || !list.length) return `<p class="pgrid-empty">${t('Coming soon.')}</p>`;
   return list.map(p => pgridCardHTML(p)).join('');
 }
 

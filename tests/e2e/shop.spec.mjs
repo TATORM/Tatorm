@@ -163,3 +163,18 @@ test('Account cliente: icona e voce di menu verso la pagina account Shopify', as
   await expect(page.locator('#nav-links a', { hasText: 'Account' })).toHaveAttribute('href', /^https:\/\/shopify\.com\/\d+\/account/);
   await expect(page.locator('#btn-account')).toHaveAttribute('href', /^https:\/\/shopify\.com\/\d+\/account/);
 });
+
+test('Italiano: selettore EN / IT, testi dell\'interfaccia, colori e composizione tradotti', async ({ page, shopify }) => {
+  await page.goto('/product/tobi-pants/');
+  await shopifyReady(page);
+  await expect(page.locator('#pdp-add')).toContainText('Add to bag');
+  await page.locator('.footer-region .lang-btn[data-lang="it"]').click();
+  await page.waitForLoadState('load');
+  await shopifyReady(page);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'it');
+  await expect(page.locator('#pdp-add')).toContainText('Aggiungi al carrello');
+  await expect(page.locator('.pdp-color-name')).toHaveText('Nero');
+  await expect(page.locator('.pdp-material')).toHaveText('100% Cotone');
+  await expect(page.locator('.footer-col__title', { hasText: 'Assistenza clienti' })).toHaveCount(1);
+  await page.evaluate(() => localStorage.removeItem('tato-lang'));
+});

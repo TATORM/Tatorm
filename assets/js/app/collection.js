@@ -1,3 +1,4 @@
+import { t, tColor, tComposition } from './i18n.js';
 import { fixedLookInfo } from './dom.js';
 import { showSection } from './nav.js';
 import { openPreorder } from './preorder.js';
@@ -91,7 +92,7 @@ export function renderLookPanel(lookKey) {
     if (!data) {
       // blocco campagna: stagione, titolo e testo della collezione
       fixedLookInfo.innerHTML = `
-        <p class="panel-look-number">${esc(col.season || 'Campaign')}</p>
+        <p class="panel-look-number">${esc(col.season || t('Campaign'))}</p>
         <div class="panel-look-items"><div class="panel-item">
           <p class="panel-item-name">${esc(col.title)}</p>
           ${col.intro.map(t => `<p class="panel-item-info">${esc(t)}</p>`).join('')}
@@ -101,13 +102,13 @@ export function renderLookPanel(lookKey) {
     }
     const itemsHTML = data.items.map(item => {
       const action = item.slug
-        ? `<a class="panel-item-shop" href="/product/${item.slug}/">${money(item.price, item.currency)} · Shop</a>`
-        : `<button type="button" class="panel-item-shop panel-item-preorder" data-name="${esc(item.name)}" data-color="${esc(item.color)}">Pre-order</button>`;
+        ? `<a class="panel-item-shop" href="/product/${item.slug}/">${money(item.price, item.currency)} · ${t('Shop')}</a>`
+        : `<button type="button" class="panel-item-shop panel-item-preorder" data-name="${esc(item.name)}" data-color="${esc(item.color)}">${t('Pre-order')}</button>`;
       return `
         <div class="panel-item">
           <p class="panel-item-name">${esc(item.name)}</p>
-          ${item.composition ? `<p class="panel-item-info">${esc(item.composition)}</p>` : ''}
-          ${item.color ? `<p class="panel-item-info">Color: ${esc(item.color)}</p>` : ''}
+          ${item.composition ? `<p class="panel-item-info">${esc(tComposition(item.composition))}</p>` : ''}
+          ${item.color ? `<p class="panel-item-info">${esc(t('Colour: {c}', { c: tColor(item.color) }))}</p>` : ''}
           ${action}
         </div>
       `;

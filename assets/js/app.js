@@ -24,6 +24,7 @@
      motion      dissolvenza delle foto, card che salgono entrando
      zoom        foto della PDP a schermo intero
      recent      visti di recente (PDP)
+     i18n        inglese / italiano (dizionario, selettore EN / IT)
    Qui si avviano nello stesso ordine di prima.
    ═══════════════════════════════════════════ */
 import { initUrl } from './app/url.js';
@@ -39,12 +40,14 @@ import { initTheme } from './app/theme.js';
 import { initShopFilters } from './app/shop.js';
 import { initWishlist } from './app/wishlist.js';
 import { initMotion } from './app/motion.js';
+import { initI18n } from './app/i18n.js';
 
 history.scrollRestoration = 'manual';
 window.scrollTo(0, 0);
 
 initUrl();      // prima di tutto: converte i vecchi link #… nel percorso vero
 initMotion();   // osserva le card/foto inserite da qui in poi
+initI18n();     // lingua: testi fissi di index.html, selettore EN / IT
 
 initHome();
 initIntro();

@@ -1,3 +1,4 @@
+import { t, tColor } from './i18n.js';
 import { btnShop } from './dom.js';
 import { esc, money, pictureHTML } from './utils.js';
 import { go } from './url.js';
@@ -66,8 +67,8 @@ export function reconcileCart() {
   });
   if (removed) {
     cartNotice = removed === 1
-      ? 'An item in your bag is no longer available and has been removed.'
-      : `${removed} items in your bag are no longer available and have been removed.`;
+      ? t('An item in your bag is no longer available and has been removed.')
+      : t('{n} items in your bag are no longer available and have been removed.', { n: removed });
   }
   if (removed || changed) syncCart();
 }
@@ -100,8 +101,8 @@ export function renderCart() {
 
   if (cart.length === 0) {
     body.innerHTML = notice +
-      '<p class="cart-empty">Your bag is empty.</p>' +
-      '<button class="cart-continue" id="cart-continue" type="button">Continue shopping</button>';
+      `<p class="cart-empty">${t('Your bag is empty.')}</p>` +
+      `<button class="cart-continue" id="cart-continue" type="button">${t('Continue shopping')}</button>`;
     footer.classList.add('hidden');
     document.getElementById('cart-continue')
       ?.addEventListener('click', () => { closeCart(); go('shop'); });
@@ -118,16 +119,16 @@ export function renderCart() {
         : '<span class="cart-item-thumb ph-block"></span>'}
       <div class="cart-item-info">
         <p class="cart-item-name">${esc(item.name)}</p>
-        <p class="cart-item-meta">${item.color ? esc(item.color) + ' · ' : ''}${esc(item.size || '')}</p>
-        <div class="cart-qty" role="group" aria-label="Quantity">
-          <button class="cart-qty-btn" data-act="dec" aria-label="Decrease quantity">−</button>
+        <p class="cart-item-meta">${item.color ? esc(tColor(item.color)) + ' · ' : ''}${esc(item.size || '')}</p>
+        <div class="cart-qty" role="group" aria-label="${t('Quantity')}">
+          <button class="cart-qty-btn" data-act="dec" aria-label="${t('Decrease quantity')}">−</button>
           <span class="cart-qty-val" aria-live="polite">${item.qty}</span>
-          <button class="cart-qty-btn" data-act="inc" aria-label="Increase quantity">+</button>
+          <button class="cart-qty-btn" data-act="inc" aria-label="${t('Increase quantity')}">+</button>
         </div>
       </div>
       <div class="cart-item-right">
         <p class="cart-item-price">${money((item.price || 0) * item.qty, item.currency || cur)}</p>
-        <button class="cart-remove-btn" data-act="rm" aria-label="Remove ${esc(item.name)}">×</button>
+        <button class="cart-remove-btn" data-act="rm" aria-label="${esc(t('Remove {name}', { name: item.name }))}">×</button>
       </div>
     </div>
   `).join('');
@@ -182,10 +183,10 @@ document.addEventListener('tato:shopify-ready', reconcileCart);
   function syncNote() {
     const s = window.TATO_shopify;
     if (!note) return;
-    if (s && s.ready)              note.textContent = 'Secure checkout on Shopify.';
-    else if (s && s.state === 'loading') note.textContent = 'Connecting to checkout…';
-    else if (s && s.state === 'error')   note.textContent = 'Checkout temporarily unavailable.';
-    else                          note.textContent = 'Checkout unavailable.';
+    if (s && s.ready)              note.textContent = t('Secure checkout on Shopify.');
+    else if (s && s.state === 'loading') note.textContent = t('Connecting to checkout…');
+    else if (s && s.state === 'error')   note.textContent = t('Checkout temporarily unavailable.');
+    else                          note.textContent = t('Checkout unavailable.');
     btn.disabled = !(s && s.ready) || cart.length === 0;
   }
   document.addEventListener('tato:shopify-ready', syncNote);
@@ -201,15 +202,15 @@ document.addEventListener('tato:shopify-ready', reconcileCart);
       .map(i => ({ variantId: i.shopifyVariantId, quantity: i.qty || 1 }));
 
     if (!lineItems.length) {
-      if (note) note.textContent = 'No items linked to Shopify yet.';
+      if (note) note.textContent = t('No items linked to Shopify yet.');
       return;
     }
     if (lineItems.length !== cart.length && note) {
-      note.textContent = 'Some items are not available for checkout.';
+      note.textContent = t('Some items are not available for checkout.');
     }
 
     const original = btn.textContent;
-    btn.textContent = 'Redirecting…';
+    btn.textContent = t('Redirecting…');
     btn.disabled = true;
     btn.setAttribute('aria-busy', 'true');
     try {
@@ -218,7 +219,7 @@ document.addEventListener('tato:shopify-ready', reconcileCart);
       throw new Error('no url');
     } catch (e) {
       console.warn('[TATO] checkout fallito:', e);
-      if (note) note.textContent = 'Something went wrong at checkout. Please try again.';
+      if (note) note.textContent = t('Something went wrong at checkout. Please try again.');
       btn.textContent = original;
       btn.disabled = false;
       btn.removeAttribute('aria-busy');

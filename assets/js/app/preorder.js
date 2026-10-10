@@ -1,3 +1,4 @@
+import { t } from './i18n.js';
 import { esc } from './utils.js';
 
 /* ═══════════════════════════════════════════
@@ -36,28 +37,28 @@ function build() {
   overlay.hidden = true;
   overlay.innerHTML = `
     <div class="sizeguide preorder" role="dialog" aria-modal="true" aria-labelledby="preorder-title">
-      <button class="sizeguide-close" type="button" aria-label="Close pre-order">×</button>
-      <p class="sizeguide-title" id="preorder-title">Pre-order</p>
-      <p class="preorder-intro">Each piece is made to order, in small quantities. Leave your details and we will be in touch with price, timing and payment. Nothing is charged at this stage.</p>
+      <button class="sizeguide-close" type="button" aria-label="${t('Close pre-order')}">×</button>
+      <p class="sizeguide-title" id="preorder-title">${t('Pre-order')}</p>
+      <p class="preorder-intro">${t('Each piece is made to order, in small quantities. Leave your details and we will be in touch with price, timing and payment. Nothing is charged at this stage.')}</p>
       <form class="preorder-form" novalidate>
         <input type="hidden" name="piece">
         <div class="preorder-row">
-          <label class="preorder-field"><span>Colour</span><input name="color" autocomplete="off"></label>
-          <label class="preorder-field"><span>Size *</span><select name="size" required></select></label>
+          <label class="preorder-field"><span>${t('Colour')}</span><input name="color" autocomplete="off"></label>
+          <label class="preorder-field"><span>${t('Size *')}</span><select name="size" required></select></label>
         </div>
         <div class="preorder-row">
-          <label class="preorder-field"><span>Name *</span><input name="name" autocomplete="name" required></label>
-          <label class="preorder-field"><span>Email *</span><input name="email" type="email" autocomplete="email" required></label>
+          <label class="preorder-field"><span>${t('Name *')}</span><input name="name" autocomplete="name" required></label>
+          <label class="preorder-field"><span>${t('Email *')}</span><input name="email" type="email" autocomplete="email" required></label>
         </div>
         <div class="preorder-row">
-          <label class="preorder-field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel"></label>
-          <label class="preorder-field"><span>Country *</span><input name="country" autocomplete="country-name" required></label>
+          <label class="preorder-field"><span>${t('Phone')}</span><input name="phone" type="tel" autocomplete="tel"></label>
+          <label class="preorder-field"><span>${t('Country *')}</span><input name="country" autocomplete="country-name" required></label>
         </div>
-        <label class="preorder-field"><span>Notes</span><textarea name="notes" rows="2"></textarea></label>
+        <label class="preorder-field"><span>${t('Notes')}</span><textarea name="notes" rows="2"></textarea></label>
         <label class="preorder-consent"><input type="checkbox" name="consent" required>
-          <span>I agree that TATO may use these details to reply to my request (<a href="/privacy/">privacy</a>).</span></label>
+          <span>${t('I agree that TATO may use these details to reply to my request')} (<a href="/privacy/">privacy</a>).</span></label>
         <p class="preorder-error" role="alert" hidden></p>
-        <div class="preorder-actions"><button class="preorder-submit" type="submit">Send request</button></div>
+        <div class="preorder-actions"><button class="preorder-submit" type="submit">${t('Send request')}</button></div>
       </form>
       <p class="preorder-status" role="status" hidden></p>
     </div>`;
@@ -99,9 +100,9 @@ async function submit(e) {
   const err = form.querySelector('.preorder-error');
   if (!form.checkValidity()) {
     const bad = form.querySelector(':invalid');
-    err.textContent = bad && bad.name === 'consent' ? 'Please tick the box to continue.'
-      : bad && bad.type === 'email' ? 'Please check your email address.'
-      : 'Please fill in the fields marked *.';
+    err.textContent = bad && bad.name === 'consent' ? t('Please tick the box to continue.')
+      : bad && bad.type === 'email' ? t('Please check your email address.')
+      : t('Please fill in the fields marked *.');
     err.hidden = false;
     if (bad) bad.focus();
     return;
@@ -121,9 +122,9 @@ async function submit(e) {
         body: JSON.stringify({ ...d, _subject: subject, _replyto: d.email, message: summary(d) }),
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      done('Thank you. We have received your request and will be in touch by email.');
+      done(t('Thank you. We have received your request and will be in touch by email.'));
     } catch (_) {
-      err.textContent = `Your request could not be sent. Please try again, or write to us at ${EMAIL}.`;
+      err.textContent = t('Your request could not be sent. Please try again, or write to us at {email}.', { email: EMAIL });
       err.hidden = false;
     } finally {
       btn.disabled = false;
@@ -132,7 +133,7 @@ async function submit(e) {
   }
   // senza servizio form: email già scritta nell'app di posta del cliente
   location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary(d))}`;
-  done(`Thank you. Your email app will open with your request ready to send. If it doesn't, you can write to us at ${EMAIL}.`);
+  done(t("Thank you. Your email app will open with your request ready to send. If it doesn't, you can write to us at {email}.", { email: EMAIL }));
 }
 
 function done(msg) {
@@ -144,15 +145,15 @@ function done(msg) {
 export function openPreorder(item) {
   if (!overlay) build();
   lastFocus = document.activeElement;
-  titleEl.textContent = `Pre-order / ${item.name}`;
+  titleEl.textContent = t('Pre-order / {name}', { name: item.name });
   form.reset();
   form.hidden = false;
   statusEl.hidden = true;
   form.querySelector('.preorder-error').hidden = true;
   form.elements.piece.value = item.name;
   form.elements.color.value = item.color || '';
-  form.elements.size.innerHTML = `<option value="">Select</option>` +
-    sizeOptions().map(s => `<option>${esc(s)}</option>`).join('') + `<option>Not sure</option>`;
+  form.elements.size.innerHTML = `<option value="">${t('Select')}</option>` +
+    sizeOptions().map(s => `<option>${esc(s)}</option>`).join('') + `<option>${t('Not sure')}</option>`;
   overlay.hidden = false;
   document.body.style.overflow = 'hidden';
   form.elements.size.focus();

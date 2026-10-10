@@ -1,5 +1,6 @@
 /* Home: hero, reparti, feed prodotti + foto */
 
+import { t } from './i18n.js';
 import { declusterBySlug, pgridCardHTML } from './grid.js';
 import { isDesktopViewport, pictureEl, shuffle } from './utils.js';
 
@@ -190,8 +191,8 @@ export function renderHomeDepartments() {
      stessa altezza e hanno grandezza simile (vedi .home-dept img in home.css).
      Cambiando foto vanno rimisurati. */
   const depts = [
-    { slug: 'men',   label: 'Men',   img: 'media/home/hero/05.jpg', head: [0.523, 0.164], zoom: 1.02 },
-    { slug: 'women', label: 'Women', img: 'media/home/hero/06.jpg', head: [0.514, 0.278], zoom: 1.18 },
+    { slug: 'men',   label: t('Men'),   img: 'media/home/hero/05.jpg', head: [0.523, 0.164], zoom: 1.02 },
+    { slug: 'women', label: t('Women'), img: 'media/home/hero/06.jpg', head: [0.514, 0.278], zoom: 1.18 },
   ];
   depts.forEach(d => {
     const a = document.createElement('a');

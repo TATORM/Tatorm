@@ -1,3 +1,4 @@
+import { translateStatic } from './i18n.js';
 import { setMeta } from './meta.js';
 import { showSection } from './nav.js';
 import { esc } from './utils.js';
@@ -90,6 +91,7 @@ function renderDoc(html) {
   if (!el) return false;
   el.innerHTML = `<article class="info-doc">${html}
     <p class="info-back"><a href="/shop/">← Back to shop</a></p></article>`;
+  translateStatic(el);   // titoli e sottotitoli fissi (i18n.js)
   showSection('info');
   document.getElementById('info')?.classList.add('active');
   return true;

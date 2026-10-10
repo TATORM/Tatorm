@@ -1,3 +1,4 @@
+import { t, tCare, tColor, tComposition } from './i18n.js';
 import { addToCart, openCart } from './cart.js';
 import { showCollection } from './collection.js';
 import { pdpEl } from './dom.js';
@@ -18,7 +19,8 @@ import { openZoom } from './zoom.js';
    una istruzione per riga) → una istruzione per riga, iniziale maiuscola */
 function careLines(care) {
   return String(care || '').split(/[\n,;]+/).map(t => t.trim()).filter(Boolean)
-    .map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+    .map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase())
+    .map(tCare);
 }
 
 export function renderPDP(slug) {
@@ -45,7 +47,7 @@ export function renderPDP(slug) {
   }
   const gallery = galleryImgs.length
     ? galleryImgs.map((src, i) => pictureHTML(src, {
-        alt: `${p.name}, ${color.name}${galleryImgs.length > 1 ? ', view ' + (i + 1) : ''}`,
+        alt: `${p.name}, ${tColor(color.name)}${galleryImgs.length > 1 ? ', view ' + (i + 1) : ''}`,
         cls: 'pdp-gallery-img',
         eager: i === 0,
         sizes: '(max-width: 768px) 50vw, min(900px, 60vw)',
@@ -54,7 +56,7 @@ export function renderPDP(slug) {
 
   const swatches = p.colors.map((c, i) => {
     const cSold = availColors && !availColors[c.name];
-    return `<button class="pdp-color${i === state.pdp.colorIdx ? ' selected' : ''}${cSold ? ' is-soldout' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${esc(c.name)}${cSold ? ', sold out' : ''}"></button>`;
+    return `<button class="pdp-color${i === state.pdp.colorIdx ? ' selected' : ''}${cSold ? ' is-soldout' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${esc(tColor(c.name))}${cSold ? ', ' + t('Sold out') : ''}"></button>`;
   }).join('');
 
   const sizes = color.sizes.map(s => {
@@ -77,16 +79,16 @@ export function renderPDP(slug) {
   const singleSizeLabel = singleSize ? color.sizes[0].label : null;
 
   /* opzioni della tendina taglia (native <select> = accessibile) */
-  const sizeOptions = ['<option value="">Select a size</option>'].concat(
+  const sizeOptions = [`<option value="">${t('Select a size')}</option>`].concat(
     color.sizes.map(s => {
       const avail = shReady ? sh.variantAvailable(slug, color.name, s.label) : (s.available !== false);
-      return `<option value="${esc(s.label)}"${s.label === state.pdp.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${esc(s.label)}${avail ? '' : ' (Sold out)'}</option>`;
+      return `<option value="${esc(s.label)}"${s.label === state.pdp.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${esc(s.label)}${avail ? '' : t(' (Sold out)')}</option>`;
     })
   ).join('');
 
   const priceLabel = money(price, cur);
-  const addLabel = soldOut ? 'Sold out'
-    : `<span>Add to bag</span><span class="pdp-add-price">${compare && compare > price ? `<s>${money(compare, cur)}</s> ` : ''}${priceLabel}</span>`;
+  const addLabel = soldOut ? t('Sold out')
+    : `<span>${t('Add to bag')}</span><span class="pdp-add-price">${compare && compare > price ? `<s>${money(compare, cur)}</s> ` : ''}${priceLabel}</span>`;
 
   /* "Complete the look": foto del 1° look di questo prodotto a sinistra,
      i capi consigliati (a catalogo) a destra. Sempre almeno 2 card:
@@ -118,7 +120,7 @@ export function renderPDP(slug) {
     : null;
   const completeHTML = completeItems.length ? `
     <section class="pdp-complete">
-      <p class="pdp-complete-title">Complete the look</p>
+      <p class="pdp-complete-title">${t('Complete the look')}</p>
       <div class="pdp-complete-row">
         ${lookPhoto ? `<div class="pdp-complete-look">${pictureHTML(lookPhoto, {
           alt: `Look ${lookN}`, sizes: '(max-width: 768px) 100vw, 48vw',
@@ -133,7 +135,7 @@ export function renderPDP(slug) {
     <div class="pdp-main">
       <div class="pdp-gallery${galleryFlat ? ' is-flat' : ''}">${gallery}</div>
       <div class="pdp-info">
-        <button class="pdp-back" id="pdp-back">← Shop</button>
+        <button class="pdp-back" id="pdp-back">${t('← Shop')}</button>
 
         <div class="pdp-head">
           <h1 class="pdp-name">${esc(p.name)}</h1>
@@ -141,21 +143,21 @@ export function renderPDP(slug) {
           ${wishBtnHTML(p.slug, 'wish-btn--pdp')}
         </div>
         <div class="pdp-subhead">
-          <p class="pdp-material">${esc(p.composition)}</p>
-          ${ref ? `<p class="pdp-ref">Ref. ${ref}</p>` : ''}
+          <p class="pdp-material">${esc(tComposition(p.composition))}</p>
+          ${ref ? `<p class="pdp-ref">${t('Ref.')} ${ref}</p>` : ''}
         </div>
-        ${soldOut ? '<p class="pdp-soldout-tag">Sold out</p>' : ''}
+        ${soldOut ? `<p class="pdp-soldout-tag">${t('Sold out')}</p>` : ''}
 
-        <p class="pdp-row-label">Colour</p>
+        <p class="pdp-row-label">${t('Colour')}</p>
         <div class="pdp-colors">${swatches}</div>
-        <p class="pdp-color-name">${esc(color.name)}</p>
+        <p class="pdp-color-name">${esc(tColor(color.name))}</p>
 
         ${singleSize ? `
-        <p class="pdp-row-label">Size</p>
+        <p class="pdp-row-label">${t('Size')}</p>
         <p class="pdp-size-single">OS</p>` : `
         <div class="pdp-size-row">
-          <label class="pdp-row-label" for="pdp-size-select">Select the size</label>
-          <button class="pdp-sizeguide-link" id="pdp-sizeguide" type="button">Size guide</button>
+          <label class="pdp-row-label" for="pdp-size-select">${t('Select the size')}</label>
+          <button class="pdp-sizeguide-link" id="pdp-sizeguide" type="button">${t('Size guide')}</button>
         </div>
         <div class="pdp-select-wrap">
           <select class="pdp-size-select" id="pdp-size-select" aria-describedby="pdp-size-hint">${sizeOptions}</select>
@@ -164,37 +166,37 @@ export function renderPDP(slug) {
 
         <button class="pdp-add-btn" id="pdp-add"${soldOut ? ' disabled' : ''}>${addLabel}</button>
         <button class="pdp-express-btn" id="pdp-express"${soldOut ? ' disabled' : ''}>
-          <span>Express checkout</span>
-          <span class="pdp-pay-marks">PayPal · Apple Pay · Card</span>
+          <span>${t('Express checkout')}</span>
+          <span class="pdp-pay-marks">${t('PayPal · Apple Pay · Card')}</span>
         </button>
 
-        <p class="pdp-delivery-note">Delivery estimate: to be configured</p>
-        <p class="pdp-phone-note">Order by phone: number to be provided</p>
+        <p class="pdp-delivery-note">${t('Delivery estimate: to be configured')}</p>
+        <p class="pdp-phone-note">${t('Order by phone: number to be provided')}</p>
 
         <div class="pdp-tabs" role="tablist">
-          <button class="pdp-tab active" data-tab="desc" role="tab" aria-selected="true">Description</button>
-          <button class="pdp-tab" data-tab="fit" role="tab" aria-selected="false">Size &amp; fit</button>
-          <button class="pdp-tab" data-tab="care" role="tab" aria-selected="false">Composition &amp; care</button>
-          <button class="pdp-tab" data-tab="ship" role="tab" aria-selected="false">Shipping &amp; returns</button>
+          <button class="pdp-tab active" data-tab="desc" role="tab" aria-selected="true">${t('Description')}</button>
+          <button class="pdp-tab" data-tab="fit" role="tab" aria-selected="false">${esc(t('Size & fit'))}</button>
+          <button class="pdp-tab" data-tab="care" role="tab" aria-selected="false">${esc(t('Composition & care'))}</button>
+          <button class="pdp-tab" data-tab="ship" role="tab" aria-selected="false">${esc(t('Shipping & returns'))}</button>
         </div>
         <div class="pdp-tab-panels">
           <div class="pdp-tab-panel active" data-panel="desc">
             <ul class="pdp-details">${(p.details && p.details.length ? p.details : [p.description])
               .map(t => `<li>${esc(t)}</li>`).join('')}</ul>
-            ${lookN ? `<p class="pdp-seenin">Seen in ${(p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ')}</p>` : ''}
+            ${lookN ? `<p class="pdp-seenin">${t('Seen in')} ${(p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ')}</p>` : ''}
           </div>
           <div class="pdp-tab-panel" data-panel="fit">
-            <p>${p.fit ? p.fit : 'Fit information to be provided.'}</p>
-            ${p.model && p.model.height && p.model.wears ? `<p>Model is ${p.model.height} and wears size ${p.model.wears}.</p>` : ''}
-            <p><button class="pdp-inline-link" id="pdp-sizeguide-2" type="button">Open size guide</button></p>
+            <p>${p.fit ? p.fit : t('Fit information to be provided.')}</p>
+            ${p.model && p.model.height && p.model.wears ? `<p>${t('Model is {h} and wears size {s}.', { h: p.model.height, s: p.model.wears })}</p>` : ''}
+            <p><button class="pdp-inline-link" id="pdp-sizeguide-2" type="button">${t('Open size guide')}</button></p>
           </div>
           <div class="pdp-tab-panel" data-panel="care">
-            ${p.composition ? `<p>${esc(p.composition)}</p>` : ''}
+            ${p.composition ? `<p>${esc(tComposition(p.composition))}</p>` : ''}
             ${careLines(p.care).length ? `<ul class="pdp-details">${careLines(p.care).map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
           </div>
           <div class="pdp-tab-panel" data-panel="ship">
-            <p><a href="/shipping/">Shipping information</a><br>
-            <a href="/returns/">Returns &amp; refunds</a></p>
+            <p><a href="/shipping/">${t('Shipping information')}</a><br>
+            <a href="/returns/">${esc(t('Returns & refunds'))}</a></p>
           </div>
         </div>
       </div>
@@ -263,12 +265,12 @@ export function renderPDP(slug) {
     const hint = document.getElementById('pdp-size-hint');
     const chosenSize = singleSizeLabel || state.pdp.size;
     if (!chosenSize) {
-      if (hint) { hint.textContent = 'Select a size'; hint.classList.add('error'); }
+      if (hint) { hint.textContent = t('Select a size'); hint.classList.add('error'); }
       return null;
     }
     const variantId = sh ? sh.variantId(slug, color.name, chosenSize) : null;
     if (shReady && (!variantId || !sh.variantAvailable(slug, color.name, chosenSize))) {
-      if (hint) { hint.textContent = 'This option is not available'; hint.classList.add('error'); }
+      if (hint) { hint.textContent = t('This option is not available'); hint.classList.add('error'); }
       return null;
     }
     const vpAdd = shReady ? sh.variantPrice(slug, color.name, chosenSize) : null;
@@ -291,12 +293,12 @@ export function renderPDP(slug) {
       image: galleryImgs[0] || '', imageFlat: galleryFlat,
     });
     const orig = btn.innerHTML;
-    btn.textContent = 'Added';
+    btn.textContent = t('Added');
     btn.disabled = true;
     btn.setAttribute('aria-busy', 'true');
     openCart();
     setTimeout(() => {
-      btn.innerHTML = soldOut ? 'Sold out' : orig;
+      btn.innerHTML = soldOut ? t('Sold out') : orig;
       btn.disabled = soldOut;
       btn.removeAttribute('aria-busy');
     }, 1400);
@@ -305,11 +307,11 @@ export function renderPDP(slug) {
   document.getElementById('pdp-express')?.addEventListener('click', async () => {
     const btn = document.getElementById('pdp-express');
     if (!btn || btn.disabled) return;
-    if (!shReady) { const h = document.getElementById('pdp-size-hint'); if (h) { h.textContent = 'Checkout unavailable right now'; h.classList.add('error'); } return; }
+    if (!shReady) { const h = document.getElementById('pdp-size-hint'); if (h) { h.textContent = t('Checkout unavailable right now'); h.classList.add('error'); } return; }
     const s = resolveSelection();
     if (!s || !s.variantId) return;
     const orig = btn.innerHTML;
-    btn.textContent = 'Redirecting…';
+    btn.textContent = t('Redirecting…');
     btn.disabled = true;
     btn.setAttribute('aria-busy', 'true');
     try {
@@ -322,7 +324,7 @@ export function renderPDP(slug) {
       btn.disabled = false;
       btn.removeAttribute('aria-busy');
       const h = document.getElementById('pdp-size-hint');
-      if (h) { h.textContent = 'Something went wrong at checkout. Please try again.'; h.classList.add('error'); }
+      if (h) { h.textContent = t('Something went wrong at checkout. Please try again.'); h.classList.add('error'); }
     }
   });
 
@@ -336,9 +338,9 @@ export function renderPDPMissing() {
   const picks = PRODUCTS.slice(0, 4);   // i 4 arrivi più recenti (ordine Shopify)
   pdpEl.innerHTML = `
     <div class="pdp-missing">
-      <button class="pdp-back" id="pdp-back">← Shop</button>
-      <p class="pdp-missing-title">This piece is no longer available.</p>
-      ${picks.length ? `<p class="pdp-missing-sub">You may also like</p>
+      <button class="pdp-back" id="pdp-back">${t('← Shop')}</button>
+      <p class="pdp-missing-title">${t('This piece is no longer available.')}</p>
+      ${picks.length ? `<p class="pdp-missing-sub">${t('You may also like')}</p>
       <div class="pgrid pdp-missing-grid">${picks.map(p => pgridCardHTML(p)).join('')}</div>` : ''}
     </div>`;
   document.getElementById('pdp-back')?.addEventListener('click', () => { go('shop'); });
@@ -353,7 +355,7 @@ export function initSizeGuide() {
    e un avviso. Per popolarle: riempire TATO_SIZE_GUIDE[categoria].rows.
    ═══════════════════════════════════════════ */
 (function sizeGuide() {
-  const COLS = ['Chest', 'Waist', 'Length', 'Shoulder', 'Sleeve'];
+  const COLS = ['Chest', 'Waist', 'Length', 'Shoulder', 'Sleeve'].map(c => t(c));
   // sizes per categoria, dedotte dal catalogo
   function sizesFor(cat) {
     const set = new Set();
@@ -371,11 +373,11 @@ export function initSizeGuide() {
   overlay.hidden = true;
   overlay.innerHTML = `
     <div class="sizeguide" role="dialog" aria-modal="true" aria-labelledby="sizeguide-title">
-      <button class="sizeguide-close" type="button" aria-label="Close size guide">×</button>
-      <p class="sizeguide-title" id="sizeguide-title">Size guide</p>
+      <button class="sizeguide-close" type="button" aria-label="${t('Close size guide')}">×</button>
+      <p class="sizeguide-title" id="sizeguide-title">${t('Size guide')}</p>
       <div class="sizeguide-body"></div>
       <p class="sizeguide-note"></p>
-      <p class="sizeguide-how">Measurements are garment measurements in centimetres, taken flat.</p>
+      <p class="sizeguide-how">${t('Measurements are garment measurements in centimetres, taken flat.')}</p>
     </div>`;
   document.body.appendChild(overlay);
   const panel = overlay.querySelector('.sizeguide');
@@ -396,7 +398,7 @@ export function initSizeGuide() {
   window.TATO_openSizeGuide = function (category, productName) {
     lastFocus = document.activeElement;
     const labels = sizesFor(category);
-    titleEl.textContent = productName ? `Size guide · ${productName}` : 'Size guide';
+    titleEl.textContent = productName ? t('Size guide · {name}', { name: productName }) : t('Size guide');
     const guide = window.TATO_SIZE_GUIDE[category] || {};
     const rows = labels.map(lbl => {
       const vals = (guide.rows && guide.rows[lbl]) || [];
@@ -405,12 +407,12 @@ export function initSizeGuide() {
     }).join('');
     body.innerHTML = labels.length
       ? `<div class="sizeguide-scroll"><table>
-          <thead><tr><th scope="col">Size</th>${COLS.map(c => `<th scope="col">${c}</th>`).join('')}</tr></thead>
+          <thead><tr><th scope="col">${t('Size')}</th>${COLS.map(c => `<th scope="col">${c}</th>`).join('')}</tr></thead>
           <tbody>${rows}</tbody>
         </table></div>`
-      : '<p>One size.</p>';
+      : `<p>${t('One size.')}</p>`;
     const filled = guide.rows && Object.keys(guide.rows).length;
-    note.textContent = filled ? '' : 'Garment measurements for this category are not available yet.';
+    note.textContent = filled ? '' : t('Garment measurements for this category are not available yet.');
     note.hidden = !!filled;
     overlay.hidden = false;
     document.body.style.overflow = 'hidden';

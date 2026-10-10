@@ -6,6 +6,7 @@
    pagina /wishlist/ (griglia dello shop, vedi shop.js).
    Con l'account cliente Shopify potrà sincronizzarsi tra dispositivi.
    ═══════════════════════════════════════════ */
+import { t } from './i18n.js';
 export const WISHLIST_EVENT = 'tato:wishlist-change';
 const KEY = 'tato-wishlist-v1';
 
@@ -33,7 +34,7 @@ const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="cu
 
 export function wishBtnHTML(slug, extra = '') {
   const on = isSaved(slug);
-  return `<button type="button" class="wish-btn${extra ? ' ' + extra : ''}${on ? ' is-on' : ''}" data-wish="${slug}" aria-pressed="${on}" aria-label="${on ? 'Remove from wishlist' : 'Add to wishlist'}">${ICON}</button>`;
+  return `<button type="button" class="wish-btn${extra ? ' ' + extra : ''}${on ? ' is-on' : ''}" data-wish="${slug}" aria-pressed="${on}" aria-label="${on ? t('Remove from wishlist') : t('Add to wishlist')}">${ICON}</button>`;
 }
 
 function sync() {
@@ -41,7 +42,7 @@ function sync() {
     const on = isSaved(b.dataset.wish);
     b.classList.toggle('is-on', on);
     b.setAttribute('aria-pressed', String(on));
-    b.setAttribute('aria-label', on ? 'Remove from wishlist' : 'Add to wishlist');
+    b.setAttribute('aria-label', on ? t('Remove from wishlist') : t('Add to wishlist'));
   });
   const n = savedProducts().length;
   const badge = document.getElementById('wish-badge');

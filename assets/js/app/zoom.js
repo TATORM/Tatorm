@@ -6,6 +6,7 @@
    2× e l'ingrandimento segue il mouse; un altro click torna indietro.
    Touch: pinch nativo del browser. Chiusura: ×, Esc.
    ═══════════════════════════════════════════ */
+import { t } from './i18n.js';
 import { IS_SHOPIFY_CDN, cdnUrl, esc, isDesktopViewport } from './utils.js';
 
 const SCALE = 2;
@@ -19,10 +20,10 @@ function build() {
   el.className = 'zoom';
   el.setAttribute('role', 'dialog');
   el.setAttribute('aria-modal', 'true');
-  el.setAttribute('aria-label', 'Product images');
+  el.setAttribute('aria-label', t('Product images'));
   el.hidden = true;
   el.innerHTML = `
-    <button class="zoom-close" type="button" aria-label="Close">
+    <button class="zoom-close" type="button" aria-label="${t('Close')}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
     </button>
     <div class="zoom-track"></div>`;

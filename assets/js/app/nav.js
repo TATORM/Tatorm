@@ -1,3 +1,4 @@
+import { t, langSwitchHTML } from './i18n.js';
 import { firstCollectionKey, renderLookPanel } from './collection.js';
 import { fixedLookInfo, logo, navLinks, navToggle, siteBreadcrumb } from './dom.js';
 import { renderHomeHero } from './home.js';
@@ -19,10 +20,10 @@ export function shopMenuItems() {
   const products = window.TATO_PRODUCTS || [];
   const cats = (window.TATO_CATEGORIES || []).filter(c => products.some(p => window.TATO_inCategory(p, c.slug)));
   return [
-    { href: '/shop/', label: 'All' },
-    ...(products.some(p => (p.badges || []).includes('New')) ? [{ href: '/shop/new/', label: 'New arrivals' }] : []),
-    ...cats.map(c => ({ href: `/shop/${c.slug}/`, label: c.label })),
-    ...(products.some(p => p.category === 'accessories') ? [{ href: '/shop/accessories/', label: 'Accessories' }] : []),
+    { href: '/shop/', label: t('All') },
+    ...(products.some(p => (p.badges || []).includes('New')) ? [{ href: '/shop/new/', label: t('New arrivals') }] : []),
+    ...cats.map(c => ({ href: `/shop/${c.slug}/`, label: t(c.label) })),
+    ...(products.some(p => p.category === 'accessories') ? [{ href: '/shop/accessories/', label: t('Accessories') }] : []),
   ];
 }
 
@@ -31,13 +32,14 @@ export function renderNavMenu() {
   const account = document.getElementById('btn-account')?.getAttribute('href');
   navLinks.innerHTML = `
     <li class="nav-group open">
-      <button type="button" class="nav-group-toggle" aria-expanded="true">Shop</button>
+      <button type="button" class="nav-group-toggle" aria-expanded="true">${t('Shop')}</button>
       <ul class="nav-sub">${shopMenuItems().map(i => `<li><a href="${i.href}">${i.label}</a></li>`).join('')}</ul>
     </li>
-    <li><a href="/collection/">Collection</a></li>
-    ${(window.TATO_CONTENT && window.TATO_CONTENT.archive.length) ? '<li><a href="/archive/">Archive</a></li>' : ''}
-    <li><a href="/about/">About</a></li>
-    ${account ? `<li><a href="${account}">Account</a></li>` : ''}
+    <li><a href="/collection/">${t('Collection')}</a></li>
+    ${(window.TATO_CONTENT && window.TATO_CONTENT.archive.length) ? `<li><a href="/archive/">${t('Archive')}</a></li>` : ''}
+    <li><a href="/about/">${t('About')}</a></li>
+    ${account ? `<li><a href="${account}">${t('Account')}</a></li>` : ''}
+    <li class="nav-lang">${langSwitchHTML()}</li>
   `;
   /* i link veri li gestisce url.js (navigazione senza ricaricare);
      il pannello si chiude in showSection() */

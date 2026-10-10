@@ -1,3 +1,4 @@
+import { t } from './i18n.js';
 import { shopTitleEl } from './dom.js';
 import { showCollection } from './collection.js';
 import { INFO_ROUTES, showAbout, showArchive, showInfo } from './info.js';
@@ -28,7 +29,7 @@ export function handleShopRoute() {
     if (a && !col) setUrl('collection');          // collezione sconosciuta → la corrente
     showCollection(col ? col.handle : null);
     const shown = col || c.current;
-    const name = col ? [shown.season, shown.title].filter(Boolean).join(' ') : 'Collection';
+    const name = col ? [shown.season, shown.title].filter(Boolean).join(' ') : t('Collection');
     setMeta({
       title: name,
       description: (shown.intro[0] || `The TATO collection: ${shown.looks.length} looks.`) + ' Designed in Rome, made in Italy.',

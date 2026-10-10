@@ -2,9 +2,10 @@
    Nota: essendo una SPA con hash routing su hosting statico, i
    crawler che NON eseguono JS vedono solo i meta di index.html.
    Questo aggiorna title/canonical per browser e crawler JS-capaci. */
+import { t } from './i18n.js';
 export const BASE_URL = 'https://www.tatorm.com/';
 export function setMeta({ title, description, canonicalPath, ogImage }) {
-  document.title = title ? `${title} · TATO` : 'TATO · Independent Fashion. Designed in Rome, Made in Italy.';
+  document.title = title ? `${t(title)} · TATO` : t('TATO · Independent Fashion. Designed in Rome, Made in Italy.');
   const set = (sel, attr, val) => { const n = document.head.querySelector(sel); if (n && val) n.setAttribute(attr, val); };
   if (description) {
     set('meta[name="description"]', 'content', description);

@@ -1,3 +1,4 @@
+import { t } from './i18n.js';
 import { shopGrid, shopTitleEl } from './dom.js';
 import { pgridCardHTML, pgridHTML } from './grid.js';
 import { state } from './state.js';
@@ -18,19 +19,19 @@ import { WISHLIST_EVENT, savedProducts } from './wishlist.js';
 export const PRODUCTS    = window.TATO_PRODUCTS    || [];
 export const CATEGORIES  = window.TATO_CATEGORIES  || [];
 
-const DEPT_LABEL = { women: 'Women', men: 'Men' };
+const DEPT_LABEL = { women: t('Women'), men: t('Men') };
 
 /* Titolo: sezione (o categoria), preceduto dal reparto se filtrato */
 export function renderShopHead() {
   if (!shopTitleEl) return;
   const base =
-    state.shopScope === 'wishlist'      ? 'Wishlist'
-    : state.shopScope === 'new'         ? 'New Arrivals'
-    : state.shopScope === 'accessories' ? 'Accessories'
-    : state.shopCategory !== 'all'      ? window.TATO_getCategoryLabel(state.shopCategory)
-    : 'All';
+    state.shopScope === 'wishlist'      ? t('Wishlist')
+    : state.shopScope === 'new'         ? t('New Arrivals')
+    : state.shopScope === 'accessories' ? t('Accessories')
+    : state.shopCategory !== 'all'      ? t(window.TATO_getCategoryLabel(state.shopCategory))
+    : t('All');
   const dept = state.shopScope !== 'wishlist' && DEPT_LABEL[readFilters().dept];
-  shopTitleEl.textContent = dept ? (base === 'All' ? dept : `${dept} / ${base}`) : base;
+  shopTitleEl.textContent = dept ? (base === t('All') ? dept : `${dept} / ${base}`) : base;
   /* visibile solo se aggiunge qualcosa alla categoria sottolineata sotto:
      reparto filtrato (WOMEN / PANTS) o Wishlist (senza categorie).
      Altrimenti resta per lettori di schermo e meta, ma non si vede. */
@@ -49,11 +50,11 @@ export function renderShopPills() {
   const hasNew = PRODUCTS.some(p => (p.badges || []).includes('New'));
   const cats = CATEGORIES.filter(c => PRODUCTS.some(p => window.TATO_inCategory(p, c.slug)));
   const pills = [
-    { href: '/shop/', label: 'All', on: state.shopScope === 'all' && state.shopCategory === 'all' },
-    ...(hasNew ? [{ href: '/shop/new/', label: 'New arrivals', on: state.shopScope === 'new' }] : []),
-    ...cats.map(c => ({ href: `/shop/${c.slug}/`, label: c.label, on: state.shopCategory === c.slug })),
+    { href: '/shop/', label: t('All'), on: state.shopScope === 'all' && state.shopCategory === 'all' },
+    ...(hasNew ? [{ href: '/shop/new/', label: t('New arrivals'), on: state.shopScope === 'new' }] : []),
+    ...cats.map(c => ({ href: `/shop/${c.slug}/`, label: t(c.label), on: state.shopCategory === c.slug })),
     ...(PRODUCTS.some(p => p.category === 'accessories')
-      ? [{ href: '/shop/accessories/', label: 'Accessories', on: state.shopScope === 'accessories' }] : []),
+      ? [{ href: '/shop/accessories/', label: t('Accessories'), on: state.shopScope === 'accessories' }] : []),
   ];
   nav.innerHTML = pills.map(x =>
     `<a class="shop-pill${x.on ? ' is-active' : ''}" href="${x.href}${q}"${x.on ? ' aria-current="page"' : ''}>${x.label}</a>`
@@ -86,17 +87,17 @@ export function renderShopGrid() {
     ? list.flatMap(p => p.colors.map((c, ci) => ({ p, c, ci })).filter(x => !f.color.length || f.color.includes(x.c.name)))
     : null;
   shopGrid.innerHTML = wish && !scope.length
-    ? '<p class="pgrid-empty">Your wishlist is empty. <a href="/shop/">Discover the collection</a></p>'
+    ? `<p class="pgrid-empty">${t('Your wishlist is empty.')} <a href="/shop/">${t('Discover the collection')}</a></p>`
     : list.length || !scope.length
       ? (perColor ? cards.map(x => pgridCardHTML(x.p, x.ci)).join('') : pgridHTML(list))
-      : '<p class="pgrid-empty">No products match these filters.</p>';
+      : `<p class="pgrid-empty">${t('No products match these filters.')}</p>`;
   const n = perColor ? cards.length : list.length;
   const count = document.getElementById('shop-count');
-  if (count) count.textContent = n === 1 ? '1 product' : `${n} products`;
+  if (count) count.textContent = n === 1 ? t('1 product') : t('{n} products', { n });
   const btn = document.getElementById('shop-filter-btn');
   if (btn) {
     const n = activeCount(f);
-    btn.textContent = n ? `Filter & sort (${n})` : 'Filter & sort';
+    btn.textContent = n ? t('Filter & sort ({n})', { n }) : t('Filter & sort');
     btn.hidden = !scope.length || wish;
   }
 }

@@ -4,6 +4,7 @@
    Salvati nel browser (localStorage), dal più recente.
    In fondo alla PDP: fino a 4 capi, escluso quello aperto.
    ═══════════════════════════════════════════ */
+import { t } from './i18n.js';
 import { pgridCardHTML } from './grid.js';
 
 const KEY = 'tato-recent-v1';
@@ -31,7 +32,7 @@ export function recentHTML(exceptSlug) {
   if (!items.length) return '';
   return `
     <section class="pdp-recent">
-      <p class="pdp-complete-title">Recently viewed</p>
+      <p class="pdp-complete-title">${t('Recently viewed')}</p>
       <div class="pgrid pdp-recent-items" style="--n:${items.length}">${items.map(p => pgridCardHTML(p)).join('')}</div>
     </section>`;
 }

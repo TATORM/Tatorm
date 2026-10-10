@@ -7,17 +7,18 @@
    Le opzioni mostrate sono quelle presenti nella vista corrente
    (reparto/categoria), prima dei filtri.
    ═══════════════════════════════════════════ */
+import { t, tColor } from './i18n.js';
 import { esc } from './utils.js';
 
 export const SORTS = [
-  { id: '',           label: 'Newest' },
-  { id: 'price-asc',  label: 'Price: low to high' },
-  { id: 'price-desc', label: 'Price: high to low' },
+  { id: '',           label: t('Newest') },
+  { id: 'price-asc',  label: t('Price: low to high') },
+  { id: 'price-desc', label: t('Price: high to low') },
 ];
 const PRICE_BANDS = [
-  { id: '0-200',   label: 'Under €200',  min: 0,   max: 200 },
+  { id: '0-200',   label: t('Under €200'),  min: 0,   max: 200 },
   { id: '200-500', label: '€200 – €500', min: 200, max: 500 },
-  { id: '500+',    label: 'Over €500',   min: 500, max: Infinity },
+  { id: '500+',    label: t('Over €500'),   min: 500, max: Infinity },
 ];
 
 const list = v => (v ? v.split(',').map(decodeURIComponent).filter(Boolean) : []);
@@ -113,26 +114,26 @@ function render() {
   const chip = (group, value, label, on) =>
     `<button type="button" class="filter-chip${on ? ' is-on' : ''}" data-group="${group}" data-value="${esc(value)}" aria-pressed="${on}">${label}</button>`;
   drawer.querySelector('.filter-body').innerHTML = `
-    <fieldset class="filter-group"><legend>Sort by</legend>
+    <fieldset class="filter-group"><legend>${t('Sort by')}</legend>
       ${SORTS.map(s => chip('sort', s.id, s.label, f.sort === s.id)).join('')}
     </fieldset>
-    ${o.depts ? `<fieldset class="filter-group"><legend>Department</legend>
-      ${chip('dept', 'women', 'Women', f.dept === 'women')}${chip('dept', 'men', 'Men', f.dept === 'men')}
+    ${o.depts ? `<fieldset class="filter-group"><legend>${t('Department')}</legend>
+      ${chip('dept', 'women', t('Women'), f.dept === 'women')}${chip('dept', 'men', t('Men'), f.dept === 'men')}
     </fieldset>` : ''}
-    ${o.sizes.length > 1 ? `<fieldset class="filter-group"><legend>Size</legend>
+    ${o.sizes.length > 1 ? `<fieldset class="filter-group"><legend>${t('Size')}</legend>
       ${o.sizes.map(s => chip('size', s, esc(s), f.size.includes(s))).join('')}
     </fieldset>` : ''}
-    ${o.colors.length > 1 ? `<fieldset class="filter-group"><legend>Colour</legend>
+    ${o.colors.length > 1 ? `<fieldset class="filter-group"><legend>${t('Colour')}</legend>
       ${o.colors.map(c => chip('color', c.name,
-        `<span class="filter-swatch" style="background:${c.hex}"></span>${esc(c.name)}`, f.color.includes(c.name))).join('')}
+        `<span class="filter-swatch" style="background:${c.hex}"></span>${esc(tColor(c.name))}`, f.color.includes(c.name))).join('')}
     </fieldset>` : ''}
-    <fieldset class="filter-group"><legend>Availability</legend>
-      ${chip('stock', '1', 'In stock only', f.stock)}
+    <fieldset class="filter-group"><legend>${t('Availability')}</legend>
+      ${chip('stock', '1', t('In stock only'), f.stock)}
     </fieldset>
-    ${o.bands.length > 1 ? `<fieldset class="filter-group"><legend>Price</legend>
+    ${o.bands.length > 1 ? `<fieldset class="filter-group"><legend>${t('Price')}</legend>
       ${o.bands.map(b => chip('price', b.id, b.label, f.price === b.id)).join('')}
     </fieldset>` : ''}`;
-  drawer.querySelector('#filter-apply').textContent = n === 1 ? 'Show 1 product' : `Show ${n} products`;
+  drawer.querySelector('#filter-apply').textContent = n === 1 ? t('Show 1 product') : t('Show {n} products', { n });
   drawer.querySelector('#filter-clear').hidden = !activeCount(f) && !f.sort;
 }
 
@@ -175,17 +176,17 @@ export function initFilters(changed) {
   drawer.className = 'cart-drawer filter-drawer';
   drawer.setAttribute('role', 'dialog');
   drawer.setAttribute('aria-modal', 'true');
-  drawer.setAttribute('aria-label', 'Filter and sort');
+  drawer.setAttribute('aria-label', t('Filter and sort'));
   drawer.setAttribute('aria-hidden', 'true');
   drawer.innerHTML = `
     <div class="cart-drawer-header">
-      <p class="cart-drawer-title">Filter &amp; sort</p>
-      <button class="cart-close" type="button" aria-label="Close filters"></button>
+      <p class="cart-drawer-title">${esc(t('Filter & sort'))}</p>
+      <button class="cart-close" type="button" aria-label="${t('Close filters')}"></button>
     </div>
     <div class="cart-drawer-body filter-body"></div>
     <div class="cart-drawer-footer filter-footer">
-      <button class="cart-checkout-btn" id="filter-apply" type="button">Show products</button>
-      <button class="filter-clear" id="filter-clear" type="button">Clear all</button>
+      <button class="cart-checkout-btn" id="filter-apply" type="button">${t('Show {n} products', { n: '' })}</button>
+      <button class="filter-clear" id="filter-clear" type="button">${t('Clear all')}</button>
     </div>`;
   document.body.append(overlay, drawer);
   overlay.addEventListener('click', closeFilters);
