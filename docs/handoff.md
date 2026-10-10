@@ -23,7 +23,8 @@ visti di recente, guida taglie), bag + checkout Shopify, wishlist, pre-ordine (m
 4. **Redirect negozio Shopify**: in theme.liquid cambiare `nuovo_sito = false` → `true` al lancio.
 
 ## Aperto / da decidere
-- Pre-order via Formspree (oggi mailto: info@tatorm.com) → `ENDPOINT` in `app/preorder.js` + CSP connect-src.
+- Pre-order e **Notify me** (taglia esaurita, `app/notify.js`) via Formspree: oggi mailto a info@tatorm.com →
+  un solo `ENDPOINT` in `app/preorder.js` attiva entrambi (+ CSP connect-src).
 - Descrizioni prodotto in italiano (oggi inglese anche con IT).
 - 6 colori senza foto del look all'hover (Cap Black/Navy/Red, Smock Black/Dark Grey, Tiny Crewneck Black,
   2 Button Shirt Light Grey/White).
