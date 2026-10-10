@@ -4,7 +4,6 @@ export const splashBg          = document.getElementById('splash-bg');
 export const logo              = document.getElementById('logo');
 export const navToggle         = document.getElementById('nav-toggle');
 export const navLinks          = document.getElementById('nav-links');
-export const btnMonogram       = document.getElementById('btn-monogram');
 export const btnShop           = document.getElementById('btn-shop');
 export const fixedLookInfo     = document.getElementById('fixed-look-info');
 export const siteNav           = document.querySelector('.site-nav');

@@ -81,5 +81,5 @@ body.dark-mode {
   --gray-light: #2a2a2a;
 }
 body.dark-mode .site-logo img { filter: invert(1); }
-body.dark-mode #btn-monogram img { filter: invert(1); }
+body.dark-mode #btn-account img { filter: invert(1); }
 body.dark-mode #splash-bg { background: #0a0a0a; }

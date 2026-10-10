@@ -1,4 +1,4 @@
-import { btnMonogram } from './dom.js';
+import { ROUTE_EVENT } from './url.js';
 
 export function initNewsletter() {
 /* ═══════════════════════════════════════════
@@ -29,13 +29,23 @@ export function initNewsletter() {
     popup.setAttribute('aria-hidden', 'true');
   }
 
-  // auto-apri dopo la fine dell'intro
-  window.addEventListener('tato:intro-done', openPopup, { once: true });
+  /* Apertura automatica: qualche secondo dopo l'intro, così non copre
+     subito la pagina; mai sopra la Collection (coprirebbe il pannello del
+     look): lì aspetta che si passi a un'altra pagina. */
+  const AUTO_DELAY = 8000;    // ms dopo la fine dell'intro
+  const AFTER_ROUTE = 3000;   // ms dopo essere usciti dalla Collection
+  const inCollection = () => document.getElementById('collection')?.classList.contains('active');
+  function autoOpen() {
+    if (!inCollection()) { openPopup(); return; }
+    const onRoute = () => setTimeout(() => {
+      if (inCollection()) return;
+      window.removeEventListener(ROUTE_EVENT, onRoute);
+      openPopup();
+    }, AFTER_ROUTE);
+    window.addEventListener(ROUTE_EVENT, onRoute);
+  }
+  window.addEventListener('tato:intro-done', () => setTimeout(autoOpen, AUTO_DELAY), { once: true });
 
-  btnMonogram?.addEventListener('click', () => {
-    if (popup.classList.contains('is-open')) closePopup();
-    else openPopup();
-  });
   closeBtn.addEventListener('click', closePopup);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
 

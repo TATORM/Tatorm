@@ -100,7 +100,7 @@
     mix-blend-mode: difference;
   }
   .site-logo img,
-  #btn-monogram img {
+  #btn-account img {
     filter: invert(1);
   }
   .icon-btn,
