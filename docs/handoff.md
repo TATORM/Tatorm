@@ -1,6 +1,6 @@
 # TATO — Handoff
 
-**Aggiornato:** 2026-10-10 · branch `ecommerce-dev` (solo locale, push bloccato) · live `main` invariato.
+**Aggiornato:** 2026-10-10 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
 Mappa del codice e regole: `CLAUDE.md`. Storico sessioni: `docs/archive/handoff-storico.md`.
 
 ## Stato
@@ -10,13 +10,12 @@ visti di recente, guida taglie), bag + checkout Shopify, wishlist, pre-ordine (m
 404, accessibilità AA, Lighthouse mobile ~84 / 100 / 96 / 100.
 
 ## Prima del lancio (bloccanti)
-1. **Push GitHub**: accedere con l'account TATORM o dare i permessi a `samuelemurru1-wq`. Tutto è solo sul Mac.
-2. **Cloudflare Pages** al posto di GitHub Pages + DNS da Aruba (posta!): checklist nella memoria "PROMEMORIA lancio".
-3. **Shopify**: stock reale; pagamenti (Shopify Payments); **mercati USA/UK/Giappone** + spedizioni/dazi
+1. **Cloudflare Pages** al posto di GitHub Pages + DNS da Aruba (posta!): checklist nella memoria "PROMEMORIA lancio".
+2. **Shopify**: stock reale; pagamenti (Shopify Payments); **mercati USA/UK/Giappone** + spedizioni/dazi
    + canale Headless nei mercati; branding account/checkout (logo `docs/guide/shopify-logo.jpg`).
-4. **Testi** (li scrive l'utente): pagine About, Spedizioni, Resi, FAQ, Privacy, Cookie, Condizioni
+3. **Testi** (li scrive l'utente): pagine About, Spedizioni, Resi, FAQ, Privacy, Cookie, Condizioni
    (Shopify › Pagine); nella PDP "Delivery estimate" e "Order by phone"; misure guida taglie.
-5. **Redirect negozio Shopify**: in theme.liquid cambiare `nuovo_sito = false` → `true` al lancio.
+4. **Redirect negozio Shopify**: in theme.liquid cambiare `nuovo_sito = false` → `true` al lancio.
 
 ## Aperto / da decidere
 - Pre-order via Formspree (oggi mailto: info@tatorm.com) → `ENDPOINT` in `app/preorder.js` + CSP connect-src.
@@ -33,4 +32,4 @@ Menu sopra le foto in home/Collection · una card per colore · tailored pants i
 zoom + visti di recente · motion · account (monogramma) · EN/IT · valute · header a scomparsa su desktop ·
 menu chiuso da scroll del visitatore · Collection ▸ collezioni nel menu · Bag al posto di Cart · 404 ·
 accessibilità (grigio #767676, inert) · CLS 0 · redirect del negozio Shopify attivo (tutto → home) ·
-pulizia codice e riorganizzazione docs (questa mappa).
+pulizia codice e riorganizzazione docs (questa mappa) · primo push di `ecommerce-dev` su GitHub.

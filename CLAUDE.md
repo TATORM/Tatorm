@@ -5,8 +5,8 @@ E-commerce headless di un brand di moda di Roma. HTML/CSS/JS vanilla, dati da Sh
 **Stato e cose aperte: `docs/handoff.md`** (corto, leggilo a inizio sessione).
 
 ## Regole di lavoro
-- Branch `ecommerce-dev` (live = `main`, non toccare). Push bloccato: account senza permessi su TATORM/Tatorm.
-- Commit dopo ogni modifica, messaggio in italiano + `Co-Authored-By`.
+- Branch `ecommerce-dev` (live = `main`: NON pushare/mergiare su main senza ok esplicito, pubblica il sito).
+- Commit dopo ogni modifica (messaggio in italiano + `Co-Authored-By`) e `git push` di `ecommerce-dev` (gh: account TATORM, scope workflow).
 - Dopo modifiche: `npm run build` poi test (e2e e visivi girano sul build `_site/`, porta 4173).
   Differenze visive volute → `npm run test:visual:update`.
 - Server dell'utente: `HOST=0.0.0.0 npm run dev` → http://localhost:8777 (sorgenti, niente build).
