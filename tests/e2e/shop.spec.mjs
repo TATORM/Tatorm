@@ -36,9 +36,32 @@ test('PDP: dati da Shopify, colori, taglie e sold-out', async ({ page, shopify }
   expect(src).toMatch(/^https:\/\/cdn\.shopify\.com\/.+width=\d+/);
 
   // taglia 5 del nero esaurita
-  await expect(page.locator('#pdp-size-select option[value="5"]')).toBeDisabled();
+  await expect(page.locator('#pdp-size-select option[value="5"]')).toHaveAttribute('data-soldout', '');
   // colore Navy esaurito per intero
   await expect(page.locator('.pdp-color.is-soldout')).toHaveCount(1);
+});
+
+test('PDP: taglia esaurita → Notify me con campo email', async ({ page, shopify }) => {
+  await page.goto('/product/tobi-pants/?color=Black');
+  await shopifyReady(page);
+  const add = page.locator('#pdp-add');
+  await expect(add).toContainText('Add to bag');
+  await page.locator('#pdp-size-select').selectOption('5');
+  await expect(add).toHaveText('Notify me when available');
+  await expect(page.locator('#pdp-express')).toBeHidden();
+  await add.click();
+  await expect(page.locator('#pdp-notify')).toBeVisible();
+  await expect(page.locator('#pdp-notify-copy')).toContainText('size 5, is sold out');
+  await page.locator('.pdp-notify-btn').click();
+  await expect(page.locator('.pdp-notify-error')).toBeVisible();
+  // taglia disponibile → torna Add to bag
+  await page.locator('#pdp-size-select').selectOption('4');
+  await expect(add).toContainText('Add to bag');
+  await expect(page.locator('#pdp-notify')).toBeHidden();
+  await expect(page.locator('#pdp-express')).toBeVisible();
+  // colore esaurito per intero → Notify me subito
+  await page.locator('.pdp-color.is-soldout').click();
+  await expect(page.locator('#pdp-add')).toHaveText('Notify me when available');
 });
 
 test('Link a un prodotto tolto da Shopify: pagina "no longer available"', async ({ page, shopify }) => {

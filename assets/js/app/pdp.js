@@ -10,6 +10,7 @@ import { go } from './url.js';
 import { wishBtnHTML } from './wishlist.js';
 import { addRecent, recentHTML } from './recent.js';
 import { openZoom } from './zoom.js';
+import { bindNotify, notifyFormHTML } from './notify.js';
 
 /* ─── PDP: scheda prodotto ─────────────────
    Shopify (window.TATO_shopify) è fonte autorevole per prezzo,
@@ -74,17 +75,17 @@ export function renderPDP(slug) {
   const ref = (p.id ? 'TATO-' + String(p.id).toUpperCase() : '').trim();
   const singleSizeLabel = singleSize ? color.sizes[0].label : null;
 
-  /* opzioni della tendina taglia (native <select> = accessibile) */
+  /* opzioni della tendina taglia (native <select> = accessibile).
+     Le taglie esaurite restano selezionabili: scelte, il pulsante diventa "Notify me". */
   const sizeOptions = [`<option value="">${t('Select a size')}</option>`].concat(
     color.sizes.map(s => {
       const avail = shReady ? sh.variantAvailable(slug, color.name, s.label) : (s.available !== false);
-      return `<option value="${esc(s.label)}"${s.label === state.pdp.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${esc(s.label)}${avail ? '' : t(' (Sold out)')}</option>`;
+      return `<option value="${esc(s.label)}"${s.label === state.pdp.size ? ' selected' : ''}${avail ? '' : ' data-soldout'}>${esc(s.label)}${avail ? '' : t(' (Sold out)')}</option>`;
     })
   ).join('');
 
   const priceLabel = money(price, cur);
-  const addLabel = soldOut ? t('Sold out')
-    : `<span>${t('Add to bag')}</span><span class="pdp-add-price">${compare && compare > price ? `<s>${money(compare, cur)}</s> ` : ''}${priceLabel}</span>`;
+  const addLabel = `<span>${t('Add to bag')}</span><span class="pdp-add-price">${compare && compare > price ? `<s>${money(compare, cur)}</s> ` : ''}${priceLabel}</span>`;
 
   /* "Complete the look": foto del 1° look di questo prodotto a sinistra,
      i capi consigliati (a catalogo) a destra. Sempre almeno 2 card:
@@ -160,8 +161,9 @@ export function renderPDP(slug) {
         </div>`}
         <p class="pdp-size-hint" id="pdp-size-hint"></p>
 
-        <button class="pdp-add-btn" id="pdp-add"${soldOut ? ' disabled' : ''}>${addLabel}</button>
-        <button class="pdp-express-btn" id="pdp-express"${soldOut ? ' disabled' : ''}>
+        <button class="pdp-add-btn" id="pdp-add">${addLabel}</button>
+        ${notifyFormHTML()}
+        <button class="pdp-express-btn" id="pdp-express">
           <span>${t('Express checkout')}</span>
           <span class="pdp-pay-marks">${t('PayPal · Apple Pay · Card')}</span>
         </button>
@@ -220,10 +222,31 @@ export function renderPDP(slug) {
     });
   });
 
+  /* Esaurito (prodotto, colore o taglia scelta) → "Notify me when available"
+     al posto di "Add to bag", niente pagamento veloce */
+  const colorSoldOut = !!(availColors && !availColors[color.name]);
+  const chosen = () => singleSizeLabel || state.pdp.size;
+  const isUnavailable = () => soldOut || colorSoldOut
+    || !!(shReady && chosen() && !sh.variantAvailable(slug, color.name, chosen()));
+  const notify = bindNotify(pdpEl, () => ({ name: p.name, color: tColor(color.name), size: chosen() }));
+  const addBtn = pdpEl.querySelector('#pdp-add');
+  const expressBtn = pdpEl.querySelector('#pdp-express');
+  function updateMode() {
+    const off = isUnavailable();
+    if (off === addBtn.classList.contains('is-notify')) return;
+    addBtn.classList.toggle('is-notify', off);
+    addBtn.innerHTML = off ? `<span>${t('Notify me when available')}</span>` : addLabel;
+    addBtn.setAttribute('aria-expanded', 'false');
+    expressBtn.hidden = off;
+    notify.close();
+  }
+  updateMode();
+
   const priceEl = () => pdpEl.querySelector('.pdp-add-price');
   const sel = pdpEl.querySelector('#pdp-size-select');
   sel?.addEventListener('change', () => {
     state.pdp.size = sel.value || null;
+    updateMode();
     const hint = document.getElementById('pdp-size-hint');
     if (hint) { hint.textContent = ''; hint.classList.remove('error'); }
     const vp2 = shReady && state.pdp.size ? sh.variantPrice(slug, color.name, state.pdp.size) : null;
@@ -277,9 +300,14 @@ export function renderPDP(slug) {
     };
   }
 
-  document.getElementById('pdp-add')?.addEventListener('click', () => {
-    const btn = document.getElementById('pdp-add');
-    if (!btn || btn.disabled) return;
+  addBtn.addEventListener('click', () => {
+    const btn = addBtn;
+    if (btn.disabled) return;
+    if (btn.classList.contains('is-notify')) {
+      notify.open();
+      btn.setAttribute('aria-expanded', 'true');
+      return;
+    }
     const s = resolveSelection();
     if (!s) return;
     addToCart({
@@ -294,8 +322,8 @@ export function renderPDP(slug) {
     btn.setAttribute('aria-busy', 'true');
     openCart();
     setTimeout(() => {
-      btn.innerHTML = soldOut ? t('Sold out') : orig;
-      btn.disabled = soldOut;
+      btn.innerHTML = orig;
+      btn.disabled = false;
       btn.removeAttribute('aria-busy');
     }, 1400);
   });

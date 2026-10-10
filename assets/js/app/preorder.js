@@ -16,9 +16,10 @@ import { esc } from './utils.js';
      la richiesta arriva per email senza che il cliente
      esca dalla pagina. Aggiungere il dominio del servizio a
      connect-src nella Content-Security-Policy di index.html.
+   Lo stesso invio serve anche "Notify me" (notify.js).
    ═══════════════════════════════════════════ */
-const ENDPOINT = '';
-const EMAIL = 'info@tatorm.com';
+export const ENDPOINT = '';
+export const EMAIL = 'info@tatorm.com';
 
 let overlay, form, statusEl, titleEl, lastFocus = null;
 

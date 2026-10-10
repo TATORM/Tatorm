@@ -372,3 +372,54 @@
   .pdp-recent { margin-top: 56px; padding-bottom: 88px; }
   .pdp-recent-items { padding: 0; grid-template-columns: 1fr 1fr; }
 }
+
+/* Notify me — taglia/colore esaurito: campo email sotto il pulsante,
+   a filo come la newsletter del footer (niente riquadri) */
+.pdp-add-btn.is-notify { justify-content: center; }
+.pdp-notify { margin: 6px 0 22px; }
+.pdp-notify-copy,
+.pdp-notify-status {
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-1);
+  line-height: 1.7;
+  color: var(--gray);
+  margin-bottom: 14px;
+}
+.pdp-notify-status { margin: 6px 0 22px; color: var(--black); }
+.pdp-notify-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--black);
+  padding-bottom: 8px;
+}
+.pdp-notify-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font);
+  font-size: var(--fs-l);
+  letter-spacing: var(--ls-2);
+  color: var(--black);
+  border-radius: 0;
+}
+.pdp-notify-input::placeholder { color: var(--gray); text-transform: uppercase; letter-spacing: var(--ls-3); }
+.pdp-notify-input:focus { outline: none; }
+.pdp-notify-row:focus-within { border-bottom-width: 2px; padding-bottom: 7px; }
+.pdp-notify-btn {
+  border: 0;
+  background: none;
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: var(--fs-s);
+  letter-spacing: var(--ls-4);
+  text-transform: uppercase;
+  color: var(--black);
+  cursor: pointer;
+}
+.pdp-notify-btn:hover { opacity: 0.45; }
+.pdp-notify-btn:disabled { opacity: 0.45; cursor: default; }
+.pdp-notify-error { font-size: var(--fs-xs); letter-spacing: var(--ls-1); color: #b23; margin-top: 8px; }
+.pdp-notify-note { font-size: var(--fs-xs); letter-spacing: var(--ls-1); color: var(--gray); margin-top: 10px; }
+.pdp-notify-note a { color: inherit; }

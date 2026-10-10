@@ -123,6 +123,16 @@ const IT = {
   "Thank you. Your email app will open with your request ready to send. If it doesn't, you can write to us at {email}.":
     'Grazie. Si aprirà la tua app di posta con la richiesta pronta da inviare. Se non dovesse aprirsi, puoi scriverci a {email}.',
 
+  // notify me (taglia esaurita)
+  'Notify me when available': 'Avvisami quando torna disponibile',
+  'We will only write to you about this piece.': 'Ti scriveremo solo per questo capo.',
+  'Any size': 'Qualsiasi taglia',
+  'Thank you. We will write to you as soon as it is back.': 'Grazie. Ti scriveremo appena tornerà disponibile.',
+  '{name} in {color}, size {size}, is sold out. Leave your email and we will let you know when it is back.':
+    '{name} in {color}, taglia {size}, è esaurito. Lasciaci la tua email e ti avviseremo quando tornerà disponibile.',
+  '{name} in {color} is sold out. Leave your email and we will let you know when it is back.':
+    '{name} in {color} è esaurito. Lasciaci la tua email e ti avviseremo quando tornerà disponibile.',
+
   // newsletter
   'Join the newsletter': 'Iscriviti alla newsletter',
   'Sign up for updates, releases and occasional news.': 'Aggiornamenti, nuove uscite e qualche notizia, di tanto in tanto.',
