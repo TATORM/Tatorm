@@ -6,7 +6,7 @@
 .collection-breadcrumb {
   position: fixed;
   right: 3vw;
-  width: 200px;
+  white-space: nowrap;          /* sempre su una riga */
   bottom: 26px;
   z-index: 50;
   font-size: var(--fs-s);       /* come il testo del pannello look / PDP */

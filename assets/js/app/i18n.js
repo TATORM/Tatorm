@@ -35,7 +35,7 @@ const IT = {
   // menu, header, breadcrumb
   'Shop': 'Shop', 'All': 'Tutto', 'New arrivals': 'Novità', 'New Arrivals': 'Novità',
   'Collection': 'Collezione', 'Archive': 'Archivio', 'About': 'Chi siamo', 'Account': 'Account',
-  'HOME': 'HOME', 'SHOP': 'SHOP', 'COLLECTION': 'COLLEZIONE', 'CONTACTS': 'CONTATTI',
+  'HOME': 'HOME', 'SHOP': 'SHOP', 'COLLECTION': 'COLLEZIONE', 'CONTACTS': 'CONTATTI', 'ABOUT': 'CHI SIAMO', 'Breadcrumb': 'Percorso',
   'Main menu': 'Menu principale', 'Toggle dark mode': 'Modalità scura', 'Close': 'Chiudi',
   'Shop categories': 'Categorie dello shop', 'Wishlist': 'Wishlist',
 
