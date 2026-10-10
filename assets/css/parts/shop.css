@@ -94,28 +94,31 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
     white-space: nowrap;
   }
 
-  /* Header che si nasconde scendendo (Shop / prodotto): logo e icone
-     salgono insieme della stessa quota con dissolvenza, curva "decelerate"
-     in uscita/entrata come le app native. */
-  body.shop-mode .site-logo,
-  body.shop-mode .site-logo.logo--left,
-  body.shop-mode .site-nav,
-  body.shop-mode .top-icons {
-    transition:
-      transform var(--dur-3) var(--ease-out),
-      opacity var(--dur-2) ease;
-    will-change: transform, opacity;
-  }
-  body.shop-mode.header-hidden .site-logo,
-  body.shop-mode.header-hidden .site-logo.logo--left {
-    transform: translate3d(-50%, -72px, 0);
-    opacity: 0;
-    pointer-events: none;
-  }
-  body.shop-mode.header-hidden .site-nav,
-  body.shop-mode.header-hidden .top-icons {
-    transform: translate3d(0, -72px, 0);
-    opacity: 0;
-    pointer-events: none;
-  }
+}
+
+/* Header che si nasconde scendendo (Shop / prodotto), su tutti gli schermi: logo e icone
+   salgono insieme della stessa quota con dissolvenza, curva "decelerate"
+   in uscita/entrata come le app native. */
+body.shop-mode .site-logo,
+body.shop-mode .site-logo.logo--left,
+body.shop-mode .site-nav,
+body.shop-mode .top-icons {
+  transition:
+    transform var(--dur-3) var(--ease-out),
+    opacity var(--dur-2) ease,
+    left var(--dur-4) var(--ease), width var(--dur-4) var(--ease),
+    top var(--dur-4) var(--ease);          /* animazione d'apertura del logo (header.css) */
+  will-change: transform, opacity;
+}
+body.shop-mode.header-hidden .site-logo,
+body.shop-mode.header-hidden .site-logo.logo--left {
+  transform: translate3d(-50%, -72px, 0);
+  opacity: 0;
+  pointer-events: none;
+}
+body.shop-mode.header-hidden .site-nav,
+body.shop-mode.header-hidden .top-icons {
+  transform: translate3d(0, -72px, 0);
+  opacity: 0;
+  pointer-events: none;
 }

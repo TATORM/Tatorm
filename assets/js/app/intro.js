@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
    container — vedi media query ≤768px). */
 (function () {
   const THRESHOLD = 80;
-  /* Header a scomparsa (Shop/prodotto mobile, regole in style.css):
+  /* Header a scomparsa (Shop/prodotto, regole in parts/shop.css):
      reagisce a un movimento deciso, non a ogni pixel. Scendendo sparisce
      dopo HIDE_AFTER px continui, risalendo torna dopo SHOW_AFTER px. */
   const HIDE_FROM  = 60;   // sopra questa quota l'header resta sempre visibile
