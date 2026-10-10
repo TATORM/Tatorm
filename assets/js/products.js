@@ -75,7 +75,7 @@ window.TATO_inCategory = function (p, slug) {
 /* ═══════════════════════════════════════════
    LOOKS LOCALI — riserva finché la collezione non è
    su Shopify (metaoggetti, vedi content-core.js e
-   docs/shopify-contenuti.md). Quando su Shopify c'è
+   docs/guide/shopify-contenuti.md). Quando su Shopify c'è
    almeno una collezione, questi dati non si usano più.
    ─────────────────────────────────────────
    Ogni capo è { name, comp, color }. Se il nome coincide

@@ -24,7 +24,7 @@ base('Shopify lento: la pagina non resta appesa', async ({ page }) => {
 });
 
 base('Pubblicazione: i file interni non sono online', async ({ request }) => {
-  for (const path of ['/docs/handoff.md', '/package.json', '/scripts/build.mjs', '/assets/js/app.js', '/assets/js/app/cart.js', '/tests/e2e/fixtures.mjs', '/archive/shop-test.html']) {
+  for (const path of ['/docs/handoff.md', '/CLAUDE.md', '/package.json', '/scripts/build.mjs', '/assets/js/app.js', '/assets/js/app/cart.js', '/tests/e2e/fixtures.mjs', '/archive/shop-test.html']) {
     expect((await request.get(path)).status(), path).toBe(404);
   }
 });

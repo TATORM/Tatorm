@@ -150,7 +150,9 @@ test('PDP: zoom delle foto e visti di recente', async ({ page, shopify }) => {
   await expect(page.locator('.pdp-recent .pgrid-card[data-slug="tato-cap"]')).toHaveCount(1);
   await expect(page.locator('.pdp-recent .pgrid-card[data-slug="tobi-pants"]')).toHaveCount(0);   // non quello aperto
 
-  await page.locator('.pdp-gallery-img').first().click();
+  const img = page.locator('.pdp-gallery-img').first();
+  await expect(img).toBeVisible();
+  await img.click();
   await expect(page.locator('.zoom')).toBeVisible();
   await expect(page.locator('.zoom-img').first()).toHaveAttribute('src', /width=2048/);
   await page.keyboard.press('Escape');

@@ -10,7 +10,7 @@
    si aggiornano al build successivo (cron 30 min).
 
    COME SI GESTISCE (tutto da Shopify, vedi
-   docs/shopify-contenuti.md):
+   docs/guide/shopify-contenuti.md):
    • Metaoggetto `tato_collection` → una collezione
        title, season, intro (testo campagna),
        campaign_images (foto campagna), looks (elenco
