@@ -8,3 +8,20 @@
     location.replace('/' + location.search + '#' + route);
   }
 })();
+
+/* Stessa modalità scura e lingua scelte sul sito (theme.js, app/i18n.js) */
+(function () {
+  var dark = false, it = false;
+  try {
+    dark = localStorage.getItem('tato-dark') === 'true';
+    it = localStorage.getItem('tato-lang') === 'it';
+  } catch (_) {}
+  if (dark) document.documentElement.classList.add('dark');
+  if (!it) return;
+  document.documentElement.lang = 'it';
+  document.title = 'Pagina non trovata · TATO';
+  document.addEventListener('DOMContentLoaded', function () {
+    var els = document.querySelectorAll('[data-it]');
+    for (var i = 0; i < els.length; i++) els[i].textContent = els[i].getAttribute('data-it');
+  });
+})();

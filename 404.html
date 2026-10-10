@@ -6,10 +6,19 @@
   <title>Page not found · TATO</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+  <link rel="preload" href="/assets/fonts/NeueHaasDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin />
   <style>
-    :root { --bg:#fff; --fg:#0a0a0a; --dim:#888; }
-    @media (prefers-color-scheme: dark) { :root { --bg:#0a0a0a; --fg:#f0f0f0; --dim:#777; } }
-    * { box-sizing: border-box; margin: 0; }
+    /* Stessi font, colori e misure del sito (parts/tokens.css, menu, footer).
+       Modalità scura e lingua: quelle scelte sul sito (404.js). */
+    @font-face {
+      font-family: "Neue Haas Grotesk Display";
+      src: url("/assets/fonts/NeueHaasDisplay-Medium.woff2") format("woff2");
+      font-weight: 500; font-style: normal; font-display: swap;
+    }
+    :root { --bg: #fff; --fg: #0a0a0a; --dim: #888; }
+    html.dark { --bg: #0a0a0a; --fg: #f0f0f0; --dim: #8a8a8a; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 125%; }
     html, body { height: 100%; }
     body {
       background: var(--bg); color: var(--fg);
@@ -17,29 +26,35 @@
       font-weight: 500;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      text-align: center; padding: 40px 24px; gap: 28px;
+      text-align: center; padding: 40px 16px; gap: 30px;
     }
-    .wordmark { font-size: 1.4rem; letter-spacing: 0.34em; text-indent: 0.34em; }
-    .msg { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
-    nav { display: flex; gap: 26px; }
+    .logo { display: block; width: 74px; }
+    .logo img { width: 100%; height: auto; display: block; }
+    html.dark .logo img { filter: invert(1); }
+    .msg {
+      font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--dim);
+    }
+    nav { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
     nav a {
-      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--fg); text-decoration: none;
-      border-bottom: 1px solid transparent; padding-bottom: 2px;
-      transition: border-color 0.2s ease;
+      font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--fg); text-decoration: underline;
+      text-decoration-color: transparent; text-underline-offset: 4px;
+      transition: text-decoration-color 0.2s ease;
     }
-    nav a:hover { border-color: var(--fg); }
+    nav a:hover, nav a:focus-visible { text-decoration-color: currentColor; }
   </style>
   <!-- Pagina del sito non ancora generata (es. prodotto aggiunto su Shopify
        dopo l'ultimo build): 404.js la riapre dentro il sito. -->
   <script src="/404.js"></script>
 </head>
 <body>
-  <p class="wordmark">TATO</p>
-  <p class="msg">Page not found</p>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/#shop">Shop</a>
+  <a class="logo" href="/" aria-label="TATO, home"><img src="/media/brand/logotype.png" alt="TATO" /></a>
+  <p class="msg" data-it="Pagina non trovata">Page not found</p>
+  <nav aria-label="TATO">
+    <a href="/" data-it="Home">Home</a>
+    <a href="/shop/" data-it="Shop">Shop</a>
+    <a href="/collection/" data-it="Collezione">Collection</a>
   </nav>
 </body>
 </html>
