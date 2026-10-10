@@ -142,15 +142,22 @@
 .home-dept-caption {
   position: absolute;
   left: 6%;
-  bottom: 9%;
+  bottom: 40px;
   color: #fff;
 }
 .home-dept-title {
-  font-size: var(--fs-2xl);
-  letter-spacing: var(--ls-1);
+  font-size: var(--fs-m);
+  letter-spacing: var(--ls-3);
   text-transform: uppercase;
   font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: transparent;     /* sottolineato solo al passaggio del mouse */
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  transition: text-decoration-color var(--dur-1) ease;
 }
+.home-dept:hover .home-dept-title,
+.home-dept:focus-visible .home-dept-title { text-decoration-color: currentColor; }
 
 /* Foto successive */
 .home-image-block {
