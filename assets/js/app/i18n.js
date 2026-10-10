@@ -61,7 +61,7 @@ const IT = {
 
   // scheda prodotto
   'Select a size': 'Seleziona una taglia', ' (Sold out)': ' (Esaurito)',
-  'Add to bag': 'Aggiungi al carrello', 'Added': 'Aggiunto',
+  'Add to bag': 'Aggiungi alla shopping bag', 'Added': 'Aggiunto',
   'Complete the look': 'Completa il look', 'Recently viewed': 'Visti di recente',
   '← Shop': '← Shop', 'Ref.': 'Rif.', 'Select the size': 'Seleziona la taglia',
   'Size guide': 'Guida alle taglie', 'Size guide · {name}': 'Guida alle taglie · {name}',
@@ -87,8 +87,8 @@ const IT = {
   'Garment measurements for this category are not available yet.': 'Le misure dei capi di questa categoria non sono ancora disponibili.',
 
   // carrello
-  'Cart': 'Carrello', 'Close cart': 'Chiudi il carrello',
-  'Your cart is empty.': 'Il carrello è vuoto.', 'Your bag is empty.': 'Il carrello è vuoto.',
+  'Bag': 'Shopping bag', 'Close bag': 'Chiudi la shopping bag',
+  'Your bag is empty.': 'La tua shopping bag è vuota.',
   'Continue shopping': 'Continua lo shopping', 'Total': 'Totale', 'Checkout': 'Vai al pagamento',
   'Payment integration coming soon.': 'Il pagamento sarà disponibile a breve.',
   'Secure checkout on Shopify.': 'Pagamento sicuro su Shopify.',
@@ -99,8 +99,8 @@ const IT = {
   'Some items are not available for checkout.': 'Alcuni articoli non possono essere acquistati al momento.',
   'Redirecting…': 'Reindirizzamento…',
   'Something went wrong at checkout. Please try again.': 'Si è verificato un problema con il pagamento. Ti preghiamo di riprovare.',
-  'An item in your bag is no longer available and has been removed.': 'Un articolo nel carrello non è più disponibile ed è stato rimosso.',
-  '{n} items in your bag are no longer available and have been removed.': '{n} articoli nel carrello non sono più disponibili e sono stati rimossi.',
+  'An item in your bag is no longer available and has been removed.': 'Un articolo nella shopping bag non è più disponibile ed è stato rimosso.',
+  '{n} items in your bag are no longer available and have been removed.': '{n} articoli nella shopping bag non sono più disponibili e sono stati rimossi.',
   'Quantity': 'Quantità', 'Decrease quantity': 'Diminuisci la quantità', 'Increase quantity': 'Aumenta la quantità',
   'Remove {name}': 'Rimuovi {name}',
 

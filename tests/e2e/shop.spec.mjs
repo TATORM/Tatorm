@@ -172,7 +172,7 @@ test('Italiano: selettore EN / IT, testi dell\'interfaccia, colori e composizion
   await page.waitForLoadState('load');
   await shopifyReady(page);
   await expect(page.locator('html')).toHaveAttribute('lang', 'it');
-  await expect(page.locator('#pdp-add')).toContainText('Aggiungi al carrello');
+  await expect(page.locator('#pdp-add')).toContainText('Aggiungi alla shopping bag');
   await expect(page.locator('.pdp-color-name')).toHaveText('Nero');
   await expect(page.locator('.pdp-material')).toHaveText('100% Cotone');
   await expect(page.locator('.footer-col__title', { hasText: 'Assistenza clienti' })).toHaveCount(1);
