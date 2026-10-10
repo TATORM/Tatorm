@@ -6,7 +6,6 @@
 .page { display: none; opacity: 0; transition: opacity var(--dur-3) ease; }
 .page.active { display: block; opacity: 1; }
 
-
 /* ═══════════════════════════════════════════
    HOME — scroll editoriale
    ─────────────────────────────────────────

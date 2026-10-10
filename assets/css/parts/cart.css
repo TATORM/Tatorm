@@ -135,11 +135,6 @@
   line-height: 1.6;
   margin-bottom: 2px;
 }
-.cart-item-look {
-  font-size: var(--fs-xs);
-  color: rgba(17,17,17,0.35);
-  letter-spacing: var(--ls-2);
-}
 .cart-item-right {
   display: flex;
   flex-direction: column;

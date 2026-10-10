@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════
    TATO — products.js
    ─────────────────────────────────────────
-   Struttura del negozio (reparti, categorie) e
+   Struttura del negozio (categorie) e
    contenuto editoriale (look della collezione).
 
    I PRODOTTI NON SI SCRIVONO QUI: arrivano da Shopify
@@ -10,15 +10,8 @@
    poi la aggiorna con i dati dal vivo.
    ═══════════════════════════════════════════ */
 
-/* Reparti (menu WOMEN / MEN). ACCESSORIES è una
-   voce di menu a sé, non filtrata per genere. */
-window.TATO_DEPARTMENTS = [
-  { slug: 'women', label: 'Women' },
-  { slug: 'men',   label: 'Men' },
-];
-
-/* Categorie merceologiche — sottomenu di WOMEN / MEN.
-   (accessories è gestita separatamente, vedi sotto) */
+/* Categorie merceologiche (menu Shop, pill dello shop). Women / Men sono
+   un filtro dello shop (?dept=), non categorie. Accessories a parte, vedi sotto. */
 window.TATO_CATEGORIES = [
   { slug: 'tailoring', label: 'Tailoring' },   // tipo Shopify "Tailoring": giacche, cappotti, pantaloni sartoriali
   { slug: 'outerwear', label: 'Outerwear' },   // capispalla non sartoriali (oggi nessuno → voce nascosta)
@@ -72,27 +65,11 @@ window.TATO_getCategoryLabel = function (slug) {
   return window.TATO_ALL_CATEGORY_LABELS[slug] || slug;
 };
 
-window.TATO_getDepartmentLabel = function (slug) {
-  const d = window.TATO_DEPARTMENTS.find(d => d.slug === slug);
-  return d ? d.label : slug;
-};
-
 /* Il capo sta nella categoria? I pantaloni sartoriali (tipo Shopify Tailoring)
    compaiono anche in Pants. */
 window.TATO_inCategory = function (p, slug) {
   return p.category === slug ||
     (slug === 'pants' && p.category === 'tailoring' && /\b(pants|trousers)\b/i.test(p.name));
-};
-
-/* Categorie che hanno almeno 1 capo nel reparto dato — per non
-   mostrare voci vuote nei sottomenu (es. Skirts sotto Men). */
-window.TATO_categoriesFor = function (dept) {
-  return window.TATO_CATEGORIES.filter(c =>
-    window.TATO_PRODUCTS.some(p =>
-      window.TATO_inCategory(p, c.slug) &&
-      (p.genders || ['women', 'men']).includes(dept)
-    )
-  );
 };
 
 /* ═══════════════════════════════════════════

@@ -53,7 +53,7 @@ export function renderNavMenu() {
     ${account ? `<li><a href="${account}">${t('Account')}</a></li>` : ''}
   `;
   /* i link veri li gestisce url.js (navigazione senza ricaricare);
-     il pannello si chiude in showSection() */
+     il menu si chiude al click su una voce (listener sotto) */
   navLinks.querySelectorAll('.nav-group-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const open = btn.closest('.nav-group').classList.toggle('open');
@@ -155,8 +155,8 @@ export function showSection(id) {
   if (id === 'home') setUrl('');
   else if (id === 'about') setUrl(id);
   else if (id === 'collection' && !currentRoute().startsWith('collection/')) setUrl(id);   // /collection/<archivio>/ resta
-
-  closeNav();
+  /* il menu NON si chiude qui: la pagina iniziale si disegna al "load" e
+     chiuderebbe un menu appena aperto. Si chiude da sé su voce, click fuori, Indietro. */
 }
 
 /* Naviga a una sezione creando una voce di cronologia (tasto Indietro) */
@@ -206,11 +206,21 @@ if ('ResizeObserver' in window) {
   document.addEventListener('scroll', () => { if (navLinks.classList.contains('open')) update(); }, { passive: true, capture: true });
 }
 
-/* Menu aperto + pagina scorsa verso il basso → il menu si chiude
-   (lo scroll dentro l'elenco delle voci non conta: pageY non cambia) */
+/* Menu aperto + pagina scorsa verso il basso DAL VISITATORE → il menu si chiude.
+   Contano solo gli scroll subito dopo un gesto (dito, rotellina, tasti): quelli
+   automatici (scroll-snap del mobile, pagina che si ridisegna) no.
+   Lo scroll dentro l'elenco delle voci non conta: pageY non cambia. */
+let lastGesture = 0;
+const GESTURE_MS = 800;
+const gesture = () => { lastGesture = Date.now(); };
+['wheel', 'touchmove'].forEach(ev => window.addEventListener(ev, gesture, { passive: true }));
+window.addEventListener('keydown', e => {
+  if (['ArrowDown', 'PageDown', 'End', ' '].includes(e.key)) gesture();
+});
 document.addEventListener('scroll', () => {
   if (!navLinks.classList.contains('open')) return;
   const y = pageY();
+  if (Date.now() - lastGesture > GESTURE_MS) { openedAtY = y; return; }   // scroll automatico
   if (y - openedAtY > CLOSE_AFTER) closeNav();
   else if (y < openedAtY) openedAtY = y;   // risalendo si riparte da lì
 }, { passive: true, capture: true });
@@ -220,9 +230,10 @@ navToggle.addEventListener('click', () => {
   if (navLinks.classList.contains('open')) closeNav();
   else openNav();
 });
-// click fuori dal menu (sulla pagina sfumata) → chiude
+// click fuori dal menu, o su una sua voce → chiude
 document.addEventListener('click', e => {
-  if (!e.target.closest('.site-nav')) closeNav();
+  if (!e.target.closest('.site-nav') || e.target.closest('#nav-links a')) closeNav();
 });
+window.addEventListener('popstate', closeNav);   // tasto Indietro
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
 }

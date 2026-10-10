@@ -59,10 +59,6 @@ export function renderPDP(slug) {
     return `<button class="pdp-color${i === state.pdp.colorIdx ? ' selected' : ''}${cSold ? ' is-soldout' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${esc(tColor(c.name))}${cSold ? ', ' + t('Sold out') : ''}"></button>`;
   }).join('');
 
-  const sizes = color.sizes.map(s => {
-    const avail = shReady ? sh.variantAvailable(slug, color.name, s.label) : (s.available !== false);
-    return `<button class="pdp-size${s.label === state.pdp.size ? ' selected' : ''}" data-size="${esc(s.label)}"${avail ? '' : ' disabled aria-disabled="true"'}>${esc(s.label)}</button>`;
-  }).join('');
   const singleSize = color.sizes.length === 1 && /one size/i.test(color.sizes[0].label);
 
   /* Prezzo: variante selezionata → prezzo variante; altrimenti minimo prodotto */

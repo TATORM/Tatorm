@@ -19,8 +19,6 @@ const SIZES = '(max-width: 768px) 100vw, min(700px, 36vw)';
 let shown = null;        // collezione disegnata ora
 let observer = null;
 
-export function collectionShown() { return shown; }
-
 function carouselHTML(key, images, label) {
   const slides = images.map((src, j) =>
     `<div class="carousel-slide">${pictureHTML(src, { alt: `TATO ${label}, view ${j + 1} of ${images.length}`, sizes: SIZES })}</div>`

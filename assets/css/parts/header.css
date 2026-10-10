@@ -14,7 +14,6 @@
 }
 #splash-bg.fade-out { opacity: 0; }
 
-
 /* ═══════════════════════════════════════════
    LOGO — unico elemento, animazione FLIP
    ─────────────────────────────────────────
@@ -64,7 +63,6 @@
 }
 
 .site-logo.logo--left:hover { opacity: 0.5; transition: opacity var(--dur-1) ease; }
-
 
 /* ═══════════════════════════════════════════
    UI FISSA — icone e nav

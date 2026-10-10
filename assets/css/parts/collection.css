@@ -84,7 +84,6 @@
   border-top: none;
 }
 
-
 /* ═══════════════════════════════════════════
    PANNELLO LOOK FISSO — aside.fixed-look-info
    ─────────────────────────────────────────
@@ -174,72 +173,6 @@
   font-family: var(--font);
   font-weight: 500;
   cursor: pointer;
-}
-
-/* capo da lookbook, non in vendita (non più usato: ora Pre-order) */
-.panel-item-archive {
-  margin-top: 5px;
-  font-size: var(--fs-s);
-  letter-spacing: var(--ls-2);
-  color: var(--gray);
-}
-
-.panel-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
-  max-height: 200px;
-  opacity: 1;
-  margin-top: 20px;
-  transition: max-height var(--dur-3) ease, opacity var(--dur-2) ease, margin-top var(--dur-2) ease;
-}
-
-.panel-footer--hidden {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
-}
-
-.panel-footer--open {
-  max-height: 200px;
-  opacity: 1;
-  margin-top: 20px;
-}
-
-.panel-footer-line {
-  font-size: var(--fs-l);
-  color: var(--gray);
-  line-height: 1.7;
-}
-
-.panel-footer-line a {
-  color: var(--gray);
-  transition: color var(--dur-1);
-}
-.panel-footer-line a:hover { color: var(--black); }
-
-.panel-details-link {
-  display: inline-block;
-  margin-top: 20px;
-  font-size: var(--fs-l);
-  letter-spacing: var(--ls-4);
-  text-transform: uppercase;
-  color: var(--gray);
-  border-bottom: 1px solid var(--gray-light);
-  padding-bottom: 2px;
-  background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  cursor: pointer;
-  font-family: var(--font);
-  font-weight: 500;
-  transition: color var(--dur-1) ease, border-color var(--dur-1) ease;
-}
-.panel-details-link:hover {
-  color: var(--black);
-  border-color: var(--black);
 }
 
 /* ─── Testo campagna senza foto (content-core: intro) ──

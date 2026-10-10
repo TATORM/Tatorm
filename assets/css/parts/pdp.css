@@ -355,42 +355,6 @@
 }
 .pdp-complete-items .pgrid-card { max-width: 340px; margin: 0 auto; }
 
-.pdp-accordion { border-top: 1px solid var(--gray-light); }
-.pdp-acc-item { border-bottom: 1px solid var(--gray-light); }
-.pdp-acc-head {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 0;
-  font-size: var(--fs-s);
-  letter-spacing: var(--ls-4);
-  text-transform: uppercase;
-  color: var(--black);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: var(--font);
-  font-weight: 500;
-}
-.pdp-acc-head .pdp-acc-sign { color: var(--gray); font-size: var(--fs-l); }
-.pdp-acc-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height var(--dur-2) ease, padding var(--dur-2) ease;
-  font-size: var(--fs-s);
-  line-height: 1.8;
-  color: var(--gray);
-}
-.pdp-acc-item.open .pdp-acc-body { max-height: 240px; padding-bottom: 14px; }
-.pdp-lookrefs { margin-top: 4px; }
-.pdp-lookrefs a {
-  color: var(--gray);
-  border-bottom: 1px solid var(--gray-light);
-  transition: color var(--dur-1) ease, border-color var(--dur-1) ease;
-}
-.pdp-lookrefs a:hover { color: var(--black); border-color: var(--black); }
-
 /* Etichette New / Exclusive accanto al nome (stile in grid.css) */
 .pdp-badges { display: flex; gap: 6px; margin-top: 4px; }
 

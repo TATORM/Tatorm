@@ -19,15 +19,6 @@
   padding: 80px 40px;
 }
 
-.about-label {
-  font-size: var(--fs-xs);
-  letter-spacing: var(--ls-6);
-  text-transform: uppercase;
-  text-align: center;
-  color: var(--gray);
-  margin-bottom: 48px;
-}
-
 .about-body {
   font-size: var(--fs-xl);
   line-height: 2;

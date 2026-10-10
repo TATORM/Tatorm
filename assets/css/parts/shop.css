@@ -12,7 +12,6 @@
 }
 body.dark-mode .ph-block { background: #1e1e1e; }
 
-
 /* ═══════════════════════════════════════════
    SHOP MODE — logo + nav come header in alto
    (evita che il logo fisso centrato copra la griglia)
@@ -27,7 +26,6 @@ body.shop-mode .site-logo.logo--left {
 }
 /* Il breadcrumb fisso non serve in shop-mode: c'è il MENU in header */
 body.shop-mode .collection-breadcrumb { display: none !important; }
-
 
 /* ═══════════════════════════════════════════
    SHOP — griglia prodotti
@@ -71,8 +69,7 @@ body.shop-mode .collection-breadcrumb { display: none !important; }
   transition: text-decoration-color var(--dur-1) ease;
 }
 .shop-pill:hover,
-.shop-pill.is-active,
-.shop-pill.is-scope { text-decoration-color: currentColor; }
+.shop-pill.is-active { text-decoration-color: currentColor; }
 @media (max-width: 768px) {
   .shop-pills {
     flex-wrap: nowrap;

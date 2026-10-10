@@ -81,11 +81,6 @@
   background: var(--gray);
   transform: translate(-50%, -50%) rotate(-45deg);
 }
-.pdp-size-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
 .pdp-sizeguide-link {
   font-size: var(--fs-xs);
   letter-spacing: var(--ls-4);
@@ -99,12 +94,6 @@
   transition: color var(--dur-1), border-color var(--dur-1);
 }
 .pdp-sizeguide-link:hover { color: var(--black); border-color: var(--black); }
-.pdp-fit, .pdp-model {
-  font-size: var(--fs-s);
-  line-height: 1.7;
-  color: var(--gray);
-  margin-top: 10px;
-}
 
 /* Size guide — modale */
 .sizeguide-overlay {

@@ -170,9 +170,6 @@
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
     pointer-events: none;
   }
-  .fixed-look-info .panel-details-link {
-    pointer-events: auto;
-  }
 
   .fixed-look-info .panel-look-number {
     font-size: var(--fs-s);
@@ -195,21 +192,6 @@
     margin-top: 3px;
     color: #fff;
     border-bottom-color: #fff;
-  }
-  .fixed-look-info .panel-item-archive {
-    font-size: var(--fs-2xs);
-    margin-top: 3px;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  .fixed-look-info .panel-details-link {
-    font-size: var(--fs-xs);
-    margin-top: 10px;
-    color: #fff;
-    border-bottom-color: #fff;
-  }
-  .fixed-look-info .panel-footer-line {
-    font-size: var(--fs-xs);
-    color: #fff;
   }
 
   .cart-drawer { width: 100vw; border-left: none; }

@@ -138,20 +138,6 @@ export function homePhotoAlt(src) {
   return look ? `TATO Look ${parseInt(look[1], 10)}` : 'TATO editorial photography';
 }
 
-export function appendPhotos(feed, photos, isFirst) {
-  photos.forEach((src, i) => {
-    const fig = document.createElement('figure');
-    const hero = isFirst && i === 0;
-    fig.className = hero ? 'home-image-block home-hero' : 'home-image-block';
-    fig.appendChild(pictureEl(src, {
-      eager: hero,
-      alt: homePhotoAlt(src),
-      sizes: '(max-width: 768px) 100vw, min(700px, 36vw)',
-    }));
-    feed.appendChild(fig);
-  });
-}
-
 /* Hero Home: crea (o aggiorna sul posto) la prima figure del feed.
    Desktop → pool curato heroPhotosDesktop, ripescato a ogni chiamata
    (vedi showSection). Mobile → invariato: allHomePhotos, fissato al load. */
