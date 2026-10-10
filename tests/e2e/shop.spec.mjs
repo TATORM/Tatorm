@@ -5,13 +5,17 @@ test('Shop: All = tutti i prodotti, pill per categoria', async ({ page, shopify 
   await page.goto('/shop/');
   await shopifyReady(page);
   await expect(page.locator('#shop-title')).toHaveText('All');
-  const expected = await page.evaluate(() => window.TATO_PRODUCTS.length);
+  // una card per ogni colore di ogni prodotto
+  const expected = await page.evaluate(() => window.TATO_PRODUCTS.reduce((n, p) => n + p.colors.length, 0));
   await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(expected);
 
   await page.locator('#shop-pills').getByRole('link', { name: 'Pants', exact: true }).click();
   await expect(page).toHaveURL(/\/shop\/pants\/$/);
   await expect(page.locator('#shop-title')).toHaveText('Pants');
-  const pants = await page.evaluate(() => window.TATO_PRODUCTS.filter(p => p.category === 'pants').length);
+  // Pants include anche i pantaloni sartoriali di Tailoring
+  const pants = await page.evaluate(() => window.TATO_PRODUCTS
+    .filter(p => window.TATO_inCategory(p, 'pants')).reduce((n, p) => n + p.colors.length, 0));
+  await expect(page.locator('#shop-grid')).toContainText('TAILORED PANTS');
   await expect(page.locator('#shop-grid .pgrid-card')).toHaveCount(pants);
 
   await page.locator('#shop-pills').getByRole('link', { name: 'Accessories' }).click();
@@ -50,7 +54,7 @@ base('Etichetta New da tag Shopify + seconda immagine all\'hover (desktop)', asy
   await page.addInitScript(() => localStorage.setItem('tato-nl-done', '1'));
   await page.goto('/shop/pants/');
   await page.waitForFunction(() => window.TATO_shopify.state === 'ready');
-  const card = page.locator('#shop-grid .pgrid-card[data-slug="tobi-pants"]');
+  const card = page.locator('#shop-grid .pgrid-card[data-slug="tobi-pants"]').first();
   await expect(card.locator('.pgrid-badge')).toHaveText('New');
   if (info.project.name === 'desktop') {
     const alt = card.locator('.pgrid-alt');

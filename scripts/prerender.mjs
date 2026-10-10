@@ -63,10 +63,10 @@ function productPage(p, node, fetchedAt) {
   const inStock = variants.some(v => v.availableForSale);
   const img = p.colors.map(c => c.images[0]).find(Boolean);
   const imgBig = img ? img + (img.includes('?') ? '&' : '?') + 'width=1200' : null;
-  const description = `${p.name} — ${p.composition}. ${p.description}`.slice(0, 300);
+  const description = `${p.name}, ${p.composition}. ${p.description}`.slice(0, 300);
   const url = `${BASE}product/${p.slug}/`;
   return {
-    title: `${p.name} — TATO`,
+    title: `${p.name} · TATO`,
     description,
     url,
     image: imgBig,
@@ -100,8 +100,8 @@ export async function prerender({ root, out }) {
 
   const shop = (route, label) => {
     pages.push({ route, meta: {
-      title: `${label} — TATO`,
-      description: `Shop ${label} — TATO. Independent fashion, designed in Rome, made in Italy.`,
+      title: `${label} · TATO`,
+      description: `Shop ${label} at TATO. Independent fashion, designed in Rome, made in Italy.`,
       url: `${BASE}${route}/`,
     } });
   };
@@ -119,8 +119,8 @@ export async function prerender({ root, out }) {
     return src.startsWith('https://') ? src + (src.includes('?') ? '&' : '?') + 'width=1200' : BASE + src;
   };
   const colMeta = (c, route, name) => ({
-    title: `${name} — TATO`,
-    description: `${c.intro[0] || `The TATO collection — ${c.looks.length} looks.`} Designed in Rome, made in Italy.`.slice(0, 300),
+    title: `${name} · TATO`,
+    description: `${c.intro[0] || `The TATO collection: ${c.looks.length} looks.`} Designed in Rome, made in Italy.`.slice(0, 300),
     url: `${BASE}${route}/`,
     image: colImage(c),
   });
@@ -131,7 +131,7 @@ export async function prerender({ root, out }) {
   }
   if (content.archive.length) {
     pages.push({ route: 'archive', meta: {
-      title: 'Archive — TATO',
+      title: 'Archive · TATO',
       description: 'Past TATO collections. Designed in Rome, made in Italy.',
       url: `${BASE}archive/`,
     } });
@@ -139,16 +139,16 @@ export async function prerender({ root, out }) {
   const plain = h => String(h || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
   const about = content.pages.about;
   pages.push({ route: 'about', meta: about ? {
-    title: `${about.title || 'About'} — TATO`,
+    title: `${about.title || 'About'} · TATO`,
     description: plain(about.body).slice(0, 300) || 'About TATO.',
     url: `${BASE}about/`,
   } : {
-    title: 'Contacts — TATO',
-    description: 'Get in touch with TATO — general, press and sales enquiries.',
+    title: 'Contacts · TATO',
+    description: 'Get in touch with TATO for general, press and sales enquiries.',
     url: `${BASE}about/`,
   } });
   pages.push({ route: 'wishlist', noindex: true, meta: {
-    title: 'Wishlist — TATO', description: 'Your saved pieces — TATO.', url: `${BASE}wishlist/`, robots: 'noindex, follow',
+    title: 'Wishlist · TATO', description: 'Your saved pieces at TATO.', url: `${BASE}wishlist/`, robots: 'noindex, follow',
   } });
   /* pagine info: indicizzate solo quando il testo vero è su Shopify
      (finché restano i segnaposto [DA FORNIRE] → noindex) */
@@ -156,7 +156,7 @@ export async function prerender({ root, out }) {
     const sp = content.pages[k];
     const t = (sp && sp.title) || t0;
     pages.push({ route: k, noindex: !sp, meta: {
-      title: `${t} — TATO`, description: `${t} — TATO.`, url: `${BASE}${k}/`, robots: sp ? undefined : 'noindex, follow',
+      title: `${t} · TATO`, description: `${t} · TATO.`, url: `${BASE}${k}/`, robots: sp ? undefined : 'noindex, follow',
     } });
   }
   for (const p of products) {

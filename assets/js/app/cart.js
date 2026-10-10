@@ -218,7 +218,7 @@ document.addEventListener('tato:shopify-ready', reconcileCart);
       throw new Error('no url');
     } catch (e) {
       console.warn('[TATO] checkout fallito:', e);
-      if (note) note.textContent = 'Checkout error — please retry.';
+      if (note) note.textContent = 'Something went wrong at checkout. Please try again.';
       btn.textContent = original;
       btn.disabled = false;
       btn.removeAttribute('aria-busy');

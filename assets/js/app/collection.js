@@ -22,7 +22,7 @@ export function collectionShown() { return shown; }
 
 function carouselHTML(key, images, label) {
   const slides = images.map((src, j) =>
-    `<div class="carousel-slide">${pictureHTML(src, { alt: `TATO — ${label}, view ${j + 1} of ${images.length}`, sizes: SIZES })}</div>`
+    `<div class="carousel-slide">${pictureHTML(src, { alt: `TATO ${label}, view ${j + 1} of ${images.length}`, sizes: SIZES })}</div>`
   ).join('');
   return `
         <div class="look-carousel" data-look="${esc(key)}">
@@ -101,7 +101,7 @@ export function renderLookPanel(lookKey) {
     }
     const itemsHTML = data.items.map(item => {
       const action = item.slug
-        ? `<a class="panel-item-shop" href="/product/${item.slug}/">${money(item.price, item.currency)} — Shop</a>`
+        ? `<a class="panel-item-shop" href="/product/${item.slug}/">${money(item.price, item.currency)} · Shop</a>`
         : `<button type="button" class="panel-item-shop panel-item-preorder" data-name="${esc(item.name)}" data-color="${esc(item.color)}">Pre-order</button>`;
       return `
         <div class="panel-item">

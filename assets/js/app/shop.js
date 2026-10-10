@@ -47,7 +47,7 @@ export function renderShopPills() {
   const dept = readFilters().dept;
   const q = dept ? `?dept=${dept}` : '';
   const hasNew = PRODUCTS.some(p => (p.badges || []).includes('New'));
-  const cats = CATEGORIES.filter(c => PRODUCTS.some(p => p.category === c.slug));
+  const cats = CATEGORIES.filter(c => PRODUCTS.some(p => window.TATO_inCategory(p, c.slug)));
   const pills = [
     { href: '/shop/', label: 'All', on: state.shopScope === 'all' && state.shopCategory === 'all' },
     ...(hasNew ? [{ href: '/shop/new/', label: 'New arrivals', on: state.shopScope === 'new' }] : []),
@@ -68,7 +68,7 @@ export function shopFilteredProducts() {
   if (state.shopScope === 'wishlist') return savedProducts();
   if (state.shopScope === 'new') return PRODUCTS.filter(p => (p.badges || []).includes('New'));
   if (state.shopScope === 'accessories') return PRODUCTS.filter(p => p.category === 'accessories');
-  if (state.shopCategory !== 'all') return PRODUCTS.filter(p => p.category === state.shopCategory);
+  if (state.shopCategory !== 'all') return PRODUCTS.filter(p => window.TATO_inCategory(p, state.shopCategory));
   return PRODUCTS.slice();
 }
 
@@ -79,9 +79,9 @@ export function renderShopGrid() {
   const list = applyFilters(scope, f);
   shopGrid.className = 'pgrid';
   const wish = state.shopScope === 'wishlist';
-  /* Accessories: una card per ogni colore (es. il cappello in tutti i colori),
-     rispettando il filtro colore se attivo */
-  const perColor = state.shopScope === 'accessories';
+  /* Una card per ogni colore (es. il cappello in tutti i colori), rispettando
+     il filtro colore se attivo. Wishlist no: lì si salva il capo, non il colore. */
+  const perColor = !wish;
   const cards = perColor
     ? list.flatMap(p => p.colors.map((c, ci) => ({ p, c, ci })).filter(x => !f.color.length || f.color.includes(x.c.name)))
     : null;

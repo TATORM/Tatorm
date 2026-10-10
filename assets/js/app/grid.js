@@ -46,7 +46,7 @@ export function pgridCardHTML(p, colorIdx) {
   else img = productImgSrc(p);
 
   const media = img.src
-    ? pictureHTML(img.src, { alt: col ? `${p.name} — ${col.name}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
+    ? pictureHTML(img.src, { alt: col ? `${p.name}, ${col.name}` : p.name, sizes: '(max-width: 768px) 50vw, 25vw' })
     : '<span class="ph-block"></span>';
   const alt = CAN_HOVER && img.flat ? hoverImgSrc(p, col) : '';
   const altMedia = alt && alt !== img.src

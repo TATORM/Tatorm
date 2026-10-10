@@ -43,7 +43,7 @@ export function renderPDP(slug) {
   }
   const gallery = galleryImgs.length
     ? galleryImgs.map((src, i) => pictureHTML(src, {
-        alt: `${p.name} — ${color.name}${galleryImgs.length > 1 ? ', view ' + (i + 1) : ''}`,
+        alt: `${p.name}, ${color.name}${galleryImgs.length > 1 ? ', view ' + (i + 1) : ''}`,
         cls: 'pdp-gallery-img',
         eager: i === 0,
         sizes: '(max-width: 768px) 50vw, min(900px, 60vw)',
@@ -52,7 +52,7 @@ export function renderPDP(slug) {
 
   const swatches = p.colors.map((c, i) => {
     const cSold = availColors && !availColors[c.name];
-    return `<button class="pdp-color${i === state.pdp.colorIdx ? ' selected' : ''}${cSold ? ' is-soldout' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${esc(c.name)}${cSold ? ' — sold out' : ''}"></button>`;
+    return `<button class="pdp-color${i === state.pdp.colorIdx ? ' selected' : ''}${cSold ? ' is-soldout' : ''}" data-idx="${i}" style="background:${c.hex}" aria-label="${esc(c.name)}${cSold ? ', sold out' : ''}"></button>`;
   }).join('');
 
   const sizes = color.sizes.map(s => {
@@ -78,7 +78,7 @@ export function renderPDP(slug) {
   const sizeOptions = ['<option value="">Select a size</option>'].concat(
     color.sizes.map(s => {
       const avail = shReady ? sh.variantAvailable(slug, color.name, s.label) : (s.available !== false);
-      return `<option value="${esc(s.label)}"${s.label === state.pdp.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${esc(s.label)}${avail ? '' : ' — Sold out'}</option>`;
+      return `<option value="${esc(s.label)}"${s.label === state.pdp.size ? ' selected' : ''}${avail ? '' : ' disabled'}>${esc(s.label)}${avail ? '' : ' (Sold out)'}</option>`;
     })
   ).join('');
 
@@ -166,8 +166,8 @@ export function renderPDP(slug) {
           <span class="pdp-pay-marks">PayPal · Apple Pay · Card</span>
         </button>
 
-        <p class="pdp-delivery-note">Delivery estimate — to be configured</p>
-        <p class="pdp-phone-note">Order by phone — number to be provided</p>
+        <p class="pdp-delivery-note">Delivery estimate: to be configured</p>
+        <p class="pdp-phone-note">Order by phone: number to be provided</p>
 
         <div class="pdp-tabs" role="tablist">
           <button class="pdp-tab active" data-tab="desc" role="tab" aria-selected="true">Description</button>
@@ -314,7 +314,7 @@ export function renderPDP(slug) {
       btn.disabled = false;
       btn.removeAttribute('aria-busy');
       const h = document.getElementById('pdp-size-hint');
-      if (h) { h.textContent = 'Checkout error — please retry'; h.classList.add('error'); }
+      if (h) { h.textContent = 'Something went wrong at checkout. Please try again.'; h.classList.add('error'); }
     }
   });
 
@@ -388,7 +388,7 @@ export function initSizeGuide() {
   window.TATO_openSizeGuide = function (category, productName) {
     lastFocus = document.activeElement;
     const labels = sizesFor(category);
-    titleEl.textContent = productName ? `Size guide — ${productName}` : 'Size guide';
+    titleEl.textContent = productName ? `Size guide · ${productName}` : 'Size guide';
     const guide = window.TATO_SIZE_GUIDE[category] || {};
     const rows = labels.map(lbl => {
       const vals = (guide.rows && guide.rows[lbl]) || [];

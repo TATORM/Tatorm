@@ -77,12 +77,19 @@ window.TATO_getDepartmentLabel = function (slug) {
   return d ? d.label : slug;
 };
 
+/* Il capo sta nella categoria? I pantaloni sartoriali (tipo Shopify Tailoring)
+   compaiono anche in Pants. */
+window.TATO_inCategory = function (p, slug) {
+  return p.category === slug ||
+    (slug === 'pants' && p.category === 'tailoring' && /\b(pants|trousers)\b/i.test(p.name));
+};
+
 /* Categorie che hanno almeno 1 capo nel reparto dato — per non
    mostrare voci vuote nei sottomenu (es. Skirts sotto Men). */
 window.TATO_categoriesFor = function (dept) {
   return window.TATO_CATEGORIES.filter(c =>
     window.TATO_PRODUCTS.some(p =>
-      p.category === c.slug &&
+      window.TATO_inCategory(p, c.slug) &&
       (p.genders || ['women', 'men']).includes(dept)
     )
   );

@@ -17,7 +17,7 @@ import { currentRoute, go, setUrl } from './url.js';
    Women/Men non sono voci di menu: sono un filtro dello shop. */
 export function shopMenuItems() {
   const products = window.TATO_PRODUCTS || [];
-  const cats = (window.TATO_CATEGORIES || []).filter(c => products.some(p => p.category === c.slug));
+  const cats = (window.TATO_CATEGORIES || []).filter(c => products.some(p => window.TATO_inCategory(p, c.slug)));
   return [
     { href: '/shop/', label: 'All' },
     ...(products.some(p => (p.badges || []).includes('New')) ? [{ href: '/shop/new/', label: 'New arrivals' }] : []),

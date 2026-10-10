@@ -134,7 +134,7 @@ export const allHomePhotos = [
    generico ma reale (non decorativo: è il contenuto della Home). */
 export function homePhotoAlt(src) {
   const look = src.match(/look-(\d+)/);
-  return look ? `TATO — Look ${parseInt(look[1], 10)}` : 'TATO — editorial photography';
+  return look ? `TATO Look ${parseInt(look[1], 10)}` : 'TATO editorial photography';
 }
 
 export function appendPhotos(feed, photos, isFirst) {
@@ -201,7 +201,7 @@ export function renderHomeDepartments() {
     a.style.setProperty('--hy', d.head[1]);
     a.style.setProperty('--zoom', d.zoom);
     a.appendChild(pictureEl(d.img, {
-      alt: `TATO — ${d.label}`,
+      alt: `TATO, ${d.label}`,
       sizes: '50vw',
       widths: [1600, 2400],
     }));

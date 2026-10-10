@@ -89,7 +89,7 @@ for (const look of looks) {
   if (images.length !== look.images.length) {
     images = [];
     for (let i = 0; i < look.images.length; i++) {
-      images.push(await uploadImage(look.images[i], `TATO — Look ${look.number}, view ${i + 1} of ${look.images.length}`));
+      images.push(await uploadImage(look.images[i], `TATO Look ${look.number}, view ${i + 1} of ${look.images.length}`));
     }
   }
   const items = look.items.map(it => [it.name, it.comp, it.color].join(' | ')).join('\n');

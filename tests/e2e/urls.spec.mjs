@@ -4,7 +4,7 @@ test('Pagina prodotto generata: meta, Open Graph e JSON-LD già nell\'HTML (senz
   const res = await request.get('/product/tobi-pants/');
   expect(res.status()).toBe(200);
   const html = await res.text();
-  expect(html).toContain('<title>TOBI PANTS — TATO</title>');
+  expect(html).toContain('<title>TOBI PANTS · TATO</title>');
   expect(html).toContain('<link rel="canonical" href="https://www.tatorm.com/product/tobi-pants/" />');
   expect(html).toContain('<meta property="og:type" content="product" />');
   expect(html).toMatch(/<meta property="og:image" content="https:\/\/cdn\.shopify\.com\/[^"]+width=1200" \/>/);
@@ -26,7 +26,7 @@ test('Navigazione interna: URL veri, niente ricarica, tasto indietro', async ({ 
   await shopifyReady(page);
   await page.evaluate(() => { window.__sameDocument = true; });
   await page.locator('#shop-grid .pgrid-card').first().click();
-  await expect(page).toHaveURL(/\/product\/[a-z0-9-]+\/$/);
+  await expect(page).toHaveURL(/\/product\/[a-z0-9-]+\/(\?color=[^&]+)?$/);
   await expect(page.locator('.pdp-name')).toBeVisible();
   expect(await page.evaluate(() => window.__sameDocument)).toBe(true);   // nessun ricaricamento
   await page.goBack();

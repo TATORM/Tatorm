@@ -103,7 +103,7 @@ export function showInfo(route) {
   const body = sp
     ? (/<h1[\s>]/i.test(sp.body) ? '' : `<h1>${esc(title)}</h1>`) + safeHTML(sp.body)
     : data.body;
-  if (renderDoc(body)) setMeta({ title, description: `${title} — TATO.`, canonicalPath: route });
+  if (renderDoc(body)) setMeta({ title, description: `${title} · TATO.`, canonicalPath: route });
 }
 
 /* About: testo della Pagina Shopify "about" sopra i contatti */
@@ -117,7 +117,7 @@ export function showAbout() {
   showSection('about');
   setMeta(sp
     ? { title: sp.title || 'About', description: (el ? el.textContent : '').replace(/\s+/g, ' ').trim().slice(0, 300) || 'About TATO.', canonicalPath: 'about' }
-    : { title: 'Contacts', description: 'Get in touch with TATO — general, press and sales enquiries.', canonicalPath: 'about' });
+    : { title: 'Contacts', description: 'Get in touch with TATO for general, press and sales enquiries.', canonicalPath: 'about' });
 }
 
 /* Archivio: elenco delle collezioni passate → /collection/<handle>/ */

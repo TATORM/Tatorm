@@ -31,7 +31,7 @@ export function handleShopRoute() {
     const name = col ? [shown.season, shown.title].filter(Boolean).join(' ') : 'Collection';
     setMeta({
       title: name,
-      description: (shown.intro[0] || `The TATO collection — ${shown.looks.length} looks.`) + ' Designed in Rome, made in Italy.',
+      description: (shown.intro[0] || `The TATO collection: ${shown.looks.length} looks.`) + ' Designed in Rome, made in Italy.',
       canonicalPath: col ? `collection/${col.handle}` : 'collection',
     });
     return;
@@ -50,7 +50,7 @@ export function handleShopRoute() {
         const price = pd && pd.minPrice != null ? pd.minPrice : p.price;
         setMeta({
           title: p.name,
-          description: `${p.name} — ${p.composition}. ${p.description}`.slice(0, 300),
+          description: `${p.name}, ${p.composition}. ${p.description}`.slice(0, 300),
           canonicalPath: 'product/' + a,
           ogImage: (pd && pd.images && pd.images[0]) || (window.TATO_lookImages ? window.TATO_lookImages(p.lookRefs, { onePerLook: true, limit: 1 })[0] : null),
         });
@@ -75,7 +75,7 @@ export function handleShopRoute() {
     showSection('shop');
     document.getElementById('shop')?.classList.add('active');
     setProductJsonLd(null);
-    setMeta({ title: 'Wishlist', description: 'Your saved pieces — TATO.', canonicalPath: 'wishlist' });
+    setMeta({ title: 'Wishlist', description: 'Your saved pieces at TATO.', canonicalPath: 'wishlist' });
     return;
   }
 
@@ -111,7 +111,7 @@ export function handleShopRoute() {
     const label = shopTitleEl ? shopTitleEl.textContent : 'Shop';
     setMeta({
       title: label,
-      description: `Shop ${label} — TATO. Independent fashion, designed in Rome, made in Italy.`,
+      description: `Shop ${label} at TATO. Independent fashion, designed in Rome, made in Italy.`,
       canonicalPath: currentRoute(),
     });
   }
