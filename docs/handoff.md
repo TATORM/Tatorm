@@ -1,16 +1,20 @@
 # TATO — Handoff
 
-**Aggiornato:** 2026-10-10 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
+**Aggiornato:** 2026-10-11 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
 Mappa del codice e regole: `CLAUDE.md`. Storico sessioni: `docs/archive/handoff-storico.md`.
 
 ## Ripartire da qui
-Fine sessione 10/10: tutto committato e pushato su `origin/ecommerce-dev`, server locale su :8777.
-Prossimi passi possibili: guida Shopify Markets (USA/UK/JP) · Formspree per il pre-ordine ·
-descrizioni prodotto in italiano · passaggio a Cloudflare (al lancio). Chiedere all'utente da cosa partire.
+Fine sessione 11/10: tutto committato e pushato su `origin/ecommerce-dev`.
+Fatto: **Notify me** sulle taglie/colori esauriti (`app/notify.js`).
+Prossimi passi proposti: **Formspree** (l'utente crea l'account e passa il link → `ENDPOINT` in
+`app/preorder.js` + CSP: attiva pre-ordine e Notify me) · **analytics** (consigliato Plausible, senza
+cookie/banner; decide l'utente) · guida Shopify Markets (USA/UK/JP) · descrizioni in italiano ·
+Cloudflare (al lancio). Altre idee discusse: countdown al drop, soglia spedizione gratuita nella bag,
+Klaviyo al posto di Mailchimp (carrelli abbandonati), video nei look, pagina editoriale.
 
 ## Stato
 Sito completo lato codice: home, collection (da Shopify), shop con filtri, scheda prodotto (zoom,
-visti di recente, guida taglie), bag + checkout Shopify, wishlist, pre-ordine (mailto), account
+visti di recente, guida taglie, Notify me sulle taglie esaurite), bag + checkout Shopify, wishlist, pre-ordine (mailto), account
 (monogramma → pagina account Shopify), EN/IT, valute (attive quando Shopify ha i mercati),
 404, accessibilità AA, Lighthouse mobile ~84 / 100 / 96 / 100.
 
@@ -39,3 +43,10 @@ zoom + visti di recente · motion · account (monogramma) · EN/IT · valute · 
 menu chiuso da scroll del visitatore · Collection ▸ collezioni nel menu · Bag al posto di Cart · 404 ·
 accessibilità (grigio #767676, inert) · CLS 0 · redirect del negozio Shopify attivo (tutto → home) ·
 pulizia codice e riorganizzazione docs (questa mappa) · primo push di `ecommerce-dev` su GitHub.
+
+## Sessione 11/10
+Notify me: taglia o colore esaurito → "Notify me when available" (IT "Avvisami quando torna disponibile")
+al posto di Add to bag, pagamento veloce nascosto, campo email a filo sotto il pulsante; taglie esaurite
+ora selezionabili nella tendina (`data-soldout`, non più `disabled`). Invio come il pre-ordine (mailto oggi).
+Scelto di NON usare Mailchimp: chi è già iscritto non verrebbe registrato e manca il consenso newsletter.
+Test e2e nuovo in `tests/e2e/shop.spec.mjs`.
