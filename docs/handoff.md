@@ -9,6 +9,7 @@ Fatto: **Notify me** sulle taglie/colori esauriti (`app/notify.js`).
 20/10: **descrizioni prodotto in italiano** (`tDetail`, dizionario `DETAILS` in `app/i18n.js`; frasi nuove
 su Shopify vanno aggiunte lì). Playwright aggiornato: reinstallato chromium (`npx playwright install chromium`).
 Scartati dall'utente: soglia spedizione gratuita (no) e countdown al drop (non ora).
+Lighthouse CI riparato (falliva dal 10/10 per `localhost:PORT` in `.github/lighthouse/lighthouserc.json`): ora verde, nessun avviso.
 Prossimi passi proposti: **Formspree** (l'utente crea l'account e passa il link → `ENDPOINT` in
 `app/preorder.js` + CSP: attiva pre-ordine e Notify me) · **analytics** (consigliato Plausible, senza
 cookie/banner; decide l'utente) · guida Shopify Markets (USA/UK/JP) · descrizioni in italiano ·
