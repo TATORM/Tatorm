@@ -1,11 +1,14 @@
 # TATO — Handoff
 
-**Aggiornato:** 2026-10-11 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
+**Aggiornato:** 2026-10-20 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
 Mappa del codice e regole: `CLAUDE.md`. Storico sessioni: `docs/archive/handoff-storico.md`.
 
 ## Ripartire da qui
 Fine sessione 11/10: tutto committato e pushato su `origin/ecommerce-dev`.
 Fatto: **Notify me** sulle taglie/colori esauriti (`app/notify.js`).
+20/10: **descrizioni prodotto in italiano** (`tDetail`, dizionario `DETAILS` in `app/i18n.js`; frasi nuove
+su Shopify vanno aggiunte lì). Playwright aggiornato: reinstallato chromium (`npx playwright install chromium`).
+Scartati dall'utente: soglia spedizione gratuita (no) e countdown al drop (non ora).
 Prossimi passi proposti: **Formspree** (l'utente crea l'account e passa il link → `ENDPOINT` in
 `app/preorder.js` + CSP: attiva pre-ordine e Notify me) · **analytics** (consigliato Plausible, senza
 cookie/banner; decide l'utente) · guida Shopify Markets (USA/UK/JP) · descrizioni in italiano ·
@@ -29,7 +32,6 @@ visti di recente, guida taglie, Notify me sulle taglie esaurite), bag + checkout
 ## Aperto / da decidere
 - Pre-order e **Notify me** (taglia esaurita, `app/notify.js`) via Formspree: oggi mailto a info@tatorm.com →
   un solo `ENDPOINT` in `app/preorder.js` attiva entrambi (+ CSP connect-src).
-- Descrizioni prodotto in italiano (oggi inglese anche con IT).
 - 6 colori senza foto del look all'hover (Cap Black/Navy/Red, Smock Black/Dark Grey, Tiny Crewneck Black,
   2 Button Shirt Light Grey/White).
 - Refuso "baloon" nella descrizione Tobi Pants (Shopify).
