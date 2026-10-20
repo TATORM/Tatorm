@@ -1,4 +1,4 @@
-import { t, tCare, tColor, tComposition } from './i18n.js';
+import { t, tCare, tColor, tComposition, tDetail } from './i18n.js';
 import { addToCart, openCart } from './cart.js';
 import { showCollection } from './collection.js';
 import { pdpEl } from './dom.js';
@@ -180,7 +180,7 @@ export function renderPDP(slug) {
         <div class="pdp-tab-panels">
           <div class="pdp-tab-panel active" data-panel="desc">
             <ul class="pdp-details">${(p.details && p.details.length ? p.details : [p.description])
-              .map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+              .map(d => `<li>${esc(tDetail(d))}</li>`).join('')}</ul>
             ${lookN ? `<p class="pdp-seenin">${t('Seen in')} ${(p.lookRefs || []).map(n => `<a href="#" data-look-ref="${n}">Look ${n}</a>`).join(', ')}</p>` : ''}
           </div>
           <div class="pdp-tab-panel" data-panel="fit">

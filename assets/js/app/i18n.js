@@ -7,9 +7,10 @@
      testo inglese. {nome} nel testo = valore da vars.
    · L'HTML fisso di index.html si traduce all'avvio (translateStatic):
      ogni testo/attributo che coincide con una chiave del dizionario.
-   · Colori, composizioni e istruzioni di lavaggio da Shopify passano
-     da tColor / tComposition / tCare. Descrizioni dei prodotti, testi
-     delle collezioni e pagine restano come scritti su Shopify.
+   · Colori, composizioni, lavaggio e righe della descrizione da Shopify
+     passano da tColor / tComposition / tCare / tDetail (una frase nuova
+     su Shopify va aggiunta a DETAILS, altrimenti resta in inglese).
+     Testi delle collezioni e pagine restano come scritti su Shopify.
    · Gli indirizzi (/shop/pants/…) restano uguali nelle due lingue.
    ═══════════════════════════════════════════ */
 const KEY = 'tato-lang';
@@ -204,6 +205,45 @@ const CARE = {
 export function tCare(line) {
   if (LANG !== 'it' || !line) return line;
   return CARE[String(line).trim().toLowerCase()] || line;
+}
+
+/* Righe della descrizione prodotto (una voce dell'elenco su Shopify = una riga) */
+const DETAILS = {
+  '6 panel construction': 'Costruzione a 6 pannelli',
+  'fade visor with sticker shadow': "Visiera sfumata con l'ombra dell'adesivo",
+  'tato embroidery': 'Ricamo TATO',
+  'designed in rome, made in italy': 'Disegnato a Roma, Made in Italy',
+  'horizontal cut jersey': 'Jersey a taglio orizzontale',
+  'smock neck construction': 'Collo con lavorazione smock',
+  'straight fit': 'Vestibilità dritta',
+  'horizontal rib raglan sleeve': 'Manica raglan a costa orizzontale',
+  'straight cut neck construction': 'Scollo a taglio dritto',
+  'cropped fit': 'Vestibilità corta',
+  'dyed garment': 'Tinto in capo',
+  'fade wrist': 'Polsino sfumato',
+  '2 button closure flap': 'Patta con chiusura a 2 bottoni',
+  'pockets hidden under front flap': 'Tasche nascoste sotto la patta frontale',
+  'tailoring construction': 'Costruzione sartoriale',
+  'double pleat': 'Doppia pince',
+  'relaxed fit': 'Vestibilità comoda',
+  'tailored jacket modular button closure': 'Chiusura modulare a bottoni da giacca sartoriale',
+  'splint on the back for more freedom to move': 'Spacco sul retro per una maggiore libertà di movimento',
+  'standing collar with hook and bar closure': 'Collo alla coreana con chiusura a gancetto',
+  'multiple ways to close and wear the piece': 'Diversi modi di chiudere e indossare il capo',
+  'triple breasted closure': 'Chiusura a triplo petto',
+  'inside pocket': 'Tasca interna',
+  'raw cut finishing': 'Finitura a taglio vivo',
+  '2 button closure': 'Chiusura a 2 bottoni',
+  'popeline shirt': 'Camicia in popeline',
+  'regular fit': 'Vestibilità regolare',
+  'single pleat construction': 'Costruzione a pince singola',
+  'hook and bar closure on the bottom': "Chiusura a gancetto sull'orlo",
+  'double fit (relaxed / baloon)': 'Doppia vestibilità (comoda / balloon)',
+  'double fit (relaxed / balloon)': 'Doppia vestibilità (comoda / balloon)',
+};
+export function tDetail(line) {
+  if (LANG !== 'it' || !line) return line;
+  return DETAILS[String(line).trim().replace(/\.$/, '').toLowerCase()] || line;
 }
 
 /* ─── HTML fisso (index.html) ────────────── */

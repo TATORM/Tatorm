@@ -12,6 +12,10 @@ Il sito legge i prodotti da Shopify. Nel codice non si scrive nessun prodotto.
    - 100% Nylon
    - Ribbed collar and cuffs
    - Designed in Rome, Made in Italy
+
+   Scrivi le righe in inglese. In italiano (IT nel footer) il sito le traduce frase per frase
+   (`DETAILS` in `assets/js/app/i18n.js`): una frase nuova resta in inglese finché non viene
+   aggiunta lì. Basta chiedere a Claude "traduci le descrizioni nuove".
 4. **Foto**: carica i packshot, poi in ogni variante assegna la foto del suo colore
    (Varianti → clic sulla variante → immagine).
 5. **Varianti**: opzioni chiamate esattamente `Color` e `Size`.
