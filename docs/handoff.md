@@ -1,10 +1,10 @@
 # TATO — Handoff
 
-**Aggiornato:** 2026-10-20 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
+**Aggiornato:** 2026-11-25 · branch `ecommerce-dev` (su GitHub, push ok con account TATORM) · live `main` invariato.
 Mappa del codice e regole: `CLAUDE.md`. Storico sessioni: `docs/archive/handoff-storico.md`.
 
 ## Ripartire da qui
-Fine sessione 11/10: tutto committato e pushato su `origin/ecommerce-dev`.
+Fine sessione 25/11: tutto committato e pushato su `origin/ecommerce-dev` (About fatto, vedi sotto).
 Fatto: **Notify me** sulle taglie/colori esauriti (`app/notify.js`).
 20/10: **descrizioni prodotto in italiano** (`tDetail`, dizionario `DETAILS` in `app/i18n.js`; frasi nuove
 su Shopify vanno aggiunte lì). Playwright aggiornato: reinstallato chromium (`npx playwright install chromium`).
@@ -15,6 +15,17 @@ Prossimi passi proposti: **Formspree** (l'utente crea l'account e passa il link 
 cookie/banner; decide l'utente) · guida Shopify Markets (USA/UK/JP) · descrizioni in italiano ·
 Cloudflare (al lancio). Altre idee discusse: countdown al drop, soglia spedizione gratuita nella bag,
 Klaviyo al posto di Mailchimp (carrelli abbandonati), video nei look, pagina editoriale.
+
+## Sessione 25/11
+**Pagina About** con il testo del brand (scritto con l'utente), EN + IT:
+"TATO is an independent fashion label based in Rome. / It grows from a wish to return to a simpler way of seeing… / Designed in Rome, made in Italy, in small quantities, released one chapter at a time."
+- Testo in `ABOUT_DEFAULT` (`app/info.js`), traduzioni IT in `i18n.js` (un paragrafo = una chiave: se cambi l'inglese, cambia anche la chiave IT).
+- Una Pagina Shopify con handle `about` lo sostituirebbe (solo in inglese): meglio non crearla.
+- Box testo `.about-wrap` portato a **1000px** (era 480) su richiesta dell'utente; su mobile resta a tutta larghezza.
+- Meta About: titolo "About · TATO" (prima "Contacts") anche nel prerender.
+- Playwright: chromium reinstallato (cancellato dalla pulizia cache del Mac): `npm_config_cache=<scratchpad>/npmcache npx playwright install chromium`.
+- Tutto su `ecommerce-dev` (ultimo commit "About: box del testo a 1000px"); **non pubblicato su main**.
+- In arrivo: pop up da Kiodoshop, Piazza del Fico 21, Roma, 10–14/12 (locandina "Release 001" / "First Release" proposta, decide l'utente).
 
 ## Stato
 Sito completo lato codice: home, collection (da Shopify), shop con filtri, scheda prodotto (zoom,
