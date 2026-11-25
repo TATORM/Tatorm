@@ -26,7 +26,7 @@ visti di recente, guida taglie, Notify me sulle taglie esaurite), bag + checkout
 1. **Cloudflare Pages** al posto di GitHub Pages + DNS da Aruba (posta!): checklist nella memoria "PROMEMORIA lancio".
 2. **Shopify**: stock reale; pagamenti (Shopify Payments); **mercati USA/UK/Giappone** + spedizioni/dazi
    + canale Headless nei mercati; branding account/checkout (logo `docs/guide/shopify-logo.jpg`).
-3. **Testi** (li scrive l'utente): pagine About, Spedizioni, Resi, FAQ, Privacy, Cookie, Condizioni
+3. **Testi** (li scrive l'utente): ~~About~~ (25/11: testo EN/IT in `app/info.js` + `i18n.js`; una Pagina Shopify "about" lo sostituirebbe, ma solo in inglese), Spedizioni, Resi, FAQ, Privacy, Cookie, Condizioni
    (Shopify › Pagine); nella PDP "Delivery estimate" e "Order by phone"; misure guida taglie.
 4. **Redirect negozio Shopify**: in theme.liquid cambiare `nuovo_sito = false` → `true` al lancio.
 

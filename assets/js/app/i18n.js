@@ -158,6 +158,12 @@ const IT = {
   'Page not found': 'Pagina non trovata',
   '← Back to shop': '← Torna allo shop',
   'TATO · Independent Fashion. Designed in Rome, Made in Italy.': 'TATO · Moda indipendente. Disegnata a Roma, prodotta in Italia.',
+
+  // About (testo predefinito in app/info.js)
+  'TATO is an independent fashion label based in Rome.': 'TATO è un marchio di moda indipendente con base a Roma.',
+  'It grows from a wish to return to a simpler way of seeing. It is not nostalgia but a search for freedom, where forms stay open to change and new interpretations. Play and discovery meet a precise method in building a contemporary wardrobe, where volumes, shapes and categories mix and find a dimension of their own.':
+    'Nasce dal desiderio di tornare a uno sguardo più semplice. Non è nostalgia ma una ricerca di libertà, dove le forme restano aperte a evolversi e a essere reinterpretate. Gioco e scoperta incontrano un metodo preciso nel costruire un armadio contemporaneo, dove volumi, forme e categorie si mescolano e trovano una dimensione propria.',
+  'Designed in Rome, made in Italy, in small quantities, released one chapter at a time.': 'Disegnato a Roma, prodotto in Italia, in piccole quantità, un capitolo alla volta.',
 };
 
 export function t(s, vars) {

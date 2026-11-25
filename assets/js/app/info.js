@@ -108,18 +108,28 @@ export function showInfo(route) {
   if (renderDoc(body)) setMeta({ title, description: `${title} · TATO.`, canonicalPath: route });
 }
 
-/* About: testo della Pagina Shopify "about" sopra i contatti */
+/* About: testo sopra i contatti. Se su Shopify c'è la Pagina "about"
+   vince quella; altrimenti il testo qui sotto (traduzione IT in i18n.js,
+   un paragrafo per riga così translateStatic lo trova intero). */
+const ABOUT_DEFAULT = `
+<p>TATO is an independent fashion label based in Rome.</p>
+<p>It grows from a wish to return to a simpler way of seeing. It is not nostalgia but a search for freedom, where forms stay open to change and new interpretations. Play and discovery meet a precise method in building a contemporary wardrobe, where volumes, shapes and categories mix and find a dimension of their own.</p>
+<p>Designed in Rome, made in Italy, in small quantities, released one chapter at a time.</p>`;
+
 export function showAbout() {
   const sp = shopPage('about');
   const el = document.getElementById('about-text');
   if (el) {
-    el.innerHTML = sp ? safeHTML(sp.body) : '';
-    el.hidden = !sp;
+    el.innerHTML = sp ? safeHTML(sp.body) : ABOUT_DEFAULT;
+    el.hidden = false;
+    if (!sp) translateStatic(el);
   }
   showSection('about');
-  setMeta(sp
-    ? { title: sp.title || 'About', description: (el ? el.textContent : '').replace(/\s+/g, ' ').trim().slice(0, 300) || 'About TATO.', canonicalPath: 'about' }
-    : { title: 'Contacts', description: 'Get in touch with TATO for general, press and sales enquiries.', canonicalPath: 'about' });
+  setMeta({
+    title: (sp && sp.title) || 'About',
+    description: (el ? el.textContent : '').replace(/\s+/g, ' ').trim().slice(0, 300) || 'About TATO.',
+    canonicalPath: 'about',
+  });
 }
 
 /* Archivio: elenco delle collezioni passate → /collection/<handle>/ */

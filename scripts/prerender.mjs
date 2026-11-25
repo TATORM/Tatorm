@@ -143,8 +143,8 @@ export async function prerender({ root, out }) {
     description: plain(about.body).slice(0, 300) || 'About TATO.',
     url: `${BASE}about/`,
   } : {
-    title: 'Contacts · TATO',
-    description: 'Get in touch with TATO for general, press and sales enquiries.',
+    title: 'About · TATO',
+    description: 'TATO is an independent fashion label based in Rome. Designed in Rome, made in Italy, in small quantities, released one chapter at a time.',
     url: `${BASE}about/`,
   } });
   pages.push({ route: 'wishlist', noindex: true, meta: {
